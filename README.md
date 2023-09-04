@@ -27,7 +27,6 @@
 
 - [React (TypeScript Vite)](https://vitejs.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Shadcn UI Components](https://ui.shadcn.com/)
 - [NodeJS/Express (TypeScript)](https://expressjs.com/)
 - [Prisma](https://www.prisma.io/)
 - [MySQL](https://www.mysql.com/)
