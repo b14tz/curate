@@ -92,6 +92,7 @@ You can use this [Base64 String Generator](https://generate.plus/en/base64) to g
 2.  Add the following to the `.env` file
 
 ```
+mysql://USER:PASSWORD@HOST:PORT/DATABASE
 ```
 
 Refer to the [Prisma Documentation](https://pris.ly/d/connection-strings) regarding connection strings.
