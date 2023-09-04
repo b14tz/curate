@@ -92,7 +92,6 @@ You can use this [Base64 String Generator](https://generate.plus/en/base64) to g
 2.  Add the following to the `.env` file
 
 ```
-DATABASE_URL="mysql://uffzz9jkig41s:4by_1_1|sdbB@35.208.133.222:3306/dbhpjhdtpvocvf"
 ```
 
 Refer to the [Prisma Documentation](https://pris.ly/d/connection-strings) regarding connection strings.
