@@ -2,7 +2,7 @@
 
 <!-- PROJECT LOGO -->
 
-# Curate - A Music Sharing Platform
+# Curate - A Playlist Sharing Platform
 
 <!-- TABLE OF CONTENTS -->
 <details>
