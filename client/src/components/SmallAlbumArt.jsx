@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import { fetchSpotifyPlaylist } from "../interfaces/spotifyInterface";
 import { getClientToken } from "../interfaces/clientAuthInterface";
-import { getMultipleSongsByISRC, formatArtwork } from "../interfaces/appleInterface";
+import {
+  getMultipleSongsByISRC,
+  formatArtwork,
+} from "../interfaces/appleInterface";
 
 export default function SmallAlbumArt(props) {
   const [covers, setCovers] = useState([]);
@@ -10,35 +13,38 @@ export default function SmallAlbumArt(props) {
   useEffect(() => {
     let ignore = false;
     getClientToken().then((token) => {
-        if (!ignore) {
-            if (props.postData.origin === "spotify") {
-
-              // get cover art from spotify
-              fetchSpotifyPlaylist(token, props.postData.playlistId).then((data) => {
-                  let coverArt = {};
-                  let limit = data[0]["items"].length < 5 ? data[0]["items"].length : 5;
-                  for (let i = 0; i < limit; i += 1) {
-                    coverArt[i] =
-                      data[0]["items"][i]["track"]["album"]["images"][0]["url"];
-                  }
-                  setCovers(coverArt);
-                });
-
-            } else if (props.postData.origin === "apple") {
-
-                //fetch cover art from apple music
-                getMultipleSongsByISRC(props.postData.isrcList).then((data) => {
-                    let coverArt = []
-                    let limit = props.postData.isrcList.length < 5 ? props.postData.isrcList.length : 5
-                    for (let i = 0; i < limit; i+=1) {
-                        const url = formatArtwork(data[i]["attributes"]["artwork"])
-                        coverArt.push(url)
-                    }
-                    setCovers(coverArt)
-                });
+      if (!ignore) {
+        if (props.postData.origin === "spotify") {
+          // get cover art from spotify
+          fetchSpotifyPlaylist(token, props.postData.playlistId).then(
+            (data) => {
+              let coverArt = {};
+              let limit =
+                data[0]["items"].length < 5 ? data[0]["items"].length : 5;
+              for (let i = 0; i < limit; i += 1) {
+                coverArt[i] =
+                  data[0]["items"][i]["track"]["album"]["images"][0]["url"];
+              }
+              setCovers(coverArt);
             }
+          );
+        } else if (props.postData.origin === "apple") {
+          //fetch cover art from apple music
+          getMultipleSongsByISRC(props.postData.isrcList).then((data) => {
+            let coverArt = [];
+            let limit =
+              props.postData.isrcList.length < 5
+                ? props.postData.isrcList.length
+                : 5;
+            for (let i = 0; i < limit; i += 1) {
+              const url = formatArtwork(data[i]["attributes"]["artwork"]);
+              coverArt.push(url);
+            }
+            setCovers(coverArt);
+          });
         }
-      });
+      }
+    });
     return () => {
       ignore = true;
     };

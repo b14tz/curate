@@ -6,7 +6,6 @@ import { Avatar, Typography } from "@mui/material";
 import { getProfilePicture } from "../../interfaces/userInterface";
 
 export default function UserSearch(props) {
-  
   const [image, setImage] = useState("");
 
   //get the name from the props
@@ -17,7 +16,7 @@ export default function UserSearch(props) {
 
   const url = props.url;
 
-  useEffect( () => {
+  useEffect(() => {
     const fetchData = async () => {
       let image = await getProfilePicture(url);
       setImage(image);
@@ -29,7 +28,11 @@ export default function UserSearch(props) {
     <Container
       sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}
     >
-      <Avatar src={image} color="primary" sx={{ fontSize: "8rem", width: 93, height: 93, mr: 1, ml: 1}} />
+      <Avatar
+        src={image}
+        color="primary"
+        sx={{ fontSize: "8rem", width: 93, height: 93, mr: 1, ml: 1 }}
+      />
       <Box>
         <Link to={"/user/" + url} style={{ textDecoration: "none" }}>
           <Typography

@@ -10,7 +10,7 @@ import {
   doc,
   arrayUnion,
   arrayRemove,
-  updateDoc, 
+  updateDoc,
   increment,
 } from "firebase/firestore";
 import { sendLikeEmail } from "./emailInterface";
@@ -57,16 +57,16 @@ export const addLikeOfObject = async (objectId, objectType, userId) => {
       likedPostList: arrayUnion(objectId),
     });
 
-    const postRef = doc(db, 'post', objectId)
+    const postRef = doc(db, "post", objectId);
     await updateDoc(postRef, {
-        likeCount: increment(1)
+      likeCount: increment(1),
     });
 
     //post id is object id
     //can get author from post id
     //user id is user who liked the post
     //check to see if the author has their post like notifications turned on
-    let author = await getAuthor(objectId)
+    let author = await getAuthor(objectId);
     if (await getLikeNotification(author)) {
       const docSnap = await getDoc(userRef);
       const userName = docSnap.data().displayName;
@@ -133,10 +133,10 @@ export const removeLikeOfObject = async (objectId, objectType, userId) => {
     await updateDoc(userRef, {
       likedPostList: arrayRemove(objectId),
     });
-    
-    const postRef = doc(db, 'post', objectId)
+
+    const postRef = doc(db, "post", objectId);
     await updateDoc(postRef, {
-        likeCount: increment(-1)
+      likeCount: increment(-1),
     });
   }
 };

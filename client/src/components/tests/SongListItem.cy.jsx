@@ -1,10 +1,14 @@
-import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
-import SongListItem from '../SongListItem'
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import SongListItem from "../SongListItem";
 
-describe('<SongListItem />', () => {
-  it('renders', () => {
+describe("<SongListItem />", () => {
+  it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<BrowserRouter><SongListItem /></BrowserRouter>)
-  })
-})
+    cy.mount(
+      <BrowserRouter>
+        <SongListItem />
+      </BrowserRouter>
+    );
+  });
+});

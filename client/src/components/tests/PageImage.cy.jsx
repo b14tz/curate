@@ -1,9 +1,9 @@
-import React from 'react'
-import PageImage from '../PageImage'
+import React from "react";
+import PageImage from "../PageImage";
 
-describe('<PageImage />', () => {
-  it('renders', () => {
+describe("<PageImage />", () => {
+  it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<PageImage />)
-  })
-})
+    cy.mount(<PageImage />);
+  });
+});

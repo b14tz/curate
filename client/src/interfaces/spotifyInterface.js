@@ -322,38 +322,44 @@ export const fetchAllUserPlaylists = async (token, spotifyId) => {
 export const fetchTopPlaylists = async () => {
   let token = await getClientToken();
   if (token) {
-    const {data} = await axios.get('https://api.spotify.com/v1/browse/categories/toplists/playlists', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      params: {
-        limit: 10
+    const { data } = await axios.get(
+      "https://api.spotify.com/v1/browse/categories/toplists/playlists",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          limit: 10,
+        },
       }
-    })
-    let topLists = []
-    for (let i = 0; i < data.playlists.items.length; i+=1) {
-      let info = data.playlists.items[i]
+    );
+    let topLists = [];
+    for (let i = 0; i < data.playlists.items.length; i += 1) {
+      let info = data.playlists.items[i];
       //let info = await topPlaylistInfo(token, data.playlists.items[i].id)
       topLists.push(info);
     }
 
     //console.log(topLists)
-    
+
     return topLists;
   }
-}
+};
 
 //fetch top spotify playlist information based on id
 export const topPlaylistInfo = async (token, playlistId) => {
-  if(token){
-    const {data} = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
-      headers: {
-          Authorization: `Bearer ${token}`
+  if (token) {
+    const { data } = await axios.get(
+      `https://api.spotify.com/v1/playlists/${playlistId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
-    })
-    return data
+    );
+    return data;
   }
-}
+};
 
 //fetch users spotify id
 export const fetchUserSpotifyID = async (token) => {

@@ -25,18 +25,18 @@ export const getAllPosts = async (userId) => {
 };
 
 export const getPopularPosts = async () => {
-  let posts = []
+  let posts = [];
   const postRef = collection(db, "post");
-  const q = query(postRef, orderBy("likeCount", "desc"), limit(10))
+  const q = query(postRef, orderBy("likeCount", "desc"), limit(10));
   const querySnapshot = await getDocs(q);
   querySnapshot.forEach((doc) => {
     // doc.data() is never undefined for query doc snapshots
-    let id = doc.id
-    posts[id] = doc.data()
+    let id = doc.id;
+    posts[id] = doc.data();
     //console.log(doc.id, " => ", doc.data());
   });
-  return posts
-}
+  return posts;
+};
 
 export const getFollowerPosts = async (userId) => {
   let posts = [];
@@ -51,9 +51,13 @@ export const getFollowerPosts = async (userId) => {
   }
 
   const postRef = collection(db, "post");
-  console.log(followingArray)
-  if(followingArray.length >= 1){
-    const q = query(postRef, where("userId", "in", followingArray), orderBy("time", "desc"));
+  console.log(followingArray);
+  if (followingArray.length >= 1) {
+    const q = query(
+      postRef,
+      where("userId", "in", followingArray),
+      orderBy("time", "desc")
+    );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots

@@ -16,7 +16,7 @@ export default function ViewList(props) {
       //if the list is a playlist, convert the isrcs to tracks
       if (props.type === "playlist") {
         //convert the isrcs to tracks
-        if(!(props.spotifyToken === "" || props.isrcs === [])){
+        if (!(props.spotifyToken === "" || props.isrcs === [])) {
           convertISRCsToTracks(props.isrcs, props.spotifyToken, "data").then(
             (data) => {
               let temp = {};
@@ -162,13 +162,13 @@ export default function ViewList(props) {
 
   return (
     <Box>
-      {(Object.keys(list).length === 0 && props.type === "playlist")?
-        <Box sx={{ width: '100%', mt: '30px' }}>
+      {Object.keys(list).length === 0 && props.type === "playlist" ? (
+        <Box sx={{ width: "100%", mt: "30px" }}>
           <LinearProgress />
         </Box>
-      :
+      ) : (
         <Grid container>{renderList()}</Grid>
-      }
+      )}
     </Box>
   );
 }

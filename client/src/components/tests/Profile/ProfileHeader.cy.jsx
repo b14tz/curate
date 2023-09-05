@@ -1,9 +1,9 @@
-import React from 'react'
-import ProfileHeader from '../../Profile/ProfileHeader'
+import React from "react";
+import ProfileHeader from "../../Profile/ProfileHeader";
 
-describe('<ProfileHeader />', () => {
-  it('renders', () => {
+describe("<ProfileHeader />", () => {
+  it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<ProfileHeader />)
-  })
-})
+    cy.mount(<ProfileHeader />);
+  });
+});

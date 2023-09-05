@@ -1,9 +1,9 @@
-import React from 'react'
-import SettingsConnections from '../../Settings/SettingsConnections'
+import React from "react";
+import SettingsConnections from "../../Settings/SettingsConnections";
 
-describe('<SettingsConnections />', () => {
-  it('renders', () => {
+describe("<SettingsConnections />", () => {
+  it("renders", () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<SettingsConnections />)
-  })
-})
+    cy.mount(<SettingsConnections />);
+  });
+});

@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLE {
+  ADMIN
+  USER
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  FOLLOW
+}
+
+model User {
+  id                 Int           @id @default(autoincrement())
+  role               ROLE          @default(USER)
+  displayName        String
+  email              String
+  firstName          String
+  lastName           String
+  bio                String
+  searchTerms        String
+  connectedToSpotify Boolean
+  connectedToApple   Boolean
+  createdAt          DateTime      @default(now())
+  posts              Post[]
+  comments           PostComment[]
+  likes              PostLike[]
+  followers          Follow[]      @relation("follower")
+  following          Follow[]      @relation("following")
+}
+
+model Follow {
+  follower    User @relation("follower", fields: [followerId], references: [id])
+  followerId  Int
+  following   User @relation("following", fields: [followingId], references: [id])
+  followingId Int
+
+  @@id([followerId, followingId])
+}
+
+model Post {
+  id            Int           @id @default(autoincrement())
+  title         String
+  description   String
+  isrcs         String
+  origin        String
+  searchTerms   String
+  tags          String
+  downloadCount Int
+  likeCount     Int
+  createdAt     DateTime      @default(now())
+  author        User?         @relation(fields: [authorId], references: [id])
+  authorId      Int?
+  comments      PostComment[]
+  likes         PostLike[]
+}
+
+model PostComment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    Int?
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
+
+model PostLike {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  actor     User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model ClientToken {
+  id        Int      @id @default(autoincrement())
+  value     String
+  createdAt DateTime @default(now())
+}

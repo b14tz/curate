@@ -98,7 +98,9 @@ export const getProfilePicture = async (userId) => {
   try {
     // Check if the file exists
     const listResult = await list(storageRef.parent);
-    const fileExists = listResult.items.some((item) => item.name === storageRef.name);
+    const fileExists = listResult.items.some(
+      (item) => item.name === storageRef.name
+    );
     if (!fileExists) {
       //console.log("No avatar found");
       return null;
@@ -112,7 +114,6 @@ export const getProfilePicture = async (userId) => {
     return null;
   }
 };
-
 
 export const deleteProfilePicture = async (userId) => {
   const storageRef = ref(storage, `avatars/${userId}/avatar.jpg`);
@@ -182,7 +183,6 @@ export const setCommentNotifications = async (userId, status) => {
     console.error("Error updating comment notifications: ", e);
   }
 };
-
 
 export const setUserAttribute = async (userId, key, value) => {
   if (key === "") return;

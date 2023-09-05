@@ -28,7 +28,6 @@ import { getPostComments } from "../interfaces/commentInterface";
 import DownloadDialog from "../dialogs/DownloadDialog";
 import { createNotification } from "../interfaces/notificationsInterface";
 
-
 const AntiClippingTypography = styled(Typography)`
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -69,13 +68,13 @@ export default function ViewPlaylist() {
   const [appleId, setAppleId] = useState("");
   const [dialog, setDialog] = useState(false);
   const [tags, setTags] = useState([]);
-  const [clientToken, setClientToken] = useState("")
+  const [clientToken, setClientToken] = useState("");
 
   useEffect(() => {
     //gets and sets all post data
     let ignore = false;
     getClientToken().then((client) => {
-      setClientToken(client)
+      setClientToken(client);
       getPostData(postId).then((data) => {
         if (!ignore) {
           setUserId(data.userId);

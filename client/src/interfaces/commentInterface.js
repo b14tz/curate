@@ -42,7 +42,7 @@ export const createComment = async (userId, postId, content) => {
     const postTitle = postSnap.data().title;
 
     //see if the author has their post comment notifications turned on
-    let author = await getAuthor(postId)
+    let author = await getAuthor(postId);
     if (await getCommentNotification(author)) {
       await sendCommentEmail(userName, author_email, postTitle, content);
     }

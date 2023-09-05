@@ -1,11 +1,6 @@
-
-
 #### Local Testing
 
-
-
-
-running `npm start` will automatically boot up the emulators, loading from an exported firebase 
+running `npm start` will automatically boot up the emulators, loading from an exported firebase
 setup in `seeds/base/`
 
 to save changes made to this emulator configuration, run `firebase emulators:export ./seeds/base`

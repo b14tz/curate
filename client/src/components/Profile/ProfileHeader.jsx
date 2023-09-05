@@ -16,18 +16,17 @@ export default function ProfileHeader(props) {
   const [profilePicture, setProfilePicture] = useState("");
 
   useEffect(() => {
-      // load avatar
-      if(props.myProfile){
-        getProfilePicture(auth.currentUser.uid).then((url) => {
-          setProfilePicture(url);
-        });
-      }
-      else {
-        getProfilePicture(props.userId).then((url) => {
-          setProfilePicture(url);
-        });
-      }
-    }, [props]);
+    // load avatar
+    if (props.myProfile) {
+      getProfilePicture(auth.currentUser.uid).then((url) => {
+        setProfilePicture(url);
+      });
+    } else {
+      getProfilePicture(props.userId).then((url) => {
+        setProfilePicture(url);
+      });
+    }
+  }, [props]);
 
   let headerButton;
   //if the profile is the users own profile then show the edit profile button
@@ -126,8 +125,19 @@ export default function ProfileHeader(props) {
       <Container
         sx={{ width: "80%", display: "flex", justifyContent: "space-between" }}
       >
-        <Box sx={{ display: "flex", flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
-          <Avatar src={profilePicture} color="primary" sx={{ width: 80, height: 80, mb:"-20px", mr:"10px" }}/>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            src={profilePicture}
+            color="primary"
+            sx={{ width: 80, height: 80, mb: "-20px", mr: "10px" }}
+          />
           <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography variant="header" fontSize={40}>
               {props.username}

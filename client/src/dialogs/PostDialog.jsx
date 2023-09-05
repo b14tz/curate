@@ -154,9 +154,8 @@ function PlaylistDialog(props) {
       );
     } else if (platform === "apple") {
       // getting playlist tracks relationship
-      const playlistTrackRelationship = await getPlaylistTracksRelationship(
-        selectedPlaylist
-      );
+      const playlistTrackRelationship =
+        await getPlaylistTracksRelationship(selectedPlaylist);
       console.log("playlist track relationship: ", playlistTrackRelationship);
 
       // get catalog id for each song -> use to get isrc
