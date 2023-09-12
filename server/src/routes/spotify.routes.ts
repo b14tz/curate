@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { generateClientToken } from "../controllers/spotify.controller";
+import { getClientToken } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
 
 // public routes
+spotifyRoutes.get("/", getClientToken);
 
 // authentication token goes here
 
 // private routes
-spotifyRoutes.post("/", generateClientToken);
 
 export default spotifyRoutes;
