@@ -3,6 +3,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import userRoutes from "./routes/user.routes";
 import postRoutes from "./routes/post.routes";
+import spotifyRoutes from "./routes/spotify.routes";
 
 dotenv.config();
 
@@ -17,7 +18,7 @@ app.use(cors(corsOptions));
 // api routes
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
-// app.use("/api/follow", );
+app.use("/api/spotify", spotifyRoutes);
 
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, (): void => {
