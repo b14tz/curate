@@ -1,0 +1,42 @@
+body {
+  background-color: #e3ebff;
+}
+.h1-song {
+  font-family: "Impact", fantasy;
+  font-size: 60px;
+  font-weight: 700;
+  color: primary;
+  position: relative;
+  left: -280px;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+.h2-song {
+  font-family: "sans-serif", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: primary;
+  position: relative;
+  left: -280px;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+.h3-song {
+  font-family: "Impact", fantasy;
+  font-size: 30px;
+  font-weight: 700;
+  color: primary;
+  position: relative;
+  left: -280px;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+}
+.song-list {
+  margin-left: 47em;
+}

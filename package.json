@@ -1,5 +1,11 @@
 {
-  "devDependencies": {
-    "prettier": "3.0.3"
-  }
+    "scripts": {
+        "client": "npm run --prefix client dev",
+        "server": "npm run --prefix server dev",
+        "dev": "concurrently -n server,client -c \"bgBlue.bold,bgMagenta.bold\" \"npm run server\" \"npm run client\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.1",
+        "prettier": "3.0.3"
+    }
 }

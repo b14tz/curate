@@ -1,6 +1,8 @@
 import * as dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
+import userRoutes from "./routes/user.routes";
+import postRoutes from "./routes/post.routes";
 
 dotenv.config();
 
@@ -13,9 +15,9 @@ app.use(express.urlencoded({ limit: "200mb", extended: true }));
 app.use(cors(corsOptions));
 
 // api routes
-app.use("/api/user");
-app.use("/api/post");
-app.use("/api/follow");
+app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
+// app.use("/api/follow", );
 
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, (): void => {

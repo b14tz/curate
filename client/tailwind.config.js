@@ -8,6 +8,7 @@ export default {
             white: "#FFFFFF",
             green: "#13CE66",
             orange: "#F63F0A",
+            salmon: "#FE346E",
         },
     },
     plugins: [],
