@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getClientToken } from "../controllers/spotify.controller";
+import { searchSpotify } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
 
 // public routes
-spotifyRoutes.get("/", getClientToken);
+spotifyRoutes.post("/search", searchSpotify);
 
 // authentication token goes here
 
