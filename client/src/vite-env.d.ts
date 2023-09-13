@@ -7,9 +7,16 @@ interface Search {
     offset: number;
 }
 
-interface SearchResult {
+interface SearchResultData {
     uri: string;
     type: string;
+    title: string;
     name: string;
     imageUrl: string;
+    releaseDate: string;
+}
+
+interface SearchResult {
+    type: string;
+    data: SearchResultData[];
 }
