@@ -14,6 +14,7 @@ export const searchSpotify = async (req: Request, res: Response) => {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = searchResults.data;
+        //console.log(data.tracks.items[0].album.images[0].url);
         const result = [];
         for (const itemType in data) {
             const items = data[itemType].items;
@@ -22,10 +23,16 @@ export const searchSpotify = async (req: Request, res: Response) => {
                     type: itemType,
                     uri: item.uri,
                     name: item.name,
-                    imageUrl: item.images ? item.images[0].url : null,
+                    imageUrl:
+                        itemType === "albums"
+                            ? item.images[0].url
+                            : itemType === "tracks"
+                            ? item.album.images[0].url
+                            : null,
                 });
             }
         }
+
         return res.status(200).send(result);
     } catch (error) {
         console.log(error);
