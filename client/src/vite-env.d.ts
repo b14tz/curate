@@ -20,3 +20,16 @@ interface SearchResult {
     type: string;
     data: SearchResultData[];
 }
+
+interface GroupButton {
+    label: string;
+    value?: any;
+    onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+interface ButtonGroup {
+    buttonClasses?: string;
+    groupClasses?: string;
+    groupButtons: GroupButton[];
+    value?: any;
+}
