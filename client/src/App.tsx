@@ -33,8 +33,8 @@ function AllRoutes() {
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="feed" element={<FeedPage />} />
-                <Route path="profile" element={<ProfilePage />} />
                 <Route path="search" element={<SearchPage />} />
+                <Route path="profile" element={<ProfilePage />} />
                 <Route path="login" element={<LoginPage />} />
             </Routes>
         </>

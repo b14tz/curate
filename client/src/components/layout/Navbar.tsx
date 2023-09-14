@@ -1,4 +1,4 @@
-import NavbarLink from "../NavbarLink";
+import NavbarLink from "./NavbarLink";
 
 export default function Navbar() {
     return (
@@ -6,8 +6,8 @@ export default function Navbar() {
             <NavbarLink to="/" label="curate" />
             <div className="space-x-8">
                 <NavbarLink to="/feed" label="feed" />
+                <NavbarLink to="/search" label="search" />
                 <NavbarLink to="/profile" label="profile" />
-                <NavbarLink to="search" label="search" />
                 <NavbarLink to="/login" label="login" />
             </div>
         </div>
