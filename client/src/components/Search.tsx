@@ -51,7 +51,6 @@ export default function Search() {
     };
 
     const renderResults = () => {
-        console.log(results);
         return (
             <div className="space-y-10">
                 {Object.keys(results).map((category) => (
@@ -63,7 +62,11 @@ export default function Search() {
                                 className="flex flex-row items-center space-x-4"
                             >
                                 <img
-                                    src={item.imageUrl}
+                                    src={
+                                        item.imageUrl
+                                            ? item.imageUrl
+                                            : "/panda.png"
+                                    }
                                     alt={item.title}
                                     className="w-16 h-16"
                                 />

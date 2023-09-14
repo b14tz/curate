@@ -7,12 +7,13 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
+import SearchPage from "./pages/SearchPage";
 
 export default function App() {
     return (
         <>
             <Router>
-                <div className="min-h-screen w-screen md:p-14 p-10">
+                <div className="min-h-screen m-auto max-w-[1064px] md:p-14 p-10">
                     <Navbar />
                     <div>
                         <div className="my-10">
@@ -33,6 +34,7 @@ function AllRoutes() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="feed" element={<FeedPage />} />
                 <Route path="profile" element={<ProfilePage />} />
+                <Route path="search" element={<SearchPage />} />
                 <Route path="login" element={<LoginPage />} />
             </Routes>
         </>

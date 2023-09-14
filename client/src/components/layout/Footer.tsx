@@ -7,7 +7,7 @@ export default function Footer() {
     }
 
     return (
-        <div>
+        <div className="">
             <hr />
             <div className="flex flex-row">
                 <p>

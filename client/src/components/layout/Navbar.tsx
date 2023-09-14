@@ -7,6 +7,7 @@ export default function Navbar() {
             <div className="space-x-8">
                 <NavbarLink to="/feed" label="feed" />
                 <NavbarLink to="/profile" label="profile" />
+                <NavbarLink to="search" label="search" />
                 <NavbarLink to="/login" label="login" />
             </div>
         </div>
