@@ -22,9 +22,9 @@ export const ButtonGroup = ({
     buttonClasses,
     groupClasses,
     groupButtons,
+    activeClasses,
     value,
 }: ButtonGroup) => {
-    const activeClasses = " ring-2 ring-salmon";
     return (
         <div className={groupClasses}>
             {groupButtons.map((item, index) => {

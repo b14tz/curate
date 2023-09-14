@@ -16,29 +16,6 @@ export default function Search() {
         [key: string]: SearchResultData[];
     }>({});
 
-    const groupButtons: GroupButton[] = [
-        {
-            label: "all",
-            value: ["track", "album", "artist"],
-            onClick: () => setSearchTypes(["track", "album", "artist"]),
-        },
-        {
-            label: "track",
-            value: ["track"],
-            onClick: () => setSearchTypes(["track"]),
-        },
-        {
-            label: "album",
-            value: ["album"],
-            onClick: () => setSearchTypes(["album"]),
-        },
-        {
-            label: "artist",
-            value: ["artist"],
-            onClick: () => setSearchTypes(["artist"]),
-        },
-    ];
-
     const handleSearchSpotify = async () => {
         const searchResults: { [key: string]: SearchResultData[] } =
             await searchSpotify({
@@ -102,7 +79,30 @@ export default function Search() {
                 <ButtonGroup
                     groupClasses="flex flex-row space-x-4"
                     buttonClasses="shadow rounded bg-white px-4"
-                    groupButtons={groupButtons}
+                    activeClasses=" ring-2 ring-salmon"
+                    groupButtons={[
+                        {
+                            label: "all",
+                            value: ["track", "album", "artist"],
+                            onClick: () =>
+                                setSearchTypes(["track", "album", "artist"]),
+                        },
+                        {
+                            label: "track",
+                            value: ["track"],
+                            onClick: () => setSearchTypes(["track"]),
+                        },
+                        {
+                            label: "album",
+                            value: ["album"],
+                            onClick: () => setSearchTypes(["album"]),
+                        },
+                        {
+                            label: "artist",
+                            value: ["artist"],
+                            onClick: () => setSearchTypes(["artist"]),
+                        },
+                    ]}
                     value={searchTypes}
                 />
             </form>

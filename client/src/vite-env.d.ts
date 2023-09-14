@@ -31,5 +31,28 @@ interface ButtonGroup {
     buttonClasses?: string;
     groupClasses?: string;
     groupButtons: GroupButton[];
+    activeClasses: string;
     value?: any;
+}
+
+interface Post {
+    id: number;
+    title: string;
+    author: string;
+    description: string;
+    createdAt: Date;
+    songs: Song[];
+    downloads: number;
+    likes: Like[];
+    comments: Comment[];
+}
+
+interface Like {}
+
+interface Comment {}
+
+interface Song {
+    title: string;
+    artist: string;
+    imageUrl: string;
 }
