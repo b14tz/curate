@@ -71,10 +71,10 @@ export const fetchPlaylistSongs = async (token: string, url: string) => {
     });
 
     return songResults.data.items.map((song: any) => ({
-        id: song.track.id,
-        title: song.track.name,
-        artist: song.track.artists[0].name,
-        imageUrl: song.track.album.images[0]?.url,
+        id: song.track?.id,
+        title: song.track?.name,
+        artist: song.track?.artists[0].name,
+        imageUrl: song.track?.album.images[0]?.url,
     }));
 };
 
