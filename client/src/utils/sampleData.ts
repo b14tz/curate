@@ -27,6 +27,69 @@ export const samplePostData = [
                 imageUrl:
                     "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
             },
+            {
+                id: 4,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 5,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 6,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 7,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 8,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 9,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 10,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 11,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 12,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
         ],
         downloads: 0,
         likes: [],
@@ -55,6 +118,69 @@ export const samplePostData = [
             },
             {
                 id: 3,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 4,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 5,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 6,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 7,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 8,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 9,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 10,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 11,
+                title: "Stairway to Heaven",
+                artist: "Jimmy Choo Choo",
+                imageUrl:
+                    "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
+            },
+            {
+                id: 12,
                 title: "Stairway to Heaven",
                 artist: "Jimmy Choo Choo",
                 imageUrl:

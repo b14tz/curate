@@ -28,35 +28,39 @@ export default function Search() {
     };
 
     const renderResults = () => {
-        return (
-            <div className="space-y-10">
-                {Object.keys(results).map((category) => (
-                    <div key={category} className="space-y-4">
-                        <p>{category}</p>
-                        {results[category].map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex flex-row items-center space-x-4"
-                            >
-                                <img
-                                    src={
-                                        item.imageUrl
-                                            ? item.imageUrl
-                                            : "/panda.png"
-                                    }
-                                    alt={item.title}
-                                    className="w-16 h-16"
-                                />
-                                <div className="flex flex-col">
-                                    <p>{item.title}</p>
-                                    <p>{item.name}</p>
+        if (Object.keys(results).length === 0) {
+            return <div className="h-[300px]"></div>;
+        } else {
+            return (
+                <div className="space-y-10">
+                    {Object.keys(results).map((category) => (
+                        <div key={category} className="space-y-4">
+                            <p>{category}</p>
+                            {results[category].map((item, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-row items-center space-x-4"
+                                >
+                                    <img
+                                        src={
+                                            item.imageUrl
+                                                ? item.imageUrl
+                                                : "/panda.png"
+                                        }
+                                        alt={item.title}
+                                        className="w-16 h-16"
+                                    />
+                                    <div className="flex flex-col">
+                                        <p>{item.title}</p>
+                                        <p>{item.name}</p>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
-        );
+                            ))}
+                        </div>
+                    ))}
+                </div>
+            );
+        }
     };
 
     const handleSearch: React.MouseEventHandler<HTMLButtonElement> = (

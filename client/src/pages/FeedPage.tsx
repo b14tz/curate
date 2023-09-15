@@ -6,7 +6,7 @@ export default function FeedPage() {
     const [feed, setFeed] = useState("spotify");
     return (
         <div className="space-y-4">
-            <p>feed</p>
+            <h3>feed</h3>
             <hr />
             <ButtonGroup
                 buttonClasses=""
@@ -31,6 +31,15 @@ export default function FeedPage() {
                 ]}
                 value={feed}
             />
+
+            {feed === "spotify" ? (
+                <p>a collection of playlists recommended by spotify</p>
+            ) : feed === "friends" ? (
+                <p>playlists posted by your friends</p>
+            ) : (
+                <p>the latest and greatest playlists on the site</p>
+            )}
+
             <Feed type={feed} />
         </div>
     );
