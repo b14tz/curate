@@ -62,3 +62,55 @@ export const searchSpotify = async (req: Request, res: Response) => {
         return res.status(500).send(`Error searching with spotify client`);
     }
 };
+
+export const fetchPlaylistSongs = async (token: string, url: string) => {
+    const songResults = await axios({
+        method: "get",
+        url: url,
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return songResults.data.items.map((song: any) => ({
+        id: song.track.id,
+        title: song.track.name,
+        artist: song.track.artists[0].name,
+        imageUrl: song.track.album.images[0]?.url,
+    }));
+};
+
+export const populateSpotifyFeed = async (req: Request, res: Response) => {
+    try {
+        const token = await getClientToken();
+        const playlistResults = await axios({
+            method: "get",
+            url: `https://api.spotify.com/v1/browse/featured-playlists?country=US`,
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const playlists = playlistResults.data.playlists.items;
+
+        const result = await Promise.all(
+            playlists.map(async (playlist: any) => {
+                const songs = await fetchPlaylistSongs(
+                    token,
+                    playlist.tracks.href
+                );
+
+                return {
+                    id: playlist.id,
+                    title: playlist.name,
+                    author: playlist.owner.display_name,
+                    description: playlist.description.replace(/Cover:.*$/, ""),
+                    songs: songs,
+                    downloads: 0,
+                    likes: [],
+                    comments: [],
+                };
+            })
+        );
+
+        return res.json(result);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).send(`Error searching with spotify client`);
+    }
+};

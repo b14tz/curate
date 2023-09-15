@@ -40,7 +40,7 @@ interface Post {
     title: string;
     author: string;
     description: string;
-    createdAt: Date;
+    createdAt?: Date;
     songs: Song[];
     downloads: number;
     likes: Like[];

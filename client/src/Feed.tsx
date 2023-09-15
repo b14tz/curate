@@ -1,173 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPostTime } from "./utils/time";
+import { samplePostData } from "./utils/sampleData";
+import { populateSpotifyFeed } from "./api/routes/spotify";
 export default function Feed({ type }: { type: string }) {
-    const [posts, setPosts] = useState<Post[]>([
-        {
-            id: 1,
-            title: "playlist 1",
-            author: "marshall",
-            description: "this is my test post description",
-            createdAt: new Date(),
-            songs: [
-                {
-                    id: 1,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 2,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 3,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-            ],
-            downloads: 0,
-            likes: [],
-            comments: [],
-        },
-        {
-            id: 2,
-            title: "another playlist",
-            author: "marshall",
-            description: "this is my test post description",
-            createdAt: new Date(),
-            songs: [
-                {
-                    id: 1,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 2,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 3,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-            ],
-            downloads: 0,
-            likes: [],
-            comments: [],
-        },
-        {
-            id: 3,
-            title: "songs of the summer",
-            author: "marshall",
-            description: "this is my test post description. this is",
-            createdAt: new Date(),
-            songs: [
-                {
-                    id: 1,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 2,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 3,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 4,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 5,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 6,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 7,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 8,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 9,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 10,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 11,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-                {
-                    id: 12,
-                    title: "Stairway to Heaven",
-                    artist: "Jimmy Choo Choo",
-                    imageUrl:
-                        "https://i.scdn.co/image/ab67616d0000b273935d8d5369bc55e74a39303e",
-                },
-            ],
-            downloads: 0,
-            likes: [],
-            comments: [],
-        },
-    ]);
-    const renderFeed = () => {
+    const [spotifyPosts, setSpotifyPosts] = useState([]);
+    const [friendsPosts, setFriendsPosts] = useState(samplePostData);
+    const [popularPosts, setPopularPosts] = useState([]);
+
+    useEffect(() => {
+        async function populateSpotifyPosts() {
+            const data = await populateSpotifyFeed();
+            console.log(data);
+            setSpotifyPosts(data);
+        }
+        populateSpotifyPosts();
+    }, []);
+
+    const renderFeed = (posts: Post[]) => {
         return (
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-8">
                 {posts.map((post) => (
                     <div
                         key={post.id}
@@ -196,7 +47,7 @@ export default function Feed({ type }: { type: string }) {
                             })}
                         </div>
 
-                        <div className="flex flex-col ">
+                        <div className="flex flex-col max-w-[300px]">
                             <p className="underline">{post.title}</p>
                             <div className="flex flex-row space-x-10">
                                 <p>{post.author}</p>
@@ -218,12 +69,34 @@ export default function Feed({ type }: { type: string }) {
                                 </p>
                             </div>
                             <p>{post.description}</p>
-                            <p>{formatPostTime(post.createdAt)}</p>
+                            <p>
+                                {post.createdAt
+                                    ? formatPostTime(post.createdAt)
+                                    : ""}
+                            </p>
                         </div>
                     </div>
                 ))}
             </div>
         );
     };
-    return <>{type === "spotify" ? <>{renderFeed()}</> : <p>bye</p>}</>;
+    return (
+        <>
+            {type === "spotify" ? (
+                <p>a collection of playlists recommended by spotify</p>
+            ) : type === "friends" ? (
+                <p>playlists posted by your friends</p>
+            ) : (
+                <p>the latest and greatest playlists on the site</p>
+            )}
+
+            {renderFeed(
+                type === "spotify"
+                    ? spotifyPosts
+                    : type === "friends"
+                    ? friendsPosts
+                    : popularPosts
+            )}
+        </>
+    );
 }
