@@ -5,7 +5,7 @@ export default function SignUpPage() {
     return (
         <div className="flex w-full justify-center">
             <ClerkLoaded>
-                <SignUp path="/signup" signInUrl="/signin" />
+                <SignUp path="/signup" signInUrl="/signin" redirectUrl="/" />
             </ClerkLoaded>
             <ClerkLoading>
                 <div className="flex w-full min-h-[400px] items-center justify-center">
