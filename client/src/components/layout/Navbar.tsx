@@ -8,7 +8,7 @@ export default function Navbar() {
                 <NavbarLink to="/feed" label="feed" />
                 <NavbarLink to="/search" label="search" />
                 <NavbarLink to="/profile" label="profile" />
-                <NavbarLink to="/login" label="login" />
+                <NavbarLink to="/signin" label="login" />
             </div>
         </div>
     );

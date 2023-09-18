@@ -1,13 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import { Box, createTheme, ThemeOptions } from "@mui/material";
+// import {
+//     SignedIn,
+//     SignedOut,
+//     UserButton,
+//     useUser,
+//     RedirectToSignIn,
+// } from "@clerk/clerk-react";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
 import SearchPage from "./pages/SearchPage";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
 
 export default function App() {
     return (
@@ -35,7 +42,8 @@ function AllRoutes() {
                 <Route path="feed" element={<FeedPage />} />
                 <Route path="search" element={<SearchPage />} />
                 <Route path="profile" element={<ProfilePage />} />
-                <Route path="login" element={<LoginPage />} />
+                <Route path="signin" element={<SignInPage />} />
+                <Route path="signup" element={<SignUpPage />} />
             </Routes>
         </>
     );

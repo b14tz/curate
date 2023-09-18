@@ -7,6 +7,8 @@
     --white: #f7f8f9;
     --black: #131314;
     --green: #13ce66;
+    --salmon: #fe346e;
+    --salmonhover: #cc2957;
 
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     font-family:
@@ -54,4 +56,25 @@ p {
     to {
         transform: rotate(360deg);
     }
+}
+
+/* Clerk Styles */
+
+/* Sign Up Link */
+.cl-internal-15amzqo {
+    color: var(--salmon);
+}
+
+.cl-internal-15amzqo:hover {
+    color: var(--salmonhover);
+}
+
+/* Continue Button and Side Tag */
+.cl-internal-1fsg6zy,
+.cl-internal-b3fm6y {
+    background-color: var(--salmon);
+}
+
+.cl-internal-1fsg6zy:hover {
+    background-color: var(--salmonhover);
 }
