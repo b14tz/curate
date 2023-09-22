@@ -14,7 +14,7 @@ export const createPost = async (req: Request, res: Response) => {
 };
 
 export const getPost = async (req: Request, res: Response) => {
-    const id = +req.params;
+    const id = req.params.id;
     try {
         const result = await db.user.findFirst({ where: { id } });
         return res.status(200).send(result);
@@ -25,7 +25,7 @@ export const getPost = async (req: Request, res: Response) => {
 };
 
 export const updatePost = async (req: Request, res: Response) => {
-    const id = +req.params;
+    const id = req.params.id;
     const data = req.body;
     try {
         await db.user.update({ where: { id }, data: { ...data } });
@@ -35,7 +35,7 @@ export const updatePost = async (req: Request, res: Response) => {
 };
 
 export const deletePost = async (req: Request, res: Response) => {
-    const id = +req.params;
+    const id = req.params.id;
     try {
         await db.user.delete({ where: { id } });
         return res.status(204).send();

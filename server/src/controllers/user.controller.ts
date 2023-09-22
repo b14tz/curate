@@ -2,19 +2,31 @@ import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
 
-export const createUser = async (req: Request, res: Response) => {
-    const data = req.body;
+export const createUser = async (data: any) => {
     try {
-        const result = await db.user.create({ data: { ...data } });
-        return res.status(200).send(result);
+        const { first_name, last_name, username, id } = data;
+        const result = await db.user.create({
+            data: {
+                id,
+                firstName: first_name,
+                lastName: last_name,
+                displayName: username,
+                email: "",
+                bio: "",
+                searchTerms: "",
+                connectedToSpotify: false,
+                connectedToApple: false,
+            },
+        });
+        return result;
     } catch (error) {
-        console.log(error);
-        return res.status(500).send(`Error creating user`);
+        console.log(`Error with creating a user: ${error}`);
+        return null;
     }
 };
 
 export const getUser = async (req: Request, res: Response) => {
-    const id = +req.params;
+    const id = req.params;
     try {
         const result = await db.user.findFirst({ where: { id } });
         return res.status(200).send(result);
@@ -25,7 +37,7 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-    const id = +req.params;
+    const id = req.params.id;
     const data = req.body;
     try {
         await db.user.update({ where: { id }, data: { ...data } });
@@ -34,13 +46,12 @@ export const updateUser = async (req: Request, res: Response) => {
     }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
-    const id = +req.params;
+export const deleteUser = async (id: string) => {
     try {
         await db.user.delete({ where: { id } });
-        return res.status(204).send();
+        return null;
     } catch (error) {
-        console.error(error);
-        return res.status(500).send(`Error deleting user`);
+        console.error(`Error deleting user: ${error}`);
+        return null;
     }
 };

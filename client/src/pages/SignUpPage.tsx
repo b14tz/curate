@@ -9,7 +9,7 @@ export default function SignUpPage() {
             </ClerkLoaded>
             <ClerkLoading>
                 <div className="flex w-full min-h-[400px] items-center justify-center">
-                    <CircularProgress />
+                    <CircularProgress sx={{ color: "#FE346E" }} />
                 </div>
             </ClerkLoading>
         </div>

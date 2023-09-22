@@ -17,3 +17,14 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </ClerkProvider>
     </React.StrictMode>
 );
+
+// const domain = import.meta.env.VITE_AUTH0_DOMAIN;
+// const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+// const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URL;
+// <Auth0Provider
+// domain={domain}
+// clientId={clientId}
+// authorizationParams={{
+//     redirect_uri: redirectUri,
+// }}
+// ></Auth0Provider>

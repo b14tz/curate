@@ -69,11 +69,14 @@ const createClientToken = async (token: string) => {
 
 const updateClientToken = async (token: string) => {
     try {
-        const result = await db.clientToken.update({
-            data: { value: token, createdAt: new Date() },
-            where: { id: 1 },
-        });
-        console.log(`Successfully updated client token in the database`);
+        const clientToken = await db.clientToken.findFirst();
+        if (clientToken) {
+            const result = await db.clientToken.update({
+                data: { value: token, createdAt: new Date() },
+                where: { id: clientToken.id },
+            });
+            console.log(`Successfully updated client token in the database`);
+        }
     } catch (error) {
         console.log(error);
     }

@@ -4,6 +4,7 @@ import cors from "cors";
 import userRoutes from "./routes/user.routes";
 import postRoutes from "./routes/post.routes";
 import spotifyRoutes from "./routes/spotify.routes";
+import webhookRoutes from "./routes/webhook.routes";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors(corsOptions));
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/spotify", spotifyRoutes);
+app.use("/api/webhook", webhookRoutes);
 
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, (): void => {
