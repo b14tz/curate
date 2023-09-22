@@ -1,11 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import {
-//     SignedIn,
-//     SignedOut,
-//     UserButton,
-//     useUser,
-//     RedirectToSignIn,
-// } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
+import { useEffect, useState } from "react";
 
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
@@ -15,8 +10,21 @@ import ProfilePage from "./pages/ProfilePage";
 import SearchPage from "./pages/SearchPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import { getUser } from "./api/routes/user";
 
 export default function App() {
+    const [userData, setUserData] = useState({});
+    const { isSignedIn, user } = useUser();
+    useEffect(() => {
+        async function getUserData() {
+            if (isSignedIn) {
+                console.log("i am logged in: ", user.id);
+                const data = await getUser(user.id);
+                setUserData(data);
+            }
+        }
+        getUserData();
+    }, [isSignedIn]);
     return (
         <>
             <Router>

@@ -26,9 +26,10 @@ export const createUser = async (data: any) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-    const id = req.params;
+    const id = req.params.id;
     try {
         const result = await db.user.findFirst({ where: { id } });
+        console.log(result);
         return res.status(200).send(result);
     } catch (error) {
         console.log(error);
