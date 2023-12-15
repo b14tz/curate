@@ -10,10 +10,7 @@
     --salmon: #fe346e;
     --salmonhover: #cc2957;
 
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    font-family:
-        IBM Plex Mono,
-        monospace;
+    font-family: "Space Grotesk", sans-serif;
     font-weight: 400;
 }
 
@@ -41,7 +38,7 @@ h4,
 h5,
 h6 {
     font-size: 1.5rem;
-    font-weight: 400;
+    font-weight: 600;
     line-height: normal;
 }
 

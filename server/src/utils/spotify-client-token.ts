@@ -13,21 +13,18 @@ export const getClientToken = async () => {
                 // if token exists in db and timestamp is expired: generate new token, update db entry, and return token
                 let newToken = await generateClientToken();
                 await updateClientToken(newToken);
-                console.log(`Updated spotify client token`);
                 return newToken;
             }
             // if token exists and timestamp is not expired: return token
-            console.log(`Retrieved spotify client token`);
             return token.value;
         } else {
             // if no token exists: generate new token, create db entry, and return token
             let newToken = await generateClientToken();
             await createClientToken(newToken);
-            console.log(`Created spotify client token`);
             return newToken;
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
 
@@ -47,12 +44,9 @@ const generateClientToken = async () => {
             },
             data: "grant_type=client_credentials",
         });
-        console.log(
-            `Successfully generated spotify client token: ${key.data.access_token}`
-        );
         return key.data.access_token;
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
 
@@ -61,9 +55,8 @@ const createClientToken = async (token: string) => {
         const result = await db.clientToken.create({
             data: { value: token },
         });
-        console.log(`Successfully added client token to the database `);
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
 
@@ -75,9 +68,8 @@ const updateClientToken = async (token: string) => {
                 data: { value: token, createdAt: new Date() },
                 where: { id: clientToken.id },
             });
-            console.log(`Successfully updated client token in the database`);
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };

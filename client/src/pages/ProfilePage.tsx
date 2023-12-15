@@ -1,10 +1,10 @@
 import Feed from "../Feed";
-import ProfileHeader from "../components/ProfileHeader";
+import Header from "../components/profile/Header";
 
 export default function ProfilePage() {
     return (
         <div className="space-y-8">
-            <ProfileHeader />
+            <Header />
             <Feed type="spotify" />
         </div>
     );

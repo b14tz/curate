@@ -58,7 +58,7 @@ export const searchSpotify = async (req: Request, res: Response) => {
         }
         return res.status(200).send(result);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error searching with spotify client`);
     }
 };
@@ -110,7 +110,7 @@ export const populateSpotifyFeed = async (req: Request, res: Response) => {
 
         return res.json(result);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error searching with spotify client`);
     }
 };

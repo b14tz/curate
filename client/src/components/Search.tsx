@@ -78,7 +78,7 @@ export default function Search() {
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.target.value)}
                     />
-                    <SubmitButton label="search" onClick={handleSearch} />
+                    <SubmitButton label="Search" onClick={handleSearch} />
                 </div>
                 <ButtonGroup
                     groupClasses="flex flex-row space-x-4"
@@ -86,23 +86,23 @@ export default function Search() {
                     activeClasses=" ring-2 ring-salmon"
                     groupButtons={[
                         {
-                            label: "all",
+                            label: "All",
                             value: ["track", "album", "artist"],
                             onClick: () =>
                                 setSearchTypes(["track", "album", "artist"]),
                         },
                         {
-                            label: "track",
+                            label: "Track",
                             value: ["track"],
                             onClick: () => setSearchTypes(["track"]),
                         },
                         {
-                            label: "album",
+                            label: "Album",
                             value: ["album"],
                             onClick: () => setSearchTypes(["album"]),
                         },
                         {
-                            label: "artist",
+                            label: "Artist",
                             value: ["artist"],
                             onClick: () => setSearchTypes(["artist"]),
                         },

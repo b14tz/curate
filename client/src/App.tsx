@@ -2,15 +2,13 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useState } from "react";
 
-import Navbar from "./components/layout/Navbar";
-import Footer from "./components/layout/Footer";
+import Navbar from "./components/nav/Navbar";
+import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-import FeedPage from "./pages/FeedPage";
 import ProfilePage from "./pages/ProfilePage";
 import SearchPage from "./pages/SearchPage";
-import SignInPage from "./pages/SignInPage";
-import SignUpPage from "./pages/SignUpPage";
 import { getUser } from "./api/routes/user";
+import DiscoverPage from "./pages/DiscoverPage";
 
 export default function App() {
     const [userData, setUserData] = useState({});
@@ -28,14 +26,14 @@ export default function App() {
     return (
         <>
             <Router>
-                <div className="min-h-screen m-auto max-w-[1064px] md:p-14 p-10">
-                    <Navbar />
+                <div className="min-h-screen m-auto max-w-[1064px] flex flex-col justify-between md:p-14 p-10">
                     <div>
+                        <Navbar />
                         <div className="my-10">
                             <AllRoutes />
                         </div>
-                        <Footer />
                     </div>
+                    <Footer />
                 </div>
             </Router>
         </>
@@ -47,11 +45,9 @@ function AllRoutes() {
         <>
             <Routes>
                 <Route path="/" element={<HomePage />} />
-                <Route path="feed" element={<FeedPage />} />
+                <Route path="discover" element={<DiscoverPage />} />
                 <Route path="search" element={<SearchPage />} />
                 <Route path="profile" element={<ProfilePage />} />
-                <Route path="signin" element={<SignInPage />} />
-                <Route path="signup" element={<SignUpPage />} />
             </Routes>
         </>
     );
