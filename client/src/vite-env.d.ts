@@ -57,3 +57,7 @@ interface Song {
     artist: string;
     imageUrl: string;
 }
+
+interface PostForm {
+    content: string;
+}
