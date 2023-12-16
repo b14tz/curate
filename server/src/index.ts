@@ -1,6 +1,7 @@
 import * as dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
+
 import userRoutes from "./routes/user.routes";
 import postRoutes from "./routes/post.routes";
 import spotifyRoutes from "./routes/spotify.routes";

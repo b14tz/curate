@@ -10,10 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^2.2.1",
-    "@clerk/clerk-react": "^4.24.2",
+    "@auth0/auth0-react": "^2.2.4",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@floating-ui/react": "^0.26.4",
     "@mui/material": "^5.14.9",
     "@tabler/icons": "^2.44.0",
     "@tabler/icons-react": "^2.44.0",
@@ -27,6 +27,7 @@
     "remixicon": "^3.5.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
