@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export const SubmitButton = ({
     label,
     disabled,
@@ -23,19 +25,31 @@ export const ButtonGroup = ({
     groupClasses,
     groupButtons,
     activeClasses,
-    value,
 }: ButtonGroup) => {
+    const [activeButton, setActiveButton] = useState(groupButtons[0].value);
+
+    const handleButtonClick = async (value: string, onClick: any) => {
+        if (value !== activeButton) {
+            setActiveButton(value);
+            if (onClick) {
+                await onClick();
+            }
+        }
+    };
+
     return (
         <div className={groupClasses}>
             {groupButtons.map((item, index) => {
                 let componentClasses =
                     buttonClasses +
-                    (String(value) === String(item.value) ? activeClasses : "");
+                    (item.value === activeButton ? activeClasses : "");
                 return (
                     <button
                         key={index}
                         className={componentClasses}
-                        onClick={item.onClick}
+                        onClick={() =>
+                            handleButtonClick(item.value, item.onClick)
+                        }
                         type="button"
                     >
                         {item.label}

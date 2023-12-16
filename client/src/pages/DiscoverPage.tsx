@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { ButtonGroup } from "../components/Buttons";
 import Feed from "../Feed";
+import { samplePostData } from "~/utils/sampleData";
+import { populateSpotifyFeed } from "~/api/routes/spotify";
 
 export default function DiscoverPage() {
-    const [feed, setFeed] = useState("spotify");
+    const [posts, setPosts] = useState(samplePostData);
+
+    async function populateSpotifyPosts() {
+        const data = await populateSpotifyFeed();
+        setPosts(data);
+    }
+
     return (
         <div className="space-y-4">
             <h3>Discover</h3>
@@ -16,18 +24,21 @@ export default function DiscoverPage() {
                     {
                         label: "Spotify",
                         value: "spotify",
-                        onClick: () => setFeed("spotify"),
+                        onClick: async () => {
+                            await populateSpotifyPosts();
+                        },
                     },
                     {
                         label: "Apple",
                         value: "apple",
-                        onClick: () => setFeed("apple"),
+                        onClick: () => {
+                            setPosts(samplePostData);
+                        },
                     },
                 ]}
-                value={feed}
             />
 
-            <Feed type={feed} />
+            <Feed posts={posts} />
         </div>
     );
 }

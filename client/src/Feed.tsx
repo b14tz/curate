@@ -1,21 +1,7 @@
-import { useEffect, useState } from "react";
 import { formatPostTime } from "./utils/time";
-import { samplePostData } from "./utils/sampleData";
-import { populateSpotifyFeed } from "./api/routes/spotify";
-export default function Feed({ type }: { type: string }) {
-    const [spotifyPosts, setSpotifyPosts] = useState([]);
-    const [friendsPosts, setFriendsPosts] = useState(samplePostData);
-    const [popularPosts, setPopularPosts] = useState(samplePostData);
 
-    useEffect(() => {
-        async function populateSpotifyPosts() {
-            const data = await populateSpotifyFeed();
-            setSpotifyPosts(data);
-        }
-        populateSpotifyPosts();
-    }, []);
-
-    const renderFeed = (posts: Post[]) => {
+export default function Feed({ posts }: { posts: Post[] }) {
+    const renderFeed = () => {
         if (Object.keys(posts).length === 0) {
             return <div className="h-[300px]"></div>;
         } else {
@@ -85,15 +71,5 @@ export default function Feed({ type }: { type: string }) {
             );
         }
     };
-    return (
-        <>
-            {renderFeed(
-                type === "spotify"
-                    ? spotifyPosts
-                    : type === "friends"
-                    ? friendsPosts
-                    : popularPosts
-            )}
-        </>
-    );
+    return <>{renderFeed()}</>;
 }

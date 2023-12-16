@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { ButtonGroup } from "../components/Buttons";
 import Feed from "../Feed";
+import { samplePostData } from "~/utils/sampleData";
 
 export default function HomePage() {
-    const [feed, setFeed] = useState("for you");
     return (
         <div className="space-y-4">
             <h3>Home</h3>
@@ -16,18 +15,19 @@ export default function HomePage() {
                     {
                         label: "For You",
                         value: "for you",
-                        onClick: () => setFeed("for you"),
+                        onClick: () =>
+                            console.log("handle for you population here"),
                     },
                     {
                         label: "Following",
                         value: "following",
-                        onClick: () => setFeed("following"),
+                        onClick: () =>
+                            console.log("handle following population here"),
                     },
                 ]}
-                value={feed}
             />
 
-            <Feed type={feed} />
+            <Feed posts={samplePostData} />
         </div>
     );
 }

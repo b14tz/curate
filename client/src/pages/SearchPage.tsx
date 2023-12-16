@@ -1,9 +1,7 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import { ButtonGroup } from "../components/Buttons";
 
 export default function SearchPage() {
-    const [type, setType] = useState("users");
-
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const searchTerm = e.target.value;
@@ -22,15 +20,14 @@ export default function SearchPage() {
                     {
                         label: "Users",
                         value: "users",
-                        onClick: () => setType("users"),
+                        onClick: () => console.log("handle search users"),
                     },
                     {
                         label: "Playlists",
                         value: "posts",
-                        onClick: () => setType("posts"),
+                        onClick: () => console.log("handle search posts"),
                     },
                 ]}
-                value={type}
             />
             <label
                 title="default-search"
