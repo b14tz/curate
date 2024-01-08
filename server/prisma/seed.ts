@@ -52,7 +52,6 @@ async function seed() {
                     firstName: user.firstName,
                     lastName: user.lastName,
                     bio: user.bio,
-                    searchTerms: user.searchTerms,
                     connectedToSpotify: user.connectedToSpotify,
                     connectedToApple: user.connectedToApple,
                 },
