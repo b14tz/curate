@@ -1,0 +1,38 @@
+.h1-playlist {
+  font-family: "Impact", fantasy;
+  font-size: 60px;
+  font-weight: 700;
+  color: primary;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  margin-left: 1.5em;
+}
+.h2-playlist {
+  font-family: "sans-serif", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: primary;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  margin-left: 4.4em;
+  word-wrap: break-word;
+}
+.time-of-playlist {
+  font-family: "sans-serif", sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: primary;
+  text-align: right;
+  margin: 0;
+  padding: 0;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  margin-right: 31.4em;
+  word-wrap: break-word;
+}

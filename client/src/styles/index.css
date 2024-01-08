@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* variables */
+    --white: #f7f8f9;
+    --black: #131314;
+    --green: #13ce66;
+    --salmon: #fe346e;
+    --salmonhover: #cc2957;
+
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 400;
+}
+
+html {
+    background-color: var(--white);
+}
+
+html.dark {
+    background-color: var(--black);
+}
+
+h1 {
+    font-size: 3.375rem;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: normal;
+}
+
+h3,
+h4,
+h5,
+h6 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: normal;
+}
+
+p {
+    font-size: 1rem;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Sign Up Link */
+.cl-internal-15amzqo {
+    color: var(--salmon);
+}
+
+.cl-internal-15amzqo:hover {
+    color: var(--salmonhover);
+}
+
+/* Continue Button and Side Tag */
+.cl-internal-1fsg6zy,
+.cl-internal-b3fm6y {
+    background-color: var(--salmon);
+}
+
+.cl-internal-1fsg6zy:hover {
+    background-color: var(--salmonhover);
+}
