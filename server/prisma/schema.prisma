@@ -30,7 +30,6 @@ model User {
   firstName          String
   lastName           String
   bio                String
-  searchTerms        String
   connectedToSpotify Boolean
   connectedToApple   Boolean
   createdAt          DateTime      @default(now())
@@ -53,20 +52,17 @@ model Follow {
 }
 
 model Post {
-  id            String        @id @default(cuid())
-  title         String
-  description   String
-  isrcs         String
-  origin        String
-  searchTerms   String
-  tags          String
-  downloadCount Int
-  likeCount     Int
-  createdAt     DateTime      @default(now())
-  author        User?         @relation(fields: [authorId], references: [id])
-  authorId      String?
-  comments      PostComment[]
-  likes         PostLike[]
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  isrcs       String
+  origin      String
+  downloads   Int
+  createdAt   DateTime      @default(now())
+  author      User?         @relation(fields: [authorId], references: [id])
+  authorId    String?
+  comments    PostComment[]
+  likes       PostLike[]
 
   @@index([authorId])
 }

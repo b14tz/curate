@@ -1,5 +1,11 @@
 /// <reference types="vite/client" />
 
+interface User {
+    id: string;
+    name: string;
+    token: string;
+}
+
 interface Search {
     term: string;
     types: string[];
@@ -36,15 +42,17 @@ interface ButtonGroup {
 }
 
 interface Post {
-    id: number;
+    id: string;
     title: string;
-    author: string;
     description: string;
-    createdAt?: Date;
-    songs: Song[];
+    isrcs: string; // songs at some point
+    origin: string;
     downloads: number;
-    likes: Like[];
+    createdAt: Date;
+    author: User;
+    authorId: string;
     comments: Comment[];
+    likes: Like[];
 }
 
 interface Like {}
@@ -52,7 +60,7 @@ interface Like {}
 interface Comment {}
 
 interface Song {
-    id: number;
+    id: string;
     title: string;
     artist: string;
     imageUrl: string;
@@ -60,4 +68,10 @@ interface Song {
 
 interface PostForm {
     content: string;
+}
+
+interface ResponseError extends Error {
+    response: {
+        data: string;
+    };
 }

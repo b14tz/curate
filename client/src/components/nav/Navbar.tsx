@@ -1,6 +1,6 @@
+// client/src/components/Navbar.tsx
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 
 import NavbarLink from "./NavbarLink";
 import Modal from "../Modal";
@@ -9,11 +9,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import { IconPlus, IconUser } from "@tabler/icons-react";
 import logo from "~/assets/panda.png";
 import { useForm } from "react-hook-form";
+import { createPost } from "~/api/routes/post";
+import { login } from "~/api/routes/user";
 
 export default function Navbar() {
     const [postOpen, setPostOpen] = useState(false);
     const [authOpen, setAuthOpen] = useState(false);
-    const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
     const {
         register,
@@ -21,15 +22,21 @@ export default function Navbar() {
         formState: { errors },
     } = useForm<PostForm>();
 
-    const logoutWithRedirect = () =>
-        logout({
-            logoutParams: {
-                returnTo: window.location.origin,
-            },
-        });
+    const logoutWithRedirect = () => {
+        console.log("add logout logic here");
+    };
 
     const handlePost = async (data: PostForm) => {
         console.log(data);
+        await createPost({
+            title: data.content,
+            description: "description",
+            isrcs: "", // songs at some point
+            origin: "spotify",
+            downloads: 0,
+            authorId: "user_2VjfbWupeEgnmRtNbRUfA3XMwkj",
+        });
+        setPostOpen(false);
     };
 
     return (
@@ -42,13 +49,14 @@ export default function Navbar() {
                 <NavbarLink to="/" label="Home" />
                 <NavbarLink to="/discover" label="Discover" />
                 <NavbarLink to="/search" label="Search" />
-                {isAuthenticated ? (
+                {false ? ( // put isAuthenticated here
                     <>
                         <Popover placement="bottom-start">
                             <PopoverTrigger>
                                 <div className="pl-3 pr-4 py-2 rounded-lg border flex space-x-2 items-center">
                                     <IconUser size={20} />
-                                    <p>{user?.name}</p>
+                                    <p>{"username goes here"}</p>
+                                    {/*<p>{user?.name}</p>*/}
                                 </div>
                             </PopoverTrigger>
                             <PopoverContent>
@@ -84,7 +92,7 @@ export default function Navbar() {
             <Modal open={authOpen} setOpen={setAuthOpen} title="Login">
                 <button
                     className="bg-b-tertiary text-black drop-shadow-md py-2 pl-3 pr-5 rounded-md flex flex-row justify-center items-center"
-                    onClick={() => loginWithRedirect()}
+                    onClick={() => login()}
                 >
                     <img src={googleLogo} className="w-7 mr-2" />
                     <p>Authorize with Google</p>

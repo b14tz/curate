@@ -13,7 +13,6 @@ export const createUser = async (data: any) => {
                 displayName: username,
                 email: "",
                 bio: "",
-                searchTerms: "",
                 connectedToSpotify: false,
                 connectedToApple: false,
             },
