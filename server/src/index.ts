@@ -82,6 +82,10 @@ app.get(
     }
 );
 
+app.get("/ping", (_req, res) => {
+    return res.send("pong 🏓");
+});
+
 // api routes
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
