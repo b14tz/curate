@@ -16,7 +16,11 @@ dotenv.config();
 
 const app: Application = express();
 const corsOptions = {
-    origin: ["http://localhost:5173", "curate-api.vercel.app"],
+    origin: [
+        "http://localhost:5173",
+        "https://cureight.vercel.app",
+        "https://curate-api.vercel.app",
+    ],
     credentials: true, // allows cookies to be sent with requests
 };
 
