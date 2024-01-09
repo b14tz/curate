@@ -64,7 +64,7 @@ passport.use(
             clientSecret: GOOGLE_CLIENT_SECRET,
             callbackURL:
                 process.env.SERVER_URL ||
-                "http://localhost:3300/api/auth/google/callback",
+                "http://localhost:3300" + "/api/auth/google/callback",
         },
         (accessToken, refreshToken, profile, cb) => {
             // Here you find or create a user in your database
