@@ -40,7 +40,11 @@ const webhook_routes_1 = __importDefault(require("./routes/webhook.routes"));
 dotenv.config();
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: ["http://localhost:5173", "curate-api.vercel.app"],
+    origin: [
+        "http://localhost:5173",
+        "https://cureight.vercel.app",
+        "https://curate-api.vercel.app",
+    ],
     credentials: true, // allows cookies to be sent with requests
 };
 // middleware
