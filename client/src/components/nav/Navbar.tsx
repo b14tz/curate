@@ -1,14 +1,14 @@
 // client/src/components/Navbar.tsx
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { IconPlus, IconUser } from "@tabler/icons-react";
+import { useForm } from "react-hook-form";
 
 import NavbarLink from "./NavbarLink";
 import Modal from "../Modal";
 import googleLogo from "~/assets/google.png";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
-import { IconPlus, IconUser } from "@tabler/icons-react";
 import logo from "~/assets/panda.png";
-import { useForm } from "react-hook-form";
 import { createPost } from "~/api/routes/post";
 import { login } from "~/api/routes/user";
 
