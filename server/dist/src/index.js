@@ -40,7 +40,7 @@ const webhook_routes_1 = __importDefault(require("./routes/webhook.routes"));
 dotenv.config();
 const app = (0, express_1.default)();
 const corsOptions = {
-    origin: ["http://localhost:5173", "http://localhost:3300"],
+    origin: ["http://localhost:5173", "curate-api.vercel.app"],
     credentials: true, // allows cookies to be sent with requests
 };
 // middleware
@@ -81,6 +81,9 @@ app.get("/api/auth/google", passport_1.default.authenticate("google", { scope: [
 app.get("/api/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/" }), (req, res) => {
     // Successful authentication, redirect home.
     res.redirect("/");
+});
+app.get("/ping", (_req, res) => {
+    return res.send("pong 🏓");
 });
 // api routes
 app.use("/api/user", user_routes_1.default);
