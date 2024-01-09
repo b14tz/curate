@@ -31,10 +31,9 @@ export default function Navbar() {
         await createPost({
             title: data.content,
             description: "description",
-            isrcs: "", // songs at some point
+            songs: [], // songs at some point
             origin: "spotify",
             downloads: 0,
-            authorId: "user_2VjfbWupeEgnmRtNbRUfA3XMwkj",
         });
         setPostOpen(false);
     };

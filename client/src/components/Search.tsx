@@ -9,8 +9,8 @@ export default function Search() {
         "album",
         "artist",
     ]);
-    const [searchLimit, setSearchLimit] = useState(5);
-    const [searchOffset, setSearchOffset] = useState(0);
+    // const [searchLimit, setSearchLimit] = useState(5);
+    // const [searchOffset, setSearchOffset] = useState(0);
 
     const [results, setResults] = useState<{
         [key: string]: SearchResultData[];
@@ -21,8 +21,8 @@ export default function Search() {
             await searchSpotify({
                 term: searchTerm,
                 types: searchTypes,
-                limit: searchLimit,
-                offset: searchOffset,
+                limit: 5, // searchLimit
+                offset: 0, // searchOffset
             });
         setResults(searchResults);
     };

@@ -45,12 +45,11 @@ interface Post {
     id: string;
     title: string;
     description: string;
-    isrcs: string; // songs at some point
-    origin: string;
+    songs: Song[];
+    origin?: string;
     downloads: number;
     createdAt: Date;
     author: User;
-    authorId: string;
     comments: Comment[];
     likes: Like[];
 }
@@ -60,7 +59,6 @@ interface Like {}
 interface Comment {}
 
 interface Song {
-    id: string;
     title: string;
     artist: string;
     imageUrl: string;
