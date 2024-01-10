@@ -45,7 +45,9 @@ const corsOptions = {
         "https://cureight.vercel.app",
         "https://curate-api.vercel.app",
     ],
-    credentials: true, // allows cookies to be sent with requests
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type, Authorization, X-Requested-With",
 };
 // middleware
 app.use(express_1.default.json({ limit: "200mb" }));

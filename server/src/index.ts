@@ -22,6 +22,8 @@ const corsOptions = {
         "https://curate-api.vercel.app",
     ],
     credentials: true, // allows cookies to be sent with requests
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type, Authorization, X-Requested-With",
 };
 
 // middleware
