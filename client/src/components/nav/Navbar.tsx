@@ -10,7 +10,6 @@ import googleLogo from "~/assets/google.png";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import logo from "~/assets/panda.png";
 import { createPost } from "~/api/routes/post";
-import { login } from "~/api/routes/user";
 
 export default function Navbar() {
     const [postOpen, setPostOpen] = useState(false);
@@ -91,7 +90,11 @@ export default function Navbar() {
             <Modal open={authOpen} setOpen={setAuthOpen} title="Login">
                 <button
                     className="bg-b-tertiary text-black drop-shadow-md py-2 pl-3 pr-5 rounded-md flex flex-row justify-center items-center"
-                    onClick={() => login()}
+                    onClick={() => {
+                        window.location.href = `${
+                            import.meta.env.VITE_SERVER_URL
+                        }/auth/google`;
+                    }}
                 >
                     <img src={googleLogo} className="w-7 mr-2" />
                     <p>Authorize with Google</p>

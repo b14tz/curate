@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 import Navbar from "./components/nav/Navbar";
 import Footer from "./components/Footer";
@@ -6,6 +7,9 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
 import SearchPage from "./pages/SearchPage";
 import DiscoverPage from "./pages/DiscoverPage";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setUser } from "./redux/features/user/userSlice";
 
 export default function App() {
     return (
@@ -26,6 +30,17 @@ export default function App() {
 }
 
 function AllRoutes() {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
+
+        if (token) {
+            const user = jwtDecode(token);
+            dispatch(setUser(user));
+            console.log(user);
+        }
+    }, []);
     return (
         <>
             <Routes>

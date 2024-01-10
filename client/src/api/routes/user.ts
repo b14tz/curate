@@ -1,12 +1,6 @@
 // client/src/api/routes/user.ts
 import axiosInstance from "../axios";
 
-export const login = async () => {
-    const res = await axiosInstance.get(`/auth/google`);
-    console.log(res);
-    const user: User = { id: "", name: "", token: "" };
-    return user;
-};
 // GET /user/:id
 export const getUser = async (id: string) => {
     const res = await axiosInstance.get(`/user/${id}`);
