@@ -5,6 +5,7 @@ import cors from "cors";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
+import { google } from "googleapis";
 
 import userRoutes from "./routes/user.routes";
 import postRoutes from "./routes/post.routes";
@@ -41,54 +42,43 @@ app.use(
 );
 
 // google auth
-app.use(passport.initialize());
-app.use(passport.session());
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID, // Client ID
+    process.env.GOOGLE_CLIENT_SECRET, // Client Secret
+    process.env.GOOGLE_REDIRECT_URL // Redirect URL
+);
 
-// passport session setup
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((user, done) => {
-    user && done(null, user);
+const scopes = [
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email",
+];
+
+app.get("/api/auth/google", (req, res) => {
+    const url = oauth2Client.generateAuthUrl({
+        access_type: "offline",
+        scope: scopes,
+    });
+    res.redirect(url);
 });
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = process.env;
+app.get("/api/auth/google/callback", async (req, res) => {
+    const { code } = req.query;
 
-// Check if Google API credentials are set
-if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-    console.error("Google API credentials are missing!");
-    process.exit(1); // Exit the application if credentials are not set
-}
+    const { tokens } = await oauth2Client.getToken(code as string);
+    oauth2Client.setCredentials(tokens);
 
-// Configure Google Strategy
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: GOOGLE_CLIENT_ID,
-            clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL:
-                process.env.GOOGLE_CALLBACK_URL ||
-                "http://localhost:3300/api/auth/google/callback",
-        },
-        (accessToken, refreshToken, profile, cb) => {
-            // Here you find or create a user in your database
-            return cb(null, profile);
-        }
-    )
-);
+    // Now you can use oauth2Client for authenticated requests or store the tokens
+    // For example, retrieve the user's profile information
+    const oauth2 = google.oauth2({
+        auth: oauth2Client,
+        version: "v2",
+    });
 
-// Routes
-app.get(
-    "/api/auth/google",
-    passport.authenticate("google", { scope: ["profile", "email"] })
-);
+    const userInfo = await oauth2.userinfo.get();
+    // Handle the user info (store in database, create session, etc.)
 
-app.get(
-    "/api/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/" }),
-    (req, res) => {
-        // Successful authentication, redirect home.
-        res.redirect("/");
-    }
-);
+    res.send(userInfo.data);
+});
 
 app.get("/ping", (_req, res) => {
     return res.send("pong 🏓");
