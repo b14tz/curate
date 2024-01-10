@@ -75,8 +75,8 @@ if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
 passport_1.default.use(new passport_google_oauth20_1.Strategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.SERVER_URL ||
-        "http://localhost:3300" + "/api/auth/google/callback",
+    callbackURL: process.env.GOOGLE_CALLBACK_URL ||
+        "http://localhost:3300/api/auth/google/callback",
 }, (accessToken, refreshToken, profile, cb) => {
     // Here you find or create a user in your database
     return cb(null, profile);
