@@ -9,18 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updateUser = exports.getUser = exports.createUser = void 0;
+exports.deleteUser = exports.updateUser = exports.findOrCreateUser = exports.getUser = exports.createUser = void 0;
 const db_server_1 = require("../utils/db.server");
-const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
+const createUser = ({ firstName, lastName, username, email, }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { first_name, last_name, username, id } = data;
         const result = yield db_server_1.db.user.create({
             data: {
-                id,
-                firstName: first_name,
-                lastName: last_name,
+                firstName: firstName,
+                lastName: lastName,
                 displayName: username,
-                email: "",
+                email: email,
                 bio: "",
                 connectedToSpotify: false,
                 connectedToApple: false,
@@ -47,6 +45,31 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUser = getUser;
+const findOrCreateUser = ({ firstName, lastName, username, email, }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const existingUser = yield db_server_1.db.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+        if (existingUser) {
+            return existingUser;
+        }
+        else {
+            const newUser = yield (0, exports.createUser)({
+                firstName,
+                lastName,
+                username,
+                email,
+            });
+            return newUser;
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.findOrCreateUser = findOrCreateUser;
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     const data = req.body;

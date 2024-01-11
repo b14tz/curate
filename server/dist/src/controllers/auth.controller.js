@@ -13,6 +13,7 @@ exports.googleAuthCallback = exports.googleAuth = void 0;
 const googleapis_1 = require("googleapis");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const crypto_1 = require("crypto");
+const user_controller_1 = require("./user.controller");
 const generateJWTSecret = () => {
     // Generate a random 256-bit (32-byte) secret key
     const secret = (0, crypto_1.randomBytes)(32).toString("base64");
@@ -35,6 +36,7 @@ const googleAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.googleAuth = googleAuth;
 const googleAuthCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d, _e;
     const { code } = req.query;
     const { tokens } = yield oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
@@ -43,7 +45,17 @@ const googleAuthCallback = (req, res) => __awaiter(void 0, void 0, void 0, funct
         auth: oauth2Client,
         version: "v2",
     });
-    const userInfo = yield oauth2.userinfo.get();
+    const oauth2Info = yield oauth2.userinfo.get();
+    const email = ((_a = oauth2Info.data) === null || _a === void 0 ? void 0 : _a.email) || "";
+    const firstName = ((_b = oauth2Info.data) === null || _b === void 0 ? void 0 : _b.given_name) || "";
+    const lastName = ((_c = oauth2Info.data) === null || _c === void 0 ? void 0 : _c.family_name) || "";
+    const username = ((_e = (((_d = oauth2Info.data) === null || _d === void 0 ? void 0 : _d.email) || "").match(/^[^@]*/)) === null || _e === void 0 ? void 0 : _e[0]) || "";
+    const userInfo = yield (0, user_controller_1.findOrCreateUser)({
+        email,
+        firstName,
+        lastName,
+        username,
+    });
     const token = (0, jsonwebtoken_1.sign)({ user: userInfo }, process.env.JWT_SECRET || generateJWTSecret());
     res.redirect(`${process.env.CLIENT_URL}?token=${token}`);
 });
