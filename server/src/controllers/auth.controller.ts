@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { google } from "googleapis";
 import { sign } from "jsonwebtoken";
 import { randomBytes } from "crypto";
+import { findOrCreateUser } from "./user.controller";
 
 const generateJWTSecret = () => {
     // Generate a random 256-bit (32-byte) secret key
@@ -40,7 +41,20 @@ export const googleAuthCallback = async (req: Request, res: Response) => {
         version: "v2",
     });
 
-    const userInfo = await oauth2.userinfo.get();
+    const oauth2Info = await oauth2.userinfo.get();
+
+    const email = oauth2Info.data?.email || "";
+    const firstName = oauth2Info.data?.given_name || "";
+    const lastName = oauth2Info.data?.family_name || "";
+    const username = (oauth2Info.data?.email || "").match(/^[^@]*/)?.[0] || "";
+
+    const userInfo = await findOrCreateUser({
+        email,
+        firstName,
+        lastName,
+        username,
+    });
+
     const token = sign(
         { user: userInfo },
         process.env.JWT_SECRET || generateJWTSecret()

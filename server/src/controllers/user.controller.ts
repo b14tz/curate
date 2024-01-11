@@ -2,16 +2,24 @@ import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
 
-export const createUser = async (data: any) => {
+export const createUser = async ({
+    firstName,
+    lastName,
+    username,
+    email,
+}: {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+}) => {
     try {
-        const { first_name, last_name, username, id } = data;
         const result = await db.user.create({
             data: {
-                id,
-                firstName: first_name,
-                lastName: last_name,
+                firstName: firstName,
+                lastName: lastName,
                 displayName: username,
-                email: "",
+                email: email,
                 bio: "",
                 connectedToSpotify: false,
                 connectedToApple: false,
@@ -33,6 +41,40 @@ export const getUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error);
         return res.status(500).send(`Error getting user data`);
+    }
+};
+
+export const findOrCreateUser = async ({
+    firstName,
+    lastName,
+    username,
+    email,
+}: {
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+}) => {
+    try {
+        const existingUser = await db.user.findUnique({
+            where: {
+                email: email,
+            },
+        });
+
+        if (existingUser) {
+            return existingUser;
+        } else {
+            const newUser = await createUser({
+                firstName,
+                lastName,
+                username,
+                email,
+            });
+            return newUser;
+        }
+    } catch (error) {
+        console.log(error);
     }
 };
 
