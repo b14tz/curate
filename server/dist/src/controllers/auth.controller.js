@@ -10,9 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.googleAuthCallback = exports.googleAuth = void 0;
+const crypto_1 = require("crypto");
 const googleapis_1 = require("googleapis");
 const jsonwebtoken_1 = require("jsonwebtoken");
-const crypto_1 = require("crypto");
 const user_controller_1 = require("./user.controller");
 const generateJWTSecret = () => {
     // Generate a random 256-bit (32-byte) secret key
@@ -27,13 +27,13 @@ const scopes = [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",
 ];
-const googleAuth = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const googleAuth = (req, res) => {
     const url = oauth2Client.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
     });
     res.redirect(url);
-});
+};
 exports.googleAuth = googleAuth;
 const googleAuthCallback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d, _e;
