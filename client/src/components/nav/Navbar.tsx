@@ -1,8 +1,9 @@
 // client/src/components/Navbar.tsx
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IconPlus, IconUser } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux"; // Import useSelector hook
 
 import NavbarLink from "./NavbarLink";
 import Modal from "../Modal";
@@ -10,10 +11,16 @@ import googleLogo from "~/assets/google.png";
 import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
 import logo from "~/assets/panda.png";
 import { createPost } from "~/api/routes/post";
+import { RootState } from "~/redux/store";
+import { clearUser } from "~/redux/features/user/userSlice";
 
 export default function Navbar() {
     const [postOpen, setPostOpen] = useState(false);
     const [authOpen, setAuthOpen] = useState(false);
+
+    const user = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const {
         register,
@@ -21,8 +28,9 @@ export default function Navbar() {
         formState: { errors },
     } = useForm<PostForm>();
 
-    const logoutWithRedirect = () => {
-        console.log("add logout logic here");
+    const logoutWithRedirect = async () => {
+        await dispatch(clearUser());
+        navigate("/");
     };
 
     const handlePost = async (data: PostForm) => {
@@ -47,14 +55,13 @@ export default function Navbar() {
                 <NavbarLink to="/" label="Home" />
                 <NavbarLink to="/discover" label="Discover" />
                 <NavbarLink to="/search" label="Search" />
-                {false ? ( // put isAuthenticated here
+                {user ? (
                     <>
                         <Popover placement="bottom-start">
                             <PopoverTrigger>
                                 <div className="pl-3 pr-4 py-2 rounded-lg border flex space-x-2 items-center">
                                     <IconUser size={20} />
-                                    <p>{"username goes here"}</p>
-                                    {/*<p>{user?.name}</p>*/}
+                                    <p>{user.displayName}</p>
                                 </div>
                             </PopoverTrigger>
                             <PopoverContent>

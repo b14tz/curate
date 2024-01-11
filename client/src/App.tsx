@@ -36,9 +36,8 @@ function AllRoutes() {
         const token = urlParams.get("token");
 
         if (token) {
-            const user = jwtDecode(token);
-            dispatch(setUser(user));
-            console.log(user);
+            const data: { user: {} } = jwtDecode(token);
+            dispatch(setUser(data.user));
         }
     }, []);
     return (
