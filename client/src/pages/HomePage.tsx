@@ -1,5 +1,5 @@
 import { ButtonGroup } from "../components/Buttons";
-import Feed from "../Feed";
+import Feed from "../components/Feed";
 import { samplePostData } from "~/utils/sampleData";
 
 export default function HomePage() {

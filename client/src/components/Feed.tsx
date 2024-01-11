@@ -1,4 +1,4 @@
-import { formatPostTime } from "./utils/time";
+import { formatPostTime } from "../utils/time";
 
 export default function Feed({ posts }: { posts: Post[] }) {
     const renderFeed = () => {
@@ -38,7 +38,7 @@ export default function Feed({ posts }: { posts: Post[] }) {
                             <div className="flex flex-col max-w-[380px]">
                                 <p className="underline">{post.title}</p>
                                 <div className="flex flex-row space-x-10">
-                                    <p>{post.author.name}</p>
+                                    <p>{post.author.displayName}</p>
                                     <p>
                                         <i className="ri-music-2-fill"></i>
                                         {post.songs.length}

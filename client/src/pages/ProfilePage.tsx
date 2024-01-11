@@ -1,5 +1,5 @@
 import { samplePostData } from "~/utils/sampleData";
-import Feed from "../Feed";
+import Feed from "../components/Feed";
 import Header from "~/components/profile/Header";
 
 export default function ProfilePage() {

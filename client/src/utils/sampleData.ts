@@ -2,7 +2,14 @@ export const samplePostData: Post[] = [
     {
         id: "a",
         title: "playlist 1",
-        author: { id: "a", name: "marshall", token: "blahblahblah" },
+        author: {
+            id: "a",
+            displayName: "marshall",
+            token: "blahblahblah",
+            firstName: "marshall",
+            lastName: "blatz",
+            email: "test@gmail.com",
+        },
         description: "this is my test post description",
         createdAt: new Date(),
         songs: [
@@ -86,7 +93,14 @@ export const samplePostData: Post[] = [
     {
         id: "b",
         title: "playlist 1",
-        author: { id: "a", name: "marshall", token: "blahblahblah" },
+        author: {
+            id: "a",
+            displayName: "marshall",
+            token: "blahblahblah",
+            firstName: "marshall",
+            lastName: "blatz",
+            email: "test@gmail.com",
+        },
         description: "this is my test post description",
         createdAt: new Date(),
         songs: [
@@ -170,7 +184,14 @@ export const samplePostData: Post[] = [
     {
         id: "c",
         title: "playlist 1",
-        author: { id: "a", name: "marshall", token: "blahblahblah" },
+        author: {
+            id: "a",
+            displayName: "marshall",
+            token: "blahblahblah",
+            firstName: "marshall",
+            lastName: "blatz",
+            email: "test@gmail.com",
+        },
         description: "this is my test post description",
         createdAt: new Date(),
         songs: [
