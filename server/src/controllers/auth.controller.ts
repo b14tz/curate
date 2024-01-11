@@ -1,7 +1,8 @@
+import { randomBytes } from "crypto";
 import { Request, Response } from "express";
 import { google } from "googleapis";
 import { sign } from "jsonwebtoken";
-import { randomBytes } from "crypto";
+
 import { findOrCreateUser } from "./user.controller";
 
 const generateJWTSecret = () => {
@@ -21,7 +22,7 @@ const scopes = [
     "https://www.googleapis.com/auth/userinfo.email",
 ];
 
-export const googleAuth = async (req: Request, res: Response) => {
+export const googleAuth = (req: Request, res: Response) => {
     const url = oauth2Client.generateAuthUrl({
         access_type: "offline",
         scope: scopes,
