@@ -1,4 +1,4 @@
-import { ButtonGroup } from "../components/Buttons";
+import { ButtonGroup } from "../components/ButtonGroup";
 import Feed from "../components/Feed";
 import { samplePostData } from "~/utils/sampleData";
 

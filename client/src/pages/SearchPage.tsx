@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { ButtonGroup } from "../components/Buttons";
+import { ButtonGroup } from "../components/ButtonGroup";
 
 export default function SearchPage() {
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {

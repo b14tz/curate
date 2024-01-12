@@ -6,6 +6,12 @@ interface User {
     lastName: string;
     email: string;
     displayName: string;
+    likes?: [];
+    comments?: [];
+    followers?: [];
+    following?: [];
+    posts?: [];
+    saves?: [];
     token: string;
 }
 

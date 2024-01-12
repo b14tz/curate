@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { searchSpotify } from "../api/routes/spotify";
-import { ButtonGroup, SubmitButton } from "../components/Buttons";
+import { ButtonGroup } from "./ButtonGroup";
 
 export default function Search() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -78,7 +78,7 @@ export default function Search() {
                         value={searchTerm}
                         onChange={(event) => setSearchTerm(event.target.value)}
                     />
-                    <SubmitButton label="Search" onClick={handleSearch} />
+                    <button onClick={handleSearch}>Submit</button>
                 </div>
                 <ButtonGroup
                     groupClasses="flex flex-row space-x-4"
