@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
 
-type Props = {
+export default function NavbarLink({
+    to,
+    label,
+}: {
     to: string;
     label: string;
-};
-
-export default function NavbarLink({ to, label }: Props) {
+}) {
     return (
         <NavLink
             to={to}

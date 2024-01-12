@@ -22,6 +22,8 @@ export default function Navbar() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const profileRoute = `/user/${user?.id}`;
+
     const {
         register,
         handleSubmit,
@@ -66,7 +68,10 @@ export default function Navbar() {
                             </PopoverTrigger>
                             <PopoverContent>
                                 <div className="flex flex-col items-start px-4 py-2 bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1">
-                                    <NavbarLink to="/profile" label="Profile" />
+                                    <NavbarLink
+                                        to={profileRoute}
+                                        label="Profile"
+                                    />
                                     <button
                                         onClick={() => {
                                             logoutWithRedirect();

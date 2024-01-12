@@ -1,9 +1,10 @@
-import { useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
-
-export default function Header() {
-    const user = useSelector((state: RootState) => state.user);
-
+export default function Header({
+    user,
+    isCurrentUser,
+}: {
+    user: User;
+    isCurrentUser: boolean;
+}) {
     return (
         <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 bg-white items-center justify-between">
             <div className="flex flex-row items-center space-x-4">
@@ -11,7 +12,7 @@ export default function Header() {
                 <div className="flex flex-col space-y-2">
                     <h3>{user?.displayName}</h3>
                     <div className="flex flex-row">
-                        {false ? (
+                        {isCurrentUser ? (
                             <button
                                 className="bg-salmon rounded shadow px-4 py-1 text-white"
                                 onClick={() => console.log("handle follow")}

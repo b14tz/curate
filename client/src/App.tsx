@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Navbar from "./components/nav/Navbar";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
+import UserPage from "./pages/UserPage";
 import SearchPage from "./pages/SearchPage";
 import DiscoverPage from "./pages/DiscoverPage";
 import { useEffect } from "react";
@@ -46,7 +46,7 @@ function AllRoutes() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="discover" element={<DiscoverPage />} />
                 <Route path="search" element={<SearchPage />} />
-                <Route path="profile" element={<ProfilePage />} />
+                <Route path="user/:id" element={<UserPage />} />
             </Routes>
         </>
     );

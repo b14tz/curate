@@ -6,6 +6,9 @@ interface User {
     lastName: string;
     email: string;
     displayName: string;
+    bio: string;
+    connectedToSpotify: boolean;
+    connectedToApple: boolean;
     likes?: [];
     comments?: [];
     followers?: [];
