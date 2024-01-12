@@ -1,9 +1,11 @@
 export default function Header({
     user,
     isCurrentUser,
+    setSettingsOpen,
 }: {
     user: User;
     isCurrentUser: boolean;
+    setSettingsOpen: (val: boolean) => void;
 }) {
     return (
         <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 bg-white items-center justify-between">
@@ -13,18 +15,20 @@ export default function Header({
                     <h3>{user?.displayName}</h3>
                     <div className="flex flex-row">
                         {isCurrentUser ? (
+                            <>
+                                <button
+                                    className="bg-salmon rounded shadow px-4 py-1 text-white"
+                                    onClick={() => setSettingsOpen(true)}
+                                >
+                                    Settings
+                                </button>
+                            </>
+                        ) : (
                             <button
                                 className="bg-salmon rounded shadow px-4 py-1 text-white"
                                 onClick={() => console.log("handle follow")}
                             >
                                 Follow
-                            </button>
-                        ) : (
-                            <button
-                                className="bg-salmon rounded shadow px-4 py-1 text-white"
-                                onClick={() => console.log("handle settings")}
-                            >
-                                Settings
                             </button>
                         )}
                     </div>

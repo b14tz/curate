@@ -21,6 +21,8 @@ export default {
             "db-primary": "#131314", // for: backgrounds
             "db-secondary": "#27272C", // for: modals, tooltips, popups, widgets
             "db-tertiary": "#40404A", // for: input fields, hrs
+            // error
+            error: "#E24444",
             // other colors
             black: "#1E1E1E",
             gray: "#27272C",

@@ -83,17 +83,18 @@ export const updateUser = async (req: Request, res: Response) => {
     const data = req.body;
     try {
         await db.user.update({ where: { id }, data: { ...data } });
+        return res.status(200).send("Successfully updated user");
     } catch (error) {
         return res.status(500).send("Error updating user");
     }
 };
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (req: Request, res: Response) => {
+    const id = req.params.id;
     try {
         await db.user.delete({ where: { id } });
-        return null;
+        return res.status(200).send("Successfully deleted user");
     } catch (error) {
-        console.error(`Error deleting user: ${error}`);
-        return null;
+        return res.status(500).send(`Error deleting user: ${error}`);
     }
 };

@@ -14,7 +14,7 @@ export const createUser = async (data: {}) => {
 };
 
 // POST /user/:id
-export const updateUser = async (id: string, data: {}) => {
+export const updateUser = async (id: string, data: Partial<User>) => {
     const res = await axiosInstance.post(`/user/${id}`, data);
     return res.data;
 };

@@ -75,20 +75,21 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const data = req.body;
     try {
         yield db_server_1.db.user.update({ where: { id }, data: Object.assign({}, data) });
+        return res.status(200).send("Successfully updated user");
     }
     catch (error) {
         return res.status(500).send("Error updating user");
     }
 });
 exports.updateUser = updateUser;
-const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
     try {
         yield db_server_1.db.user.delete({ where: { id } });
-        return null;
+        return res.status(200).send("Successfully deleted user");
     }
     catch (error) {
-        console.error(`Error deleting user: ${error}`);
-        return null;
+        return res.status(500).send(`Error deleting user: ${error}`);
     }
 });
 exports.deleteUser = deleteUser;

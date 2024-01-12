@@ -15,7 +15,7 @@ export default function Modal({
         open && (
             <div
                 onClick={() => setOpen(false)}
-                className="z-[20] fixed flex left-0 top-0 bg-black/50 justify-center w-full h-screen"
+                className="z-[1000] fixed flex left-0 top-0 bg-black/50 justify-center w-full h-screen"
             >
                 <div
                     onClick={(e) => {

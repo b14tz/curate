@@ -25,7 +25,7 @@ enum NotificationType {
 model User {
   id                 String        @id @default(cuid())
   role               ROLE          @default(USER)
-  displayName        String
+  displayName        String        @unique
   email              String        @unique
   firstName          String
   lastName           String
