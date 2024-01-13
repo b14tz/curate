@@ -4,7 +4,7 @@ import Feed from "../components/Feed";
 import { populateSpotifyFeed } from "~/api/routes/spotify";
 
 export default function DiscoverPage() {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [emptyMessage, setEmptyMessage] = useState("");
 
     useEffect(() => {
@@ -51,7 +51,11 @@ export default function DiscoverPage() {
                 ]}
             />
 
-            <Feed posts={posts} emptyMessage={emptyMessage} />
+            <Feed
+                posts={posts}
+                setPosts={setPosts}
+                emptyMessage={emptyMessage}
+            />
         </div>
     );
 }

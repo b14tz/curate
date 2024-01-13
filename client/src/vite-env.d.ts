@@ -71,7 +71,10 @@ interface Post {
     likes: Like[];
 }
 
-interface Like {}
+interface Like {
+    userId: string;
+    postId: string;
+}
 
 interface Comment {}
 

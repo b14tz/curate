@@ -13,7 +13,7 @@ export const createLike = async (postId: string, data: { userId: string }) => {
 };
 
 // POST /like/remove/:id
-export const deleteLike = async (likeId: string) => {
-    const res = await axiosInstance.delete(`/like/${likeId}`);
+export const deleteLike = async (postId: string, data: { userId: string }) => {
+    const res = await axiosInstance.post(`/like/remove/${postId}`, data);
     return res.data;
 };

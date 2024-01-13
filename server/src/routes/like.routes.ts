@@ -9,6 +9,6 @@ const likeRoutes = Router();
 
 likeRoutes.get("/all/:id", getAllPostLikes);
 likeRoutes.post("/:id", createLike);
-likeRoutes.delete("/:id", deleteLike);
+likeRoutes.post("/remove/:id", deleteLike);
 
 export default likeRoutes;

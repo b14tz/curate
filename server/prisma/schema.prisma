@@ -68,26 +68,26 @@ model Post {
 }
 
 model PostComment {
-  id        String   @id @default(cuid())
   content   String
   createdAt DateTime @default(now())
-  post      Post?    @relation(fields: [postId], references: [id])
-  postId    String?
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
 
+  @@id([postId, authorId])
   @@index([postId])
   @@index([authorId])
 }
 
 model PostLike {
-  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id])
   postId    String
   actor     User     @relation(fields: [userId], references: [id])
   userId    String
 
+  @@id([userId, postId])
   @@index([postId])
   @@index([userId])
 }

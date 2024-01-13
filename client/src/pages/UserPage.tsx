@@ -16,7 +16,7 @@ export default function UserPage() {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [changeUsernameOpen, setChangeUsernameOpen] = useState(false);
     const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [userData, setUserData] = useState<User>({
         id: "",
         token: "",
@@ -95,6 +95,7 @@ export default function UserPage() {
                 />
                 <Feed
                     posts={posts}
+                    setPosts={setPosts}
                     emptyMessage={
                         isCurrentUser
                             ? "You haven't posted yet. What are you waiting for?"

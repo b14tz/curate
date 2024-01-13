@@ -63,7 +63,11 @@ export default function HomePage() {
                 ]}
             />
 
-            <Feed posts={posts} emptyMessage={emptyMessage} />
+            <Feed
+                posts={posts}
+                setPosts={setPosts}
+                emptyMessage={emptyMessage}
+            />
         </div>
     );
 }

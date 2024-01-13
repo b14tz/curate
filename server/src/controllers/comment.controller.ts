@@ -28,8 +28,11 @@ export const createComment = async (req: Request, res: Response) => {
 
 export const deleteComment = async (req: Request, res: Response) => {
     try {
-        const id = req.params.id;
-        await db.postComment.delete({ where: { id } });
+        const postId = req.params.id;
+        const { authorId } = req.body;
+        await db.postComment.delete({
+            where: { postId_authorId: { postId: postId, authorId } },
+        });
         return res.status(200).send("Successfully deleted comment");
     } catch (error) {
         console.error(error);

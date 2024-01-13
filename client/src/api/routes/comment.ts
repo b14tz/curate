@@ -19,7 +19,10 @@ export const createComment = async (
 };
 
 // POST /comment/remove/:id
-export const deleteComment = async (commentId: string) => {
-    const res = await axiosInstance.delete(`/comment/${commentId}`);
+export const deleteComment = async (
+    postId: string,
+    data: { authorId: string }
+) => {
+    const res = await axiosInstance.post(`/comment/remove/${postId}`, data);
     return res.data;
 };

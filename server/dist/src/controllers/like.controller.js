@@ -41,8 +41,16 @@ const createLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.createLike = createLike;
 const deleteLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
-        yield db_server_1.db.postLike.delete({ where: { id } });
+        const postId = req.params.id;
+        const { userId } = req.body;
+        yield db_server_1.db.postLike.delete({
+            where: {
+                userId_postId: {
+                    postId: postId,
+                    userId: userId,
+                },
+            },
+        });
         return res.status(200).send("Successfully deleted like");
     }
     catch (error) {

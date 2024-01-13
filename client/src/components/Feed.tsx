@@ -1,15 +1,57 @@
 import { useNavigate } from "react-router-dom";
 import { formatPostTime } from "../utils/time";
+import { createLike, deleteLike } from "~/api/routes/like";
+import { useSelector } from "react-redux";
+import { RootState } from "~/redux/store";
 
 export default function Feed({
     posts,
+    setPosts,
     emptyMessage,
 }: {
     posts: Post[];
+    setPosts: (val: Post[]) => void;
     emptyMessage: string;
 }) {
+    const user = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
 
+    // Check if the current user has liked the post
+    const isPostLikedByUser = (post: Post) => {
+        return user && post.likes.some((like) => like.userId === user.id);
+    };
+
+    // Handle like
+    const handleLike = async (postId: string) => {
+        if (user) {
+            await createLike(postId, { userId: user.id });
+            updatePostLikes(postId, true);
+        }
+    };
+
+    // Handle unlike
+    const handleUnlike = async (postId: string) => {
+        if (user) {
+            await deleteLike(postId, { userId: user.id });
+            updatePostLikes(postId, false);
+        }
+    };
+
+    // Update the likes in the posts state
+    const updatePostLikes = (postId: string, isLiked: boolean) => {
+        const updatedPosts = posts.map((post) => {
+            if (user && post.id === postId) {
+                return {
+                    ...post,
+                    likes: isLiked
+                        ? [...post.likes, { userId: user.id, postId }]
+                        : post.likes.filter((like) => like.userId !== user.id),
+                };
+            }
+            return post;
+        });
+        setPosts(updatedPosts);
+    };
     const renderFeed = () => {
         if (Object.keys(posts).length === 0) {
             return (
@@ -62,10 +104,28 @@ export default function Feed({
                                         <i className="ri-music-2-fill"></i>
                                         {post.songs.length}
                                     </p>
-                                    <p>
-                                        <i className="ri-heart-fill"></i>
-                                        {post.likes.length}
-                                    </p>
+                                    {isPostLikedByUser(post) ? (
+                                        <button
+                                            onClick={() =>
+                                                handleUnlike(post.id)
+                                            }
+                                        >
+                                            <p className="text-salmon">
+                                                <i className="ri-heart-fill"></i>
+                                                {post.likes.length}
+                                            </p>
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => handleLike(post.id)}
+                                        >
+                                            <p>
+                                                <i className="ri-heart-fill"></i>
+                                                {post.likes.length}
+                                            </p>
+                                        </button>
+                                    )}
+
                                     <p>
                                         <i className="ri-chat-1-fill"></i>
                                         {post.comments.length}

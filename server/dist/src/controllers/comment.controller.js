@@ -38,8 +38,11 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.createComment = createComment;
 const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const id = req.params.id;
-        yield db_server_1.db.postComment.delete({ where: { id } });
+        const postId = req.params.id;
+        const { authorId } = req.body;
+        yield db_server_1.db.postComment.delete({
+            where: { postId_authorId: { postId: postId, authorId } },
+        });
         return res.status(200).send("Successfully deleted comment");
     }
     catch (error) {

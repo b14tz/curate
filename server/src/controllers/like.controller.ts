@@ -30,8 +30,16 @@ export const createLike = async (req: Request, res: Response) => {
 
 export const deleteLike = async (req: Request, res: Response) => {
     try {
-        const id = req.params.id;
-        await db.postLike.delete({ where: { id } });
+        const postId = req.params.id;
+        const { userId } = req.body;
+        await db.postLike.delete({
+            where: {
+                userId_postId: {
+                    postId: postId,
+                    userId: userId,
+                },
+            },
+        });
         return res.status(200).send("Successfully deleted like");
     } catch (error) {
         console.error(error);

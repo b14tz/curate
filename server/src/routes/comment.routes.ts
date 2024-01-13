@@ -9,6 +9,6 @@ const commentRoutes = Router();
 
 commentRoutes.get("/all/:id", getAllPostComments);
 commentRoutes.post("/:id", createComment);
-commentRoutes.delete("/:id", deleteComment);
+commentRoutes.post("/remove/:id", deleteComment);
 
 export default commentRoutes;
