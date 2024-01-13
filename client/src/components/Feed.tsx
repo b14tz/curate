@@ -1,9 +1,19 @@
 import { formatPostTime } from "../utils/time";
 
-export default function Feed({ posts }: { posts: Post[] }) {
+export default function Feed({
+    posts,
+    emptyMessage,
+}: {
+    posts: Post[];
+    emptyMessage: string;
+}) {
     const renderFeed = () => {
         if (Object.keys(posts).length === 0) {
-            return <div className="h-[300px]"></div>;
+            return (
+                <div className="h-[300px] flex justify-center items-center">
+                    <p>{emptyMessage}</p>
+                </div>
+            );
         } else {
             return (
                 <div className="flex flex-col space-y-8">

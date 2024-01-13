@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonGroup } from "../components/ButtonGroup";
 import Feed from "../components/Feed";
-import { samplePostData } from "~/utils/sampleData";
 import { populateSpotifyFeed } from "~/api/routes/spotify";
 
 export default function DiscoverPage() {
-    const [posts, setPosts] = useState(samplePostData);
+    const [posts, setPosts] = useState([]);
+    const [emptyMessage, setEmptyMessage] = useState("");
+
+    useEffect(() => {
+        populateSpotifyPosts();
+    }, []);
 
     async function populateSpotifyPosts() {
+        setEmptyMessage(
+            "It looks like there aren't any spotify recommendations at this time."
+        );
         const data = await populateSpotifyFeed();
         setPosts(data);
+    }
+
+    async function populateApplePosts() {
+        setEmptyMessage(
+            "It looks like there aren't any apple recommendations at this time."
+        );
     }
 
     return (
@@ -32,13 +45,13 @@ export default function DiscoverPage() {
                         label: "Apple",
                         value: "apple",
                         onClick: () => {
-                            setPosts(samplePostData);
+                            populateApplePosts();
                         },
                     },
                 ]}
             />
 
-            <Feed posts={posts} />
+            <Feed posts={posts} emptyMessage={emptyMessage} />
         </div>
     );
 }

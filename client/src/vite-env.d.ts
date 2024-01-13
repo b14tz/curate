@@ -60,7 +60,7 @@ interface Post {
     songs: Song[];
     origin?: string;
     downloads: number;
-    createdAt: Date;
+    createdAt: string;
     author: User;
     comments: Comment[];
     likes: Like[];
@@ -77,7 +77,11 @@ interface Song {
 }
 
 interface PostForm {
-    content: string;
+    title: string;
+    description: string;
+    isrcs: string;
+    origin: string;
+    authorId: string;
 }
 
 interface ResponseError extends Error {

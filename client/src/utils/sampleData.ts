@@ -14,7 +14,7 @@ export const samplePostData: Post[] = [
             connectedToApple: false,
         },
         description: "this is my test post description",
-        createdAt: new Date(),
+        createdAt: "2024-01-12T23:17:51.862Z",
         songs: [
             {
                 title: "Stairway to Heaven",
@@ -108,7 +108,7 @@ export const samplePostData: Post[] = [
             connectedToApple: false,
         },
         description: "this is my test post description",
-        createdAt: new Date(),
+        createdAt: "2024-01-12T23:17:51.862Z",
         songs: [
             {
                 title: "Stairway to Heaven",
@@ -202,7 +202,7 @@ export const samplePostData: Post[] = [
             connectedToApple: false,
         },
         description: "this is my test post description",
-        createdAt: new Date(),
+        createdAt: "2024-01-12T23:17:51.862Z",
         songs: [
             {
                 title: "Stairway to Heaven",

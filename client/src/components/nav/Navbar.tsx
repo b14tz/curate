@@ -36,14 +36,15 @@ export default function Navbar() {
     };
 
     const handlePost = async (data: PostForm) => {
-        console.log(data);
-        await createPost({
-            title: data.content,
-            description: "description",
-            songs: [], // songs at some point
-            origin: "spotify",
-            downloads: 0,
-        });
+        if (user) {
+            await createPost({
+                title: data.title,
+                description: "description",
+                origin: "spotify",
+                isrcs: "",
+                authorId: user.id,
+            });
+        }
         setPostOpen(false);
     };
 
@@ -118,16 +119,16 @@ export default function Navbar() {
                     <div className="space-y-1">
                         <input
                             type="text"
-                            placeholder="Content"
-                            {...register("content", {
+                            placeholder="Title"
+                            {...register("title", {
                                 required: "Content is required",
                                 minLength: 2,
                             })}
                             className="p-2 rounded-md shadow-inner bg-b-tertiary dark:bg-db-tertiary w-full"
                         />
-                        {errors.content && (
+                        {errors.title && (
                             <p className="text-red-1 text-xs">
-                                {errors.content.message as string}
+                                {errors.title.message as string}
                             </p>
                         )}
                     </div>

@@ -1,4 +1,5 @@
-export function formatPostTime(date: Date) {
+export function formatPostTime(unconvertedDate: string) {
+    let date = new Date(unconvertedDate);
     //get the current date
     let currentDate = new Date();
     //get the inputted date and current date in seconds

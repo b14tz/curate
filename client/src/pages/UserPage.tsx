@@ -87,7 +87,14 @@ export default function UserPage() {
                     isCurrentUser={isCurrentUser}
                     setSettingsOpen={setSettingsOpen}
                 />
-                <Feed posts={samplePostData} />
+                <Feed
+                    posts={samplePostData}
+                    emptyMessage={
+                        isCurrentUser
+                            ? "You haven't posted yet. What are you waiting for?"
+                            : "This user hasn't posted yet."
+                    }
+                />
             </div>
 
             <Modal

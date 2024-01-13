@@ -7,7 +7,7 @@ export const getPost = async (id: string) => {
 };
 
 // POST /post
-export const createPost = async (data: Partial<Post>) => {
+export const createPost = async (data: PostForm) => {
     const res = await axiosInstance.post("/post", data);
     return res.data;
 };
@@ -21,5 +21,16 @@ export const updatePost = async (id: string, data: Partial<Post>) => {
 // DELETE /post/:id
 export const deletePost = async (id: string) => {
     const res = await axiosInstance.delete(`/post/${id}`);
+    return res.data;
+};
+
+// For the Feed
+export const getAllPosts = async () => {
+    const res = await axiosInstance.get("/post/feed/all");
+    return res.data;
+};
+
+export const getAllFollowerPosts = async (id: string) => {
+    const res = await axiosInstance.get(`/post/feed/${id}`);
     return res.data;
 };
