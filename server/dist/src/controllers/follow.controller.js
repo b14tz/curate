@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unfollowUser = exports.followUser = void 0;
+exports.deleteFollow = exports.createFollow = void 0;
 const db_server_1 = require("../utils/db.server");
-const followUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     console.log(data);
     try {
@@ -27,8 +27,8 @@ const followUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         console.error(error);
     }
 });
-exports.followUser = followUser;
-const unfollowUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.createFollow = createFollow;
+const deleteFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     console.log(data);
     try {
@@ -46,4 +46,4 @@ const unfollowUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         console.error(error);
     }
 });
-exports.unfollowUser = unfollowUser;
+exports.deleteFollow = deleteFollow;

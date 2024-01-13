@@ -1,17 +1,51 @@
 import { useSelector } from "react-redux";
-import { followUser, unfollowUser } from "~/api/routes/follow";
+import { createFollow, deleteFollow } from "~/api/routes/follow";
+
 import { RootState } from "~/redux/store";
 
 export default function Header({
     user,
+    setUser,
     isCurrentUser,
     setSettingsOpen,
 }: {
     user: User;
+    setUser: (val: User) => void;
     isCurrentUser: boolean;
     setSettingsOpen: (val: boolean) => void;
 }) {
     let currentUser = useSelector((state: RootState) => state.user);
+
+    const handleFollow = async () => {
+        if (currentUser) {
+            await createFollow({
+                followerId: user.id,
+                followingId: currentUser.id,
+            });
+
+            const newFollowers = [
+                ...(user.followers || []),
+                { followerId: currentUser.id, followingId: user.id },
+            ];
+
+            setUser({ ...user, followers: newFollowers });
+        }
+    };
+
+    const handleUnfollow = async () => {
+        if (currentUser) {
+            await deleteFollow({
+                followerId: user.id,
+                followingId: currentUser.id,
+            });
+
+            const newFollowers = user.followers?.filter((follower) => {
+                return currentUser && follower.followingId !== currentUser.id;
+            });
+
+            setUser({ ...user, followers: newFollowers });
+        }
+    };
 
     return (
         <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 bg-white items-center justify-between">
@@ -39,26 +73,14 @@ export default function Header({
                           ) ? (
                             <button
                                 className="bg-salmon rounded shadow px-4 py-1 text-white"
-                                onClick={() => {
-                                    currentUser &&
-                                        unfollowUser({
-                                            followerId: user.id,
-                                            followingId: currentUser.id,
-                                        });
-                                }}
+                                onClick={() => handleUnfollow()}
                             >
                                 Unfollow
                             </button>
                         ) : (
                             <button
                                 className="bg-salmon rounded shadow px-4 py-1 text-white"
-                                onClick={() => {
-                                    currentUser &&
-                                        followUser({
-                                            followerId: user.id,
-                                            followingId: currentUser.id,
-                                        });
-                                }}
+                                onClick={() => handleFollow()}
                             >
                                 Follow
                             </button>

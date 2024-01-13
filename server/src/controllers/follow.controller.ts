@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
 
-export const followUser = async (req: Request, res: Response) => {
+export const createFollow = async (req: Request, res: Response) => {
     const data = req.body;
     console.log(data);
     try {
@@ -18,7 +18,7 @@ export const followUser = async (req: Request, res: Response) => {
     }
 };
 
-export const unfollowUser = async (req: Request, res: Response) => {
+export const deleteFollow = async (req: Request, res: Response) => {
     const data = req.body;
     console.log(data);
     try {

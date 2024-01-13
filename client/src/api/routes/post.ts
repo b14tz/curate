@@ -34,3 +34,8 @@ export const getAllFollowerPosts = async (id: string) => {
     const res = await axiosInstance.get(`/post/feed/${id}`);
     return res.data;
 };
+
+export const getAllUserPosts = async (id: string) => {
+    const res = await axiosInstance.get(`/post/user/${id}`);
+    return res.data;
+};

@@ -1,7 +1,7 @@
 import axiosInstance from "../axios";
 
 // POST /follow
-export const followUser = async (data: {
+export const createFollow = async (data: {
     followerId: string;
     followingId: string;
 }) => {
@@ -10,7 +10,7 @@ export const followUser = async (data: {
 };
 
 // POST /follow/remove
-export const unfollowUser = async (data: {
+export const deleteFollow = async (data: {
     followerId: string;
     followingId: string;
 }) => {

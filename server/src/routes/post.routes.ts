@@ -4,6 +4,7 @@ import {
     deletePost,
     getAllFollowerPosts,
     getAllPosts,
+    getAllUserPosts,
     getPost,
     updatePost,
 } from "../controllers/post.controller";
@@ -14,7 +15,7 @@ const postRoutes = Router();
 postRoutes.get("/:id", getPost);
 postRoutes.get("/feed/all", getAllPosts);
 postRoutes.get("/feed/:id", getAllFollowerPosts);
-
+postRoutes.get("/user/:id", getAllUserPosts);
 // authentication token goes here
 
 // private routes

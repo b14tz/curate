@@ -1,4 +1,3 @@
-import { samplePostData } from "~/utils/sampleData";
 import Feed from "../components/Feed";
 import Header from "~/components/profile/Header";
 import { useNavigate, useParams } from "react-router-dom";
@@ -9,6 +8,7 @@ import { useEffect, useState } from "react";
 import Modal from "~/components/Modal";
 import { useForm } from "react-hook-form";
 import { clearUser, setUser } from "~/redux/features/user/userSlice";
+import { getAllUserPosts } from "~/api/routes/post";
 
 export default function UserPage() {
     const { id } = useParams();
@@ -16,6 +16,7 @@ export default function UserPage() {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [changeUsernameOpen, setChangeUsernameOpen] = useState(false);
     const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
+    const [posts, setPosts] = useState([]);
     const [userData, setUserData] = useState<User>({
         id: "",
         token: "",
@@ -65,15 +66,19 @@ export default function UserPage() {
 
     useEffect(() => {
         async function populateUser() {
-            if (!isCurrentUser && id) {
-                const fetchedUser = await getUser(id);
-                setUserData(fetchedUser);
-                setValue("displayName", fetchedUser.displayName);
-            } else {
-                if (currentUser) {
-                    setUserData(currentUser);
-                    setValue("displayName", currentUser?.displayName);
+            if (id) {
+                if (!isCurrentUser) {
+                    const fetchedUser = await getUser(id);
+                    setUserData(fetchedUser);
+                    setValue("displayName", fetchedUser.displayName);
+                } else {
+                    if (currentUser) {
+                        setUserData(currentUser);
+                        setValue("displayName", currentUser?.displayName);
+                    }
                 }
+                const fetchedPosts = await getAllUserPosts(id);
+                setPosts(fetchedPosts);
             }
         }
         populateUser();
@@ -84,11 +89,12 @@ export default function UserPage() {
             <div className="space-y-8">
                 <Header
                     user={userData}
+                    setUser={setUserData}
                     isCurrentUser={isCurrentUser}
                     setSettingsOpen={setSettingsOpen}
                 />
                 <Feed
-                    posts={samplePostData}
+                    posts={posts}
                     emptyMessage={
                         isCurrentUser
                             ? "You haven't posted yet. What are you waiting for?"

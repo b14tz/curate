@@ -11,7 +11,7 @@ export default function Footer() {
             <hr />
             <div className="flex flex-row">
                 <p>
-                    <i className="ri-copyright-line"></i> Marshall Blatz{" "}
+                    <i className="ri-copyright-line"></i> Curate{" "}
                     {renderCurrentYear()}
                 </p>
             </div>

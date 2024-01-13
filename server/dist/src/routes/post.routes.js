@@ -7,6 +7,7 @@ const postRoutes = (0, express_1.Router)();
 postRoutes.get("/:id", post_controller_1.getPost);
 postRoutes.get("/feed/all", post_controller_1.getAllPosts);
 postRoutes.get("/feed/:id", post_controller_1.getAllFollowerPosts);
+postRoutes.get("/user/:id", post_controller_1.getAllUserPosts);
 // authentication token goes here
 // private routes
 postRoutes.post("/", post_controller_1.createPost);
