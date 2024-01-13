@@ -52,6 +52,7 @@ export default function Feed({
         });
         setPosts(updatedPosts);
     };
+
     const renderFeed = () => {
         if (Object.keys(posts).length === 0) {
             return (
@@ -91,7 +92,12 @@ export default function Feed({
                             </div>
 
                             <div className="flex flex-col max-w-[380px]">
-                                <p className="underline">{post.title}</p>
+                                <button
+                                    className="w-fit"
+                                    onClick={() => navigate(`/post/${post.id}`)}
+                                >
+                                    <p className="underline">{post.title}</p>
+                                </button>
                                 <div className="flex flex-row space-x-10">
                                     <button
                                         onClick={() =>

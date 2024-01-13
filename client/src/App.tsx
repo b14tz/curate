@@ -10,6 +10,7 @@ import DiscoverPage from "./pages/DiscoverPage";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "./redux/features/user/userSlice";
+import PostPage from "./pages/PostPage";
 
 export default function App() {
     return (
@@ -47,6 +48,7 @@ function AllRoutes() {
                 <Route path="discover" element={<DiscoverPage />} />
                 <Route path="search" element={<SearchPage />} />
                 <Route path="user/:id" element={<UserPage />} />
+                <Route path="post/:id" element={<PostPage />} />
             </Routes>
         </>
     );

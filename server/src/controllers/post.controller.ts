@@ -20,8 +20,25 @@ export const createPost = async (req: Request, res: Response) => {
 export const getPost = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
-        const result = await db.post.findFirst({ where: { id } });
-        return res.status(200).send(result);
+        const post = await db.post.findFirst({
+            where: { id },
+            include: { author: true, likes: true, comments: true },
+        });
+        if (post) {
+            const formattedPost = {
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                songs: sampleSongs,
+                origin: post.origin,
+                downloads: post.downloads,
+                createdAt: post.createdAt,
+                author: post.author,
+                likes: post.likes || [],
+                comments: post.comments || [],
+            };
+            return res.status(200).send(formattedPost);
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).send(`Error getting user data`);

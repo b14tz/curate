@@ -30,8 +30,25 @@ exports.createPost = createPost;
 const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const result = yield db_server_1.db.post.findFirst({ where: { id } });
-        return res.status(200).send(result);
+        const post = yield db_server_1.db.post.findFirst({
+            where: { id },
+            include: { author: true, likes: true, comments: true },
+        });
+        if (post) {
+            const formattedPost = {
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                songs: sampleData_1.sampleSongs,
+                origin: post.origin,
+                downloads: post.downloads,
+                createdAt: post.createdAt,
+                author: post.author,
+                likes: post.likes || [],
+                comments: post.comments || [],
+            };
+            return res.status(200).send(formattedPost);
+        }
     }
     catch (error) {
         console.log(error);
