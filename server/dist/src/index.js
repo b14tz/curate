@@ -34,6 +34,7 @@ const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const post_routes_1 = __importDefault(require("./routes/post.routes"));
 const spotify_routes_1 = __importDefault(require("./routes/spotify.routes"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
+const follow_routes_1 = __importDefault(require("./routes/follow.routes"));
 dotenv.config();
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -56,6 +57,7 @@ app.use("/api/user", user_routes_1.default);
 app.use("/api/post", post_routes_1.default);
 app.use("/api/spotify", spotify_routes_1.default);
 app.use("/api/auth", auth_routes_1.default);
+app.use("/api/follow", follow_routes_1.default);
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

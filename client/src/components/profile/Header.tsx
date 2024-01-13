@@ -1,3 +1,7 @@
+import { useSelector } from "react-redux";
+import { followUser, unfollowUser } from "~/api/routes/follow";
+import { RootState } from "~/redux/store";
+
 export default function Header({
     user,
     isCurrentUser,
@@ -7,6 +11,8 @@ export default function Header({
     isCurrentUser: boolean;
     setSettingsOpen: (val: boolean) => void;
 }) {
+    let currentUser = useSelector((state: RootState) => state.user);
+
     return (
         <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 bg-white items-center justify-between">
             <div className="flex flex-row items-center space-x-4">
@@ -23,10 +29,36 @@ export default function Header({
                                     Settings
                                 </button>
                             </>
+                        ) : user.followers &&
+                          currentUser &&
+                          user.followers.some(
+                              (item) =>
+                                  currentUser &&
+                                  item.followerId === user.id &&
+                                  item.followingId === currentUser.id
+                          ) ? (
+                            <button
+                                className="bg-salmon rounded shadow px-4 py-1 text-white"
+                                onClick={() => {
+                                    currentUser &&
+                                        unfollowUser({
+                                            followerId: user.id,
+                                            followingId: currentUser.id,
+                                        });
+                                }}
+                            >
+                                Unfollow
+                            </button>
                         ) : (
                             <button
                                 className="bg-salmon rounded shadow px-4 py-1 text-white"
-                                onClick={() => console.log("handle follow")}
+                                onClick={() => {
+                                    currentUser &&
+                                        followUser({
+                                            followerId: user.id,
+                                            followingId: currentUser.id,
+                                        });
+                                }}
                             >
                                 Follow
                             </button>

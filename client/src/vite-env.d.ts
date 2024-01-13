@@ -11,11 +11,16 @@ interface User {
     connectedToApple: boolean;
     likes?: [];
     comments?: [];
-    followers?: [];
-    following?: [];
+    followers?: Follow[];
+    following?: Follow[];
     posts?: [];
     saves?: [];
     token: string;
+}
+
+interface Follow {
+    followerId: string;
+    followingId: string;
 }
 
 interface Search {

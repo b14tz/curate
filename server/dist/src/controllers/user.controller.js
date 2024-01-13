@@ -35,7 +35,15 @@ exports.createUser = createUser;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        const result = yield db_server_1.db.user.findFirst({ where: { id } });
+        const result = yield db_server_1.db.user.findFirst({
+            where: { id },
+            include: {
+                followers: true,
+                following: true,
+                likes: true,
+                comments: true,
+            },
+        });
         console.log(result);
         return res.status(200).send(result);
     }

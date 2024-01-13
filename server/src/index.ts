@@ -7,6 +7,7 @@ import userRoutes from "./routes/user.routes";
 import postRoutes from "./routes/post.routes";
 import spotifyRoutes from "./routes/spotify.routes";
 import authRoutes from "./routes/auth.routes";
+import followRoutes from "./routes/follow.routes";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/spotify", spotifyRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/follow", followRoutes);
 
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, (): void => {

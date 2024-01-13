@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { formatPostTime } from "../utils/time";
 
 export default function Feed({
@@ -7,6 +8,8 @@ export default function Feed({
     posts: Post[];
     emptyMessage: string;
 }) {
+    const navigate = useNavigate();
+
     const renderFeed = () => {
         if (Object.keys(posts).length === 0) {
             return (
@@ -48,7 +51,13 @@ export default function Feed({
                             <div className="flex flex-col max-w-[380px]">
                                 <p className="underline">{post.title}</p>
                                 <div className="flex flex-row space-x-10">
-                                    <p>{post.author.displayName}</p>
+                                    <button
+                                        onClick={() =>
+                                            navigate(`/user/${post.author.id}`)
+                                        }
+                                    >
+                                        <p>{post.author.displayName}</p>
+                                    </button>
                                     <p>
                                         <i className="ri-music-2-fill"></i>
                                         {post.songs.length}

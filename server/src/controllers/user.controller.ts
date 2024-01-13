@@ -35,7 +35,15 @@ export const createUser = async ({
 export const getUser = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
-        const result = await db.user.findFirst({ where: { id } });
+        const result = await db.user.findFirst({
+            where: { id },
+            include: {
+                followers: true,
+                following: true,
+                likes: true,
+                comments: true,
+            },
+        });
         console.log(result);
         return res.status(200).send(result);
     } catch (error) {
