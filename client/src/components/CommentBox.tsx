@@ -1,3 +1,4 @@
+import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { createComment } from "~/api/routes/comment";
@@ -11,16 +12,21 @@ export default function CommentBox({
     setPost: (val: Post) => void;
 }) {
     const [content, setContent] = useState("");
-    const user = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector((state: RootState) => state.user);
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleCreateComment = async () => {
-        if (user) {
+        if (currentUser) {
             const comment = await createComment(post.id, {
                 content,
-                authorId: user.id,
+                authorId: currentUser.id,
             });
             console.log("comment: ", comment);
             setPost({ ...post, comments: [comment, ...post.comments] });
+        } else {
+            enqueueSnackbar("You must be logged in to comment on a post.", {
+                autoHideDuration: 2000,
+            });
         }
     };
 

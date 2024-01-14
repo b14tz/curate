@@ -1,4 +1,5 @@
 import { IconCornerDownRight } from "@tabler/icons-react";
+import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -14,6 +15,8 @@ export default function PostPage() {
 
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const [post, setPost] = useState<Post>({
         id: "",
@@ -39,7 +42,7 @@ export default function PostPage() {
     });
     const [showSongs, setShowSongs] = useState(true);
 
-    const user = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         async function populatePost() {
@@ -62,24 +65,31 @@ export default function PostPage() {
         populatePost();
     }, [id, location.search]);
 
-    // Handle like
     const handleLike = async () => {
-        if (user && post) {
-            await createLike(post.id, { userId: user.id });
+        if (currentUser) {
+            await createLike(post.id, { userId: currentUser.id });
             setPost({
                 ...post,
-                likes: [...post.likes, { userId: user.id, postId: post.id }],
+                likes: [
+                    ...post.likes,
+                    { userId: currentUser.id, postId: post.id },
+                ],
+            });
+        } else {
+            enqueueSnackbar("You must be logged in to like a post.", {
+                autoHideDuration: 2000,
             });
         }
     };
 
-    // Handle unlike
     const handleUnlike = async () => {
-        if (user && post) {
-            await deleteLike(post.id, { userId: user.id });
+        if (currentUser && post) {
+            await deleteLike(post.id, { userId: currentUser.id });
             setPost({
                 ...post,
-                likes: post.likes.filter((like) => like.userId !== user.id),
+                likes: post.likes.filter(
+                    (like) => like.userId !== currentUser.id
+                ),
             });
         }
     };
@@ -175,12 +185,16 @@ export default function PostPage() {
                     >
                         <p>{post?.author.displayName}</p>
                     </button>
-                    <p>
-                        <i className="ri-music-2-fill"></i>
-                        {post?.songs.length}
-                    </p>
-                    {user &&
-                    post?.likes.find((like) => like.userId == user.id) ? (
+                    <button onClick={() => handleShowSongs()}>
+                        <p>
+                            <i className="ri-music-2-fill"></i>
+                            {post?.songs.length}
+                        </p>
+                    </button>
+                    {currentUser &&
+                    post?.likes.find(
+                        (like) => like.userId == currentUser.id
+                    ) ? (
                         <button onClick={() => handleUnlike()}>
                             <p className="text-salmon">
                                 <i className="ri-heart-fill"></i>

@@ -1,3 +1,4 @@
+import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { createFollow, deleteFollow } from "~/api/routes/follow";
 
@@ -15,6 +16,7 @@ export default function Header({
     setSettingsOpen: (val: boolean) => void;
 }) {
     let currentUser = useSelector((state: RootState) => state.user);
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleFollow = async () => {
         if (currentUser) {
@@ -29,6 +31,10 @@ export default function Header({
             ];
 
             setUser({ ...user, followers: newFollowers });
+        } else {
+            enqueueSnackbar("You must be logged in to follow users.", {
+                autoHideDuration: 2000,
+            });
         }
     };
 

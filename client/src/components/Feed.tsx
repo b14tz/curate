@@ -3,6 +3,7 @@ import { formatPostTime } from "../utils/time";
 import { createLike, deleteLike } from "~/api/routes/like";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
+import { useSnackbar } from "notistack";
 
 export default function Feed({
     posts,
@@ -13,26 +14,34 @@ export default function Feed({
     setPosts: (val: Post[]) => void;
     emptyMessage: string;
 }) {
-    const user = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector((state: RootState) => state.user);
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
     // Check if the current user has liked the post
     const isPostLikedByUser = (post: Post) => {
-        return user && post.likes.some((like) => like.userId === user.id);
+        return (
+            currentUser &&
+            post.likes.some((like) => like.userId === currentUser.id)
+        );
     };
 
     // Handle like
     const handleLike = async (postId: string) => {
-        if (user) {
-            await createLike(postId, { userId: user.id });
+        if (currentUser) {
+            await createLike(postId, { userId: currentUser.id });
             updatePostLikes(postId, true);
+        } else {
+            enqueueSnackbar("You must be logged in to like a post.", {
+                autoHideDuration: 2000,
+            });
         }
     };
 
     // Handle unlike
     const handleUnlike = async (postId: string) => {
-        if (user) {
-            await deleteLike(postId, { userId: user.id });
+        if (currentUser) {
+            await deleteLike(postId, { userId: currentUser.id });
             updatePostLikes(postId, false);
         }
     };
@@ -40,12 +49,14 @@ export default function Feed({
     // Update the likes in the posts state
     const updatePostLikes = (postId: string, isLiked: boolean) => {
         const updatedPosts = posts.map((post) => {
-            if (user && post.id === postId) {
+            if (currentUser && post.id === postId) {
                 return {
                     ...post,
                     likes: isLiked
-                        ? [...post.likes, { userId: user.id, postId }]
-                        : post.likes.filter((like) => like.userId !== user.id),
+                        ? [...post.likes, { userId: currentUser.id, postId }]
+                        : post.likes.filter(
+                              (like) => like.userId !== currentUser.id
+                          ),
                 };
             }
             return post;

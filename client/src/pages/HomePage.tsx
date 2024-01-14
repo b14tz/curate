@@ -53,8 +53,10 @@ export default function HomePage() {
             if (currentUser) {
                 const data = await getAllFollowerPosts(currentUser.id);
 
-                console.log(data);
+                console.log("following posts: ", data);
                 setPosts(data);
+            } else {
+                setPosts([]);
             }
         } catch (error) {
             console.error(error);
