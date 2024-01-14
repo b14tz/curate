@@ -27,7 +27,7 @@ export default function HomePage() {
             path = "for you";
         }
 
-        if (path === "for you") {
+        if (path === "for you" || !path) {
             handleGetAllPosts();
         } else if (path === "following") {
             handleGetAllFollowerPosts();
