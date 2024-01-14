@@ -22,7 +22,18 @@ export const getPost = async (req: Request, res: Response) => {
     try {
         const post = await db.post.findFirst({
             where: { id },
-            include: { author: true, likes: true, comments: true },
+            include: {
+                author: true,
+                likes: true,
+                comments: {
+                    include: {
+                        author: true,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+            },
         });
         if (post) {
             const formattedPost = {

@@ -1,28 +1,66 @@
+import { IconCornerDownRight } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { createLike, deleteLike } from "~/api/routes/like";
 import { getPost } from "~/api/routes/post";
 import { ButtonGroup } from "~/components/ButtonGroup";
+import CommentBox from "~/components/CommentBox";
 import { RootState } from "~/redux/store";
+import { formatPostTime } from "~/utils/time";
 
 export default function PostPage() {
     const { id } = useParams();
-    const [post, setPost] = useState<Post>();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const [post, setPost] = useState<Post>({
+        id: "",
+        title: "",
+        description: "",
+        songs: [],
+        origin: "",
+        downloads: 0,
+        createdAt: "",
+        author: {
+            id: "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            displayName: "",
+            bio: "",
+            connectedToSpotify: false,
+            connectedToApple: false,
+            token: "",
+        },
+        comments: [],
+        likes: [],
+    });
+    const [showSongs, setShowSongs] = useState(true);
 
     const user = useSelector((state: RootState) => state.user);
-    const navigate = useNavigate();
 
     useEffect(() => {
         async function populatePost() {
             if (id) {
                 const data = await getPost(id);
                 setPost(data);
+                console.log(data);
             }
         }
+
+        const searchParams = new URLSearchParams(location.search);
+        let path = searchParams.get("path");
+
+        if (!path) {
+            navigate(`${location.pathname}?path=songs`);
+            path = "songs";
+        }
+
+        setShowSongs(path === "songs");
         populatePost();
-        handleShowSongs();
-    }, []);
+    }, [id, location.search]);
 
     // Handle like
     const handleLike = async () => {
@@ -46,12 +84,12 @@ export default function PostPage() {
         }
     };
 
-    const handleShowSongs = async () => {
-        console.log("handle show songs");
+    const handleShowSongs = () => {
+        navigate(`${location.pathname}?path=songs`);
     };
 
-    const handleShowComments = async () => {
-        console.log("handle show comments");
+    const handleShowComments = () => {
+        navigate(`${location.pathname}?path=comments`);
     };
 
     const renderSongs = () => {
@@ -78,6 +116,41 @@ export default function PostPage() {
                                 <div className="flex flex-col space-y-2">
                                     <h3>{song.title}</h3>
                                     <p>{song.artist}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            }
+        }
+    };
+
+    const renderComments = () => {
+        if (post) {
+            if (Object.keys(post?.comments).length === 0) {
+                return (
+                    <div className="h-[100px] flex justify-center items-center">
+                        <p>
+                            There's no comments on this post yet. You could be
+                            the first!
+                        </p>
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="flex flex-col space-y-4">
+                        {post?.comments.map((comment) => (
+                            <div
+                                key={comment.author + comment.content}
+                                className="flex flex-col"
+                            >
+                                <div className="flex flex-row w-full justify-between">
+                                    <p>{comment.author.displayName}</p>
+                                    <p>{formatPostTime(comment.createdAt)}</p>
+                                </div>
+                                <div className="flex items-center">
+                                    <IconCornerDownRight />
+                                    <p>{comment.content}</p>
                                 </div>
                             </div>
                         ))}
@@ -123,10 +196,12 @@ export default function PostPage() {
                         </button>
                     )}
 
-                    <p>
-                        <i className="ri-chat-1-fill"></i>
-                        {post?.comments.length}
-                    </p>
+                    <button onClick={() => handleShowComments()}>
+                        <p>
+                            <i className="ri-chat-1-fill"></i>
+                            {post?.comments.length}
+                        </p>
+                    </button>
                     <p>
                         <i className="ri-download-fill"></i>
                         {post?.downloads}
@@ -151,7 +226,17 @@ export default function PostPage() {
                     },
                 ]}
             />
-            <div>{renderSongs()}</div>
+
+            <div className="flex flex-col space-y-2">
+                {showSongs ? (
+                    <>{renderSongs()}</>
+                ) : (
+                    <div className="flex flex-col space-y-2">
+                        <CommentBox post={post} setPost={setPost} />
+                        <div>{renderComments()}</div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

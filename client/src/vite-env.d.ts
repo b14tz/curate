@@ -76,7 +76,12 @@ interface Like {
     postId: string;
 }
 
-interface Comment {}
+interface Comment {
+    content: string;
+    post: Post;
+    author: User;
+    createdAt: string;
+}
 
 interface Song {
     title: string;

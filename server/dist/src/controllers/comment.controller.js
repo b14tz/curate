@@ -14,7 +14,13 @@ const db_server_1 = require("../utils/db.server");
 const getAllPostComments = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const postId = req.params.id;
-        const comments = yield db_server_1.db.postComment.findMany({ where: { postId } });
+        const comments = yield db_server_1.db.postComment.findMany({
+            where: { postId },
+            include: { author: true },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
         return res.status(200).send(comments);
     }
     catch (error) {
@@ -28,6 +34,7 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const { content, authorId } = req.body;
         const comment = yield db_server_1.db.postComment.create({
             data: { authorId, postId, content },
+            include: { author: true },
         });
         return res.status(200).send(comment);
     }
@@ -38,11 +45,8 @@ const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.createComment = createComment;
 const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postId = req.params.id;
-        const { authorId } = req.body;
-        yield db_server_1.db.postComment.delete({
-            where: { postId_authorId: { postId: postId, authorId } },
-        });
+        const id = req.params.id;
+        yield db_server_1.db.postComment.delete({ where: { id } });
         return res.status(200).send("Successfully deleted comment");
     }
     catch (error) {

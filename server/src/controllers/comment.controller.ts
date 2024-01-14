@@ -5,7 +5,13 @@ import { db } from "../utils/db.server";
 export const getAllPostComments = async (req: Request, res: Response) => {
     try {
         const postId = req.params.id;
-        const comments = await db.postComment.findMany({ where: { postId } });
+        const comments = await db.postComment.findMany({
+            where: { postId },
+            include: { author: true },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
         return res.status(200).send(comments);
     } catch (error) {
         console.error(error);
@@ -19,6 +25,7 @@ export const createComment = async (req: Request, res: Response) => {
             req.body;
         const comment = await db.postComment.create({
             data: { authorId, postId, content },
+            include: { author: true },
         });
         return res.status(200).send(comment);
     } catch (error) {
@@ -28,11 +35,8 @@ export const createComment = async (req: Request, res: Response) => {
 
 export const deleteComment = async (req: Request, res: Response) => {
     try {
-        const postId = req.params.id;
-        const { authorId } = req.body;
-        await db.postComment.delete({
-            where: { postId_authorId: { postId: postId, authorId } },
-        });
+        const id = req.params.id;
+        await db.postComment.delete({ where: { id } });
         return res.status(200).send("Successfully deleted comment");
     } catch (error) {
         console.error(error);

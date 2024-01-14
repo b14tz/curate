@@ -2,13 +2,30 @@ import { useEffect, useState } from "react";
 import { ButtonGroup } from "../components/ButtonGroup";
 import Feed from "../components/Feed";
 import { populateSpotifyFeed } from "~/api/routes/spotify";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function DiscoverPage() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [emptyMessage, setEmptyMessage] = useState("");
 
+    const location = useLocation();
+    const navigate = useNavigate();
+
     useEffect(() => {
-        populateSpotifyPosts();
+        const searchParams = new URLSearchParams(location.search);
+        let path = searchParams.get("path");
+
+        // Set default path to 'spotify' if none is specified
+        if (!path) {
+            navigate("?path=spotify");
+            path = "spotify";
+        }
+
+        if (path === "spotify") {
+            populateSpotifyPosts();
+        } else if (path === "apple") {
+            populateApplePosts();
+        }
     }, []);
 
     async function populateSpotifyPosts() {
@@ -23,6 +40,7 @@ export default function DiscoverPage() {
         setEmptyMessage(
             "It looks like there aren't any apple recommendations at this time."
         );
+        setPosts([]);
     }
 
     return (

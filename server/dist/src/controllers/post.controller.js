@@ -32,7 +32,18 @@ const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const post = yield db_server_1.db.post.findFirst({
             where: { id },
-            include: { author: true, likes: true, comments: true },
+            include: {
+                author: true,
+                likes: true,
+                comments: {
+                    include: {
+                        author: true,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+            },
         });
         if (post) {
             const formattedPost = {
