@@ -42,6 +42,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 following: true,
                 likes: true,
                 comments: true,
+                posts: true,
             },
         });
         console.log(result);

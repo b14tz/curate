@@ -42,6 +42,7 @@ export const getUser = async (req: Request, res: Response) => {
                 following: true,
                 likes: true,
                 comments: true,
+                posts: true,
             },
         });
         console.log(result);

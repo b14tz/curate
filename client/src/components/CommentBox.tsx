@@ -23,6 +23,7 @@ export default function CommentBox({
             });
             console.log("comment: ", comment);
             setPost({ ...post, comments: [comment, ...post.comments] });
+            setContent("");
         } else {
             enqueueSnackbar("You must be logged in to comment on a post.", {
                 autoHideDuration: 2000,

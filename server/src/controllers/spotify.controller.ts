@@ -17,7 +17,7 @@ export const searchSpotify = async (req: Request, res: Response) => {
 
         // console.log(data.tracks.items[0]);
         // console.log(data.albums.items[0]);
-        //console.log(data.artists.items[1]);
+        // console.log(data.artists.items[1]);
 
         let result: any = {};
         for (const itemType in data) {

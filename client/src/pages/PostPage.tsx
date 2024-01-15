@@ -1,4 +1,4 @@
-import { IconCornerDownRight } from "@tabler/icons-react";
+import { IconCornerDownRight, IconUser } from "@tabler/icons-react";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -172,19 +172,12 @@ export default function PostPage() {
 
     return (
         <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-1">
+                <h3>{post?.title}</h3>
+                <p>{post?.description}</p>
+            </div>
             <div className="flex flex-row justify-between items-end">
-                <div className="flex flex-col space-y-1">
-                    <h3>{post?.title}</h3>
-                    <p>{post?.description}</p>
-                </div>
-
                 <div className="flex flex-row items-center space-x-10">
-                    <button
-                        className="w-fit"
-                        onClick={() => navigate(`/user/${post?.author.id}`)}
-                    >
-                        <p>{post?.author.displayName}</p>
-                    </button>
                     <button onClick={() => handleShowSongs()}>
                         <p>
                             <i className="ri-music-2-fill"></i>
@@ -221,6 +214,14 @@ export default function PostPage() {
                         {post?.downloads}
                     </p>
                 </div>
+
+                <button
+                    className="w-fit flex items-center space-x-1"
+                    onClick={() => navigate(`/user/${post?.author.id}`)}
+                >
+                    <IconUser size={20} />
+                    <p>{post?.author.displayName}</p>
+                </button>
             </div>
             <hr />
             <ButtonGroup

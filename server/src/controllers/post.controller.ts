@@ -82,7 +82,15 @@ export const getAllPosts = async (req: Request, res: Response) => {
     try {
         const posts = await db.post.findMany({
             include: {
-                author: true,
+                author: {
+                    include: {
+                        followers: true,
+                        following: true,
+                        likes: true,
+                        comments: true,
+                        posts: true,
+                    },
+                },
                 likes: true,
                 comments: true,
             },
@@ -121,7 +129,15 @@ export const getAllFollowerPosts = async (req: Request, res: Response) => {
         const posts = await db.post.findMany({
             where: { authorId: { in: followingIds } },
             include: {
-                author: true,
+                author: {
+                    include: {
+                        followers: true,
+                        following: true,
+                        likes: true,
+                        comments: true,
+                        posts: true,
+                    },
+                },
                 likes: true,
                 comments: true,
             },
@@ -156,7 +172,15 @@ export const getAllUserPosts = async (req: Request, res: Response) => {
         const posts = await db.post.findMany({
             where: { authorId: id },
             include: {
-                author: true,
+                author: {
+                    include: {
+                        followers: true,
+                        following: true,
+                        likes: true,
+                        comments: true,
+                        posts: true,
+                    },
+                },
                 likes: true,
                 comments: true,
             },

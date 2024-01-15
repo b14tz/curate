@@ -95,7 +95,15 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const posts = yield db_server_1.db.post.findMany({
             include: {
-                author: true,
+                author: {
+                    include: {
+                        followers: true,
+                        following: true,
+                        likes: true,
+                        comments: true,
+                        posts: true,
+                    },
+                },
                 likes: true,
                 comments: true,
             },
@@ -134,7 +142,15 @@ const getAllFollowerPosts = (req, res) => __awaiter(void 0, void 0, void 0, func
         const posts = yield db_server_1.db.post.findMany({
             where: { authorId: { in: followingIds } },
             include: {
-                author: true,
+                author: {
+                    include: {
+                        followers: true,
+                        following: true,
+                        likes: true,
+                        comments: true,
+                        posts: true,
+                    },
+                },
                 likes: true,
                 comments: true,
             },
@@ -168,7 +184,15 @@ const getAllUserPosts = (req, res) => __awaiter(void 0, void 0, void 0, function
         const posts = yield db_server_1.db.post.findMany({
             where: { authorId: id },
             include: {
-                author: true,
+                author: {
+                    include: {
+                        followers: true,
+                        following: true,
+                        likes: true,
+                        comments: true,
+                        posts: true,
+                    },
+                },
                 likes: true,
                 comments: true,
             },

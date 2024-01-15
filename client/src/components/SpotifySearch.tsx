@@ -2,7 +2,7 @@ import { useState } from "react";
 import { searchSpotify } from "../api/routes/spotify";
 import { ButtonGroup } from "./ButtonGroup";
 
-export default function Search() {
+export default function SpotifySearch() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchTypes, setSearchTypes] = useState<string[]>([
         "track",

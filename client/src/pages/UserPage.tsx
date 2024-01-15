@@ -32,7 +32,7 @@ export default function UserPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    let currentUser = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector((state: RootState) => state.user);
     const isCurrentUser = id === currentUser?.id;
 
     const {
@@ -66,23 +66,17 @@ export default function UserPage() {
 
     useEffect(() => {
         async function populateUser() {
-            if (id) {
-                if (!isCurrentUser) {
-                    const fetchedUser = await getUser(id);
-                    setUserData(fetchedUser);
-                    setValue("displayName", fetchedUser.displayName);
-                } else {
-                    if (currentUser) {
-                        setUserData(currentUser);
-                        setValue("displayName", currentUser?.displayName);
-                    }
-                }
+            if (id && currentUser) {
+                const fetchedUser = await getUser(id);
+                setUserData(fetchedUser);
+                setValue("displayName", fetchedUser.displayName);
+
                 const fetchedPosts = await getAllUserPosts(id);
                 setPosts(fetchedPosts);
             }
         }
         populateUser();
-    }, [id, isCurrentUser, changeUsernameOpen]);
+    }, [id, isCurrentUser, changeUsernameOpen, currentUser]);
 
     return (
         <>

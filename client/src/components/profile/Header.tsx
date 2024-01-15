@@ -96,22 +96,22 @@ export default function Header({
             </div>
             <div className="flex flex-row space-x-4">
                 <div className="flex flex-col items-center">
-                    <h3>{user?.posts?.length || 0}</h3>
+                    <h3>{user.posts?.length || 0}</h3>
                     <p>Posts</p>
                 </div>
                 <div className="border-l" />
                 <div className="flex flex-col items-center">
-                    <h3>{user?.saves?.length || 0}</h3>
+                    <h3>{user.saves?.length || 0}</h3>
                     <p>Saves</p>
                 </div>
                 <div className="border-l" />
                 <div className="flex flex-col items-center">
-                    <h3>{user?.followers?.length || 0}</h3>
+                    <h3>{user.followers?.length || 0}</h3>
                     <p>Followers</p>
                 </div>
                 <div className="border-l" />
                 <div className="flex flex-col items-center">
-                    <h3>{user?.following?.length || 0}</h3>
+                    <h3>{user.following?.length || 0}</h3>
                     <p>Following</p>
                 </div>
             </div>

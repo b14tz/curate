@@ -28,7 +28,7 @@ const searchSpotify = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const data = searchResults.data;
         // console.log(data.tracks.items[0]);
         // console.log(data.albums.items[0]);
-        //console.log(data.artists.items[1]);
+        // console.log(data.artists.items[1]);
         let result = {};
         for (const itemType in data) {
             const items = data[itemType].items;
