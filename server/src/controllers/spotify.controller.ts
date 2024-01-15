@@ -2,6 +2,121 @@ import axios from "axios";
 import { Request, Response } from "express";
 
 import { getClientToken } from "../utils/spotify-client-token";
+import { randomBytes } from "crypto";
+
+export const requestSpotifyAuthorization = async (
+    req: Request,
+    res: Response
+) => {
+    const state = randomBytes(16).toString("base64");
+    const scope =
+        "user-read-private playlist-read-private playlist-read-collaborative";
+
+    const { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } = process.env;
+    if (!SPOTIFY_CLIENT_ID || !SPOTIFY_REDIRECT_URI) {
+        return res.status(500).send("Server configuration error");
+    }
+
+    res.redirect(
+        "https://accounts.spotify.com/authorize?" +
+            `response_type=code` +
+            `&client_id=${encodeURIComponent(SPOTIFY_CLIENT_ID)}` +
+            `&scope=${encodeURIComponent(scope)}` +
+            `&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}`
+    );
+};
+
+export const requestAccessToken = async (req: Request, res: Response) => {
+    try {
+        const code = req.body.code;
+
+        const {
+            SPOTIFY_CLIENT_ID,
+            SPOTIFY_CLIENT_SECRET,
+            SPOTIFY_REDIRECT_URI,
+        } = process.env;
+        if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
+            return res.status(500).send("Server configuration error");
+        }
+
+        const response = await axios.post(
+            "https://accounts.spotify.com/api/token",
+            {
+                grant_type: "authorization_code",
+                code: code,
+                redirect_uri: SPOTIFY_REDIRECT_URI,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization:
+                        "Basic " +
+                        Buffer.from(
+                            SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET
+                        ).toString("base64"),
+                },
+            }
+        );
+
+        console.log("request access token response: ", response.data);
+        res.json(response.data);
+    } catch (error) {
+        console.error(error);
+        res.status(400).send("Error retrieving access token");
+    }
+};
+
+export const populateSpotifyFeed = async (req: Request, res: Response) => {
+    try {
+        const token = await getClientToken();
+        const playlistResults = await axios({
+            method: "get",
+            url: `https://api.spotify.com/v1/browse/featured-playlists?country=US`,
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const playlists = playlistResults.data.playlists.items;
+
+        const result = await Promise.all(
+            playlists.map(async (playlist: any) => {
+                const songs = await fetchPlaylistSongs(
+                    token,
+                    playlist.tracks.href
+                );
+
+                return {
+                    id: playlist.id,
+                    title: playlist.name,
+                    author: playlist.owner.display_name,
+                    description: playlist.description.replace(/Cover:.*$/, ""),
+                    songs: songs,
+                    downloads: 0,
+                    likes: [],
+                    comments: [],
+                };
+            })
+        );
+
+        return res.json(result);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(`Error searching with spotify client`);
+    }
+};
+
+export const fetchPlaylistSongs = async (token: string, url: string) => {
+    const songResults = await axios({
+        method: "get",
+        url: url,
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return songResults.data.items.map((song: any) => ({
+        id: song.track?.id,
+        title: song.track?.name,
+        artist: song.track?.artists[0].name,
+        imageUrl: song.track?.album.images[0]?.url,
+    }));
+};
 
 export const searchSpotify = async (req: Request, res: Response) => {
     const search = req.body;
@@ -57,58 +172,6 @@ export const searchSpotify = async (req: Request, res: Response) => {
             }
         }
         return res.status(200).send(result);
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send(`Error searching with spotify client`);
-    }
-};
-
-export const fetchPlaylistSongs = async (token: string, url: string) => {
-    const songResults = await axios({
-        method: "get",
-        url: url,
-        headers: { Authorization: `Bearer ${token}` },
-    });
-
-    return songResults.data.items.map((song: any) => ({
-        id: song.track?.id,
-        title: song.track?.name,
-        artist: song.track?.artists[0].name,
-        imageUrl: song.track?.album.images[0]?.url,
-    }));
-};
-
-export const populateSpotifyFeed = async (req: Request, res: Response) => {
-    try {
-        const token = await getClientToken();
-        const playlistResults = await axios({
-            method: "get",
-            url: `https://api.spotify.com/v1/browse/featured-playlists?country=US`,
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        const playlists = playlistResults.data.playlists.items;
-
-        const result = await Promise.all(
-            playlists.map(async (playlist: any) => {
-                const songs = await fetchPlaylistSongs(
-                    token,
-                    playlist.tracks.href
-                );
-
-                return {
-                    id: playlist.id,
-                    title: playlist.name,
-                    author: playlist.owner.display_name,
-                    description: playlist.description.replace(/Cover:.*$/, ""),
-                    songs: songs,
-                    downloads: 0,
-                    likes: [],
-                    comments: [],
-                };
-            })
-        );
-
-        return res.json(result);
     } catch (error) {
         console.error(error);
         return res.status(500).send(`Error searching with spotify client`);

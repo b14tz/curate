@@ -121,6 +121,16 @@ export default function UserPage() {
                         </button>
                     </div>
                     <button
+                        className="w-fit underline"
+                        onClick={() => {
+                            window.location.href = `${
+                                import.meta.env.VITE_SERVER_URL
+                            }/spotify/auth`;
+                        }}
+                    >
+                        Connect to Spotify
+                    </button>
+                    <button
                         className="underline w-fit text-error"
                         onClick={() => {
                             setSettingsOpen(false);

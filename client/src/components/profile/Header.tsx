@@ -1,4 +1,5 @@
 import { useSnackbar } from "notistack";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { createFollow, deleteFollow } from "~/api/routes/follow";
 
@@ -15,8 +16,21 @@ export default function Header({
     isCurrentUser: boolean;
     setSettingsOpen: (val: boolean) => void;
 }) {
-    let currentUser = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector((state: RootState) => state.user);
     const { enqueueSnackbar } = useSnackbar();
+
+    const [isFollowing, setIsFollowing] = useState(true);
+
+    useEffect(() => {
+        setIsFollowing(
+            user.followers?.some(
+                (follower) =>
+                    currentUser &&
+                    follower.followerId === user.id &&
+                    follower.followingId === currentUser.id
+            ) || false
+        );
+    }, [user, currentUser]);
 
     const handleFollow = async () => {
         if (currentUser) {
@@ -27,10 +41,11 @@ export default function Header({
 
             const newFollowers = [
                 ...(user.followers || []),
-                { followerId: currentUser.id, followingId: user.id },
+                { followerId: user.id, followingId: currentUser.id },
             ];
 
             setUser({ ...user, followers: newFollowers });
+            setIsFollowing(true);
         } else {
             enqueueSnackbar("You must be logged in to follow users.", {
                 autoHideDuration: 2000,
@@ -45,11 +60,14 @@ export default function Header({
                 followingId: currentUser.id,
             });
 
+            console.log("unfollow -> before: ", user.followers);
             const newFollowers = user.followers?.filter((follower) => {
                 return currentUser && follower.followingId !== currentUser.id;
             });
+            console.log("unfollow -> after: ", newFollowers);
 
             setUser({ ...user, followers: newFollowers });
+            setIsFollowing(false); // Set follow status to false
         }
     };
 
@@ -69,14 +87,7 @@ export default function Header({
                                     Settings
                                 </button>
                             </>
-                        ) : user.followers &&
-                          currentUser &&
-                          user.followers.some(
-                              (item) =>
-                                  currentUser &&
-                                  item.followerId === user.id &&
-                                  item.followingId === currentUser.id
-                          ) ? (
+                        ) : isFollowing ? (
                             <button
                                 className="bg-salmon rounded shadow px-4 py-1 text-white"
                                 onClick={() => handleUnfollow()}

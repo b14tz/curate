@@ -12,6 +12,8 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "./redux/features/user/userSlice";
 import PostPage from "./pages/PostPage";
+import SpotifyCallback from "./components/callbacks/SpotifyCallback";
+import AuthCallback from "./components/callbacks/AuthCallback";
 
 export default function App() {
     return (
@@ -50,6 +52,9 @@ function AllRoutes() {
                 <Route path="search" element={<SearchPage />} />
                 <Route path="user/:id" element={<UserPage />} />
                 <Route path="post/:id" element={<PostPage />} />
+                {/* Callbacks */}
+                <Route path="callback/auth" element={<AuthCallback />} />
+                <Route path="callback/spotify" element={<SpotifyCallback />} />
             </Routes>
         </>
     );
