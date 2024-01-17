@@ -178,6 +178,10 @@ export default function PostModal({
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div className="space-y-2">
+                    <p className="text-lg font-medium">Details</p>
                     <Select
                         options={playlistOptions}
                         styles={customSelectStyles}
@@ -195,10 +199,6 @@ export default function PostModal({
                             },
                         })}
                     />
-                </div>
-
-                <div className="space-y-2">
-                    <p className="text-lg font-medium">Details</p>
                     <div className="space-y-1">
                         <input
                             type="text"
