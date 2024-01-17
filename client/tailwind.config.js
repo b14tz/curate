@@ -30,6 +30,7 @@ export default {
             green: "#13CE66",
             orange: "#F63F0A",
             salmon: "#FE346E",
+            snow: "#FFF8FA",
         },
     },
     plugins: [],

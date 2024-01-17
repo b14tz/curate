@@ -23,6 +23,12 @@ export default function Navbar() {
 
     const [playlistOptions, setPlaylistOptions] = useState([]);
 
+    const [selectedRadio, setSelectedRadio] = useState("spotify");
+
+    const handleRadioSelect = (value: string) => {
+        setSelectedRadio(value);
+    };
+
     const user = useSelector((state: RootState) => state.userReducer.user);
     const spotifyToken = useSelector(
         (state: RootState) => state.spotifyReducer
@@ -145,37 +151,79 @@ export default function Navbar() {
             <Modal open={postOpen} setOpen={setPostOpen} title="Post">
                 <form
                     onSubmit={handleSubmit(handlePost)}
-                    className="space-y-2 min-w-[500px]"
+                    className="space-y-4 min-w-[500px]"
                 >
-                    <Select
-                        options={playlistOptions}
-                        styles={customSelectStyles}
-                        placeholder="Playlist"
-                    />
+                    <div className="space-y-2">
+                        <p className="text-lg font-medium">Origin</p>
+                        <div className="flex space-x-2">
+                            <button
+                                type="button"
+                                onClick={() => handleRadioSelect("spotify")}
+                                className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
+                            >
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    Spotify
+                                </span>
+                                <input
+                                    type="radio"
+                                    name="radio-post-origin"
+                                    className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
+                                    checked={selectedRadio === "spotify"}
+                                    readOnly
+                                />
+                            </button>
 
-                    <div className="space-y-1">
-                        <input
-                            type="text"
-                            placeholder="Title"
-                            {...register("title", {
-                                required: "Content is required",
-                                minLength: 2,
-                            })}
-                            className="p-2 rounded-md shadow-inner bg-b-tertiary dark:bg-db-tertiary w-full"
+                            <button
+                                type="button"
+                                onClick={() => handleRadioSelect("appleMusic")}
+                                className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
+                            >
+                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    Apple Music
+                                </span>
+                                <input
+                                    type="radio"
+                                    name="radio-post-origin"
+                                    className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
+                                    checked={selectedRadio === "appleMusic"}
+                                    readOnly
+                                />
+                            </button>
+                        </div>
+
+                        <Select
+                            options={playlistOptions}
+                            styles={customSelectStyles}
+                            placeholder="Playlist"
                         />
-                        {errors.title && (
-                            <p className="text-red-1 text-xs">
-                                {errors.title.message as string}
-                            </p>
-                        )}
                     </div>
 
-                    <textarea
-                        rows={5}
-                        placeholder="Description"
-                        {...register("description", {})}
-                        className="p-2 rounded-md shadow-inner bg-b-tertiary dark:bg-db-tertiary w-full"
-                    />
+                    <div className="space-y-2">
+                        <p className="text-lg font-medium">Details</p>
+                        <div className="space-y-1">
+                            <input
+                                type="text"
+                                placeholder="Title"
+                                {...register("title", {
+                                    required: "Content is required",
+                                    minLength: 2,
+                                })}
+                                className="p-2 rounded-md shadow-inner bg-b-tertiary dark:bg-db-tertiary w-full"
+                            />
+                            {errors.title && (
+                                <p className="text-red-1 text-xs">
+                                    {errors.title.message as string}
+                                </p>
+                            )}
+                        </div>
+
+                        <textarea
+                            rows={5}
+                            placeholder="Description"
+                            {...register("description", {})}
+                            className="p-2 rounded-md shadow-inner bg-b-tertiary dark:bg-db-tertiary w-full"
+                        />
+                    </div>
 
                     <div className="flex flex-row justify-end pt-4">
                         <button
