@@ -4,7 +4,6 @@ import { db } from "../utils/db.server";
 
 export const createFollow = async (req: Request, res: Response) => {
     const data = req.body;
-    console.log(data);
     try {
         await db.follow.create({
             data: {
@@ -20,7 +19,6 @@ export const createFollow = async (req: Request, res: Response) => {
 
 export const deleteFollow = async (req: Request, res: Response) => {
     const data = req.body;
-    console.log(data);
     try {
         await db.follow.delete({
             where: {

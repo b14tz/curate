@@ -40,7 +40,6 @@ export default function HomePage() {
         );
         try {
             const data = await getAllPosts();
-            console.log(data);
             setPosts(data);
         } catch (error) {
             console.error(error);
@@ -52,8 +51,6 @@ export default function HomePage() {
         try {
             if (currentUser) {
                 const data = await getAllFollowerPosts(currentUser.id);
-
-                console.log("following posts: ", data);
                 setPosts(data);
             } else {
                 setPosts([]);

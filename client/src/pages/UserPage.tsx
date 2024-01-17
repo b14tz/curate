@@ -73,6 +73,18 @@ export default function UserPage() {
         }
     };
 
+    const handleSettingsClose = () => {
+        setSettingsOpen(false);
+    };
+
+    const handleChangeUsernameClose = () => {
+        setChangeUsernameOpen(false);
+    };
+
+    const handleDeleteAccountClose = () => {
+        setDeleteAccountOpen(false);
+    };
+
     useEffect(() => {
         async function populateUser() {
             if (id && currentUser) {
@@ -84,21 +96,12 @@ export default function UserPage() {
                 setPosts(fetchedPosts);
             }
         }
-
         setSpotifyTokenExpirationTime(
             new Date(
                 spotifyToken.expirationTime ? spotifyToken.expirationTime : ""
             )
         );
-
-        console.log("Testing: ", {
-            accessToken: spotifyToken.accessToken,
-            expirationTime: spotifyToken.expirationTime,
-            now: now,
-        });
         populateUser();
-
-        console.log(spotifyToken);
     }, [id, isCurrentUser, changeUsernameOpen, currentUser, spotifyToken]);
 
     return (
@@ -123,7 +126,7 @@ export default function UserPage() {
 
             <Modal
                 open={settingsOpen}
-                setOpen={setSettingsOpen}
+                handleClose={handleSettingsClose}
                 title="Settings"
             >
                 <div className="flex flex-col space-y-2">
@@ -180,7 +183,7 @@ export default function UserPage() {
 
             <Modal
                 open={changeUsernameOpen}
-                setOpen={setChangeUsernameOpen}
+                handleClose={handleChangeUsernameClose}
                 title="Change Username"
             >
                 <form
@@ -210,10 +213,9 @@ export default function UserPage() {
                     </div>
                 </form>
             </Modal>
-
             <Modal
                 open={deleteAccountOpen}
-                setOpen={setDeleteAccountOpen}
+                handleClose={handleDeleteAccountClose}
                 title="Delete Account"
             >
                 <div className="max-w-[400px]">

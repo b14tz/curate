@@ -51,7 +51,6 @@ export default function PostPage() {
             if (id) {
                 const data = await getPost(id);
                 setPost(data);
-                console.log(data);
             }
         }
 

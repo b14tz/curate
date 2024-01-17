@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Select from "react-select";
 import { fetchAllSpotifyPlaylists } from "~/api/routes/spotify";
-import { Link } from "react-router-dom";
 import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 
@@ -36,7 +35,7 @@ export default function PostModal({
     } = useForm<PostForm>();
 
     useEffect(() => {
-        handleSpotifySelect();
+        !isSpotifyTokenExpired(spotifyToken) && handleSpotifySelect();
     }, [spotifyToken]);
 
     async function populateSpotifyPlaylists() {
@@ -45,12 +44,10 @@ export default function PostModal({
                 token: spotifyToken.accessToken,
                 spotifyId: spotifyToken.spotifyId,
             });
-            console.log("playlists: ", playlists);
             const formattedPlaylists = playlists.map((playlist: any) => ({
                 label: playlist.name,
                 value: playlist,
             }));
-            console.log(formattedPlaylists);
             setPlaylistOptions(formattedPlaylists);
         }
     }
@@ -64,7 +61,6 @@ export default function PostModal({
 
     const handleSelectOption = (val: any) => {
         setSelectedOption(val);
-        console.log("Selected option:", val); // Debugging
         setValue("title", val.value.name);
         setValue("description", val.value.description);
     };
@@ -96,75 +92,92 @@ export default function PostModal({
             setSelectedRadio("spotify");
         }
     };
-
     return (
-        <Modal open={open} setOpen={setOpen} title="Post">
+        <Modal open={open} handleClose={handleClose} title="Post">
             <form
                 onSubmit={handleSubmit(handlePost)}
                 className="space-y-4 min-w-[500px]"
             >
                 <div className="space-y-2">
                     <p className="text-lg font-medium">Origin</p>
-                    <div className="flex space-x-2">
-                        <button
-                            type="button"
-                            onClick={() => handleSpotifySelect()}
-                            className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
-                            disabled={isSpotifyTokenExpired(spotifyToken)}
-                        >
-                            <div className="flex flex-col items-start">
-                                <p className="text-sm text-gray-500">Spotify</p>
-                                {isSpotifyTokenExpired(spotifyToken) ? (
-                                    <Link
-                                        type="button"
-                                        className="text-xs underline"
-                                        to="/"
-                                    >
-                                        Connect to Spotify
-                                    </Link>
-                                ) : null}
-                            </div>
-                            <input
-                                type="radio"
-                                name="radio-post-origin"
-                                className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
-                                checked={selectedRadio === "spotify"}
-                                readOnly
+                    <div>
+                        <div className="flex space-x-2">
+                            <button
+                                type="button"
+                                onClick={() => handleSpotifySelect()}
+                                className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
                                 disabled={isSpotifyTokenExpired(spotifyToken)}
-                            />
-                        </button>
+                            >
+                                <div className="flex flex-col items-start">
+                                    <p className="text-sm text-gray-500">
+                                        Spotify
+                                    </p>
+                                </div>
+                                <input
+                                    type="radio"
+                                    name="radio-post-origin"
+                                    className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
+                                    checked={selectedRadio === "spotify"}
+                                    readOnly
+                                    disabled={isSpotifyTokenExpired(
+                                        spotifyToken
+                                    )}
+                                />
+                            </button>
 
-                        <button
-                            type="button"
-                            onClick={() => handleAppleSelect()}
-                            className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
-                            disabled={isAppleTokenExpired(appleToken)}
-                        >
-                            <div className="flex flex-col items-start">
+                            <button
+                                type="button"
+                                onClick={() => handleAppleSelect()}
+                                className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
+                                disabled={isAppleTokenExpired(appleToken)}
+                            >
                                 <p className="text-sm text-gray-500">
                                     Apple Music
                                 </p>
-                                {isAppleTokenExpired(appleToken) ? (
-                                    <Link
+
+                                <input
+                                    type="radio"
+                                    name="radio-post-origin"
+                                    className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
+                                    checked={selectedRadio === "appleMusic"}
+                                    readOnly
+                                    disabled={isAppleTokenExpired(appleToken)}
+                                />
+                            </button>
+                        </div>
+                        <div className="flex space-x-2">
+                            <div className="w-1/2 pl-3">
+                                {isSpotifyTokenExpired(spotifyToken) ? (
+                                    <button
                                         type="button"
                                         className="text-xs underline"
-                                        to="/"
+                                        onClick={() => {
+                                            console.log(
+                                                "handle connect to spotify here"
+                                            );
+                                        }}
                                     >
-                                        Connect to Apple Music
-                                    </Link>
+                                        Connect to Spotify
+                                    </button>
                                 ) : null}
                             </div>
-                            <input
-                                type="radio"
-                                name="radio-post-origin"
-                                className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
-                                checked={selectedRadio === "appleMusic"}
-                                readOnly
-                                disabled={isAppleTokenExpired(appleToken)}
-                            />
-                        </button>
+                            <div className="w-1/2 pl-3">
+                                {isAppleTokenExpired(appleToken) ? (
+                                    <button
+                                        type="button"
+                                        className="text-xs underline"
+                                        onClick={() => {
+                                            console.log(
+                                                "handle connect to apple music here"
+                                            );
+                                        }}
+                                    >
+                                        Connect to Apple Music
+                                    </button>
+                                ) : null}
+                            </div>
+                        </div>
                     </div>
-
                     <Select
                         options={playlistOptions}
                         styles={customSelectStyles}

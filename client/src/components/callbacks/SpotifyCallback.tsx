@@ -13,14 +13,12 @@ export default function SpotifyCallback({}: {}) {
     useEffect(() => {
         async function handleRequestAccessToken() {
             const code = new URLSearchParams(location.search).get("code");
-            console.log("code: ", code);
             if (code) {
                 const token = await requestAccessToken(code);
                 const spotifyId = await fetchUserSpotifyID(token.access_token);
                 const expirationTime = await getExpirationTime(
                     token.expires_in
                 );
-                console.log(expirationTime);
                 await dispatch(
                     setSpotify({
                         accessToken: token.access_token,

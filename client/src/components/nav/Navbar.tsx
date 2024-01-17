@@ -29,6 +29,10 @@ export default function Navbar() {
         navigate("/");
     };
 
+    const handleAuthClose = () => {
+        setAuthOpen(false);
+    };
+
     return (
         <div className="flex justify-between items-center text-black dark:text-white">
             <NavLink to="/" className="flex items-center space-x-2">
@@ -82,7 +86,7 @@ export default function Navbar() {
                 )}
             </div>
 
-            <Modal open={authOpen} setOpen={setAuthOpen} title="Login">
+            <Modal open={authOpen} handleClose={handleAuthClose} title="Login">
                 <button
                     className="bg-b-tertiary text-black drop-shadow-md py-2 pl-3 pr-5 rounded-md flex flex-row justify-center items-center"
                     onClick={() => {

@@ -62,11 +62,9 @@ export default function Header({
                 followingId: currentUser.id,
             });
 
-            console.log("unfollow -> before: ", user.followers);
             const newFollowers = user.followers?.filter((follower) => {
                 return currentUser && follower.followingId !== currentUser.id;
             });
-            console.log("unfollow -> after: ", newFollowers);
 
             setUser({ ...user, followers: newFollowers });
             setIsFollowing(false); // Set follow status to false

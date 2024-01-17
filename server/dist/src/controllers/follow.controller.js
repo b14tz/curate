@@ -13,7 +13,6 @@ exports.deleteFollow = exports.createFollow = void 0;
 const db_server_1 = require("../utils/db.server");
 const createFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    console.log(data);
     try {
         yield db_server_1.db.follow.create({
             data: {
@@ -30,7 +29,6 @@ const createFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.createFollow = createFollow;
 const deleteFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    console.log(data);
     try {
         yield db_server_1.db.follow.delete({
             where: {

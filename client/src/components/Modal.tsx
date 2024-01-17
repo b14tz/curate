@@ -2,19 +2,19 @@ import { IconX } from "@tabler/icons-react";
 
 export default function Modal({
     open,
-    setOpen,
+    handleClose,
     title,
     children,
 }: {
     open: boolean;
-    setOpen: (val: boolean) => void;
+    handleClose: () => void;
     title: string;
     children: JSX.Element;
 }) {
     return (
         open && (
             <div
-                onClick={() => setOpen(false)}
+                onClick={() => handleClose()}
                 className="z-[1000] fixed flex left-0 top-0 bg-black/50 justify-center w-full h-screen"
             >
                 <div
@@ -25,7 +25,7 @@ export default function Modal({
                 >
                     <div className="flex flex-row justify-between items-center space-x-6 mb-4">
                         <h3>{title}</h3>
-                        <button onClick={() => setOpen(false)}>
+                        <button onClick={() => handleClose()}>
                             <IconX />
                         </button>
                     </div>

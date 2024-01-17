@@ -14,7 +14,6 @@ const db_server_1 = require("../utils/db.server");
 const sampleData_1 = require("../utils/sampleData");
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    console.log(data);
     try {
         const result = yield db_server_1.db.post.create({
             data: Object.assign(Object.assign({}, data), { downloads: 0 }),
@@ -22,7 +21,7 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(200).send(result);
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error creating post`);
     }
 });
@@ -62,7 +61,7 @@ const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error getting user data`);
     }
 });

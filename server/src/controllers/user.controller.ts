@@ -27,7 +27,7 @@ export const createUser = async ({
         });
         return result;
     } catch (error) {
-        console.log(`Error with creating a user: ${error}`);
+        console.error(`Error with creating a user: ${error}`);
         return null;
     }
 };
@@ -45,10 +45,9 @@ export const getUser = async (req: Request, res: Response) => {
                 posts: true,
             },
         });
-        console.log(result);
         return res.status(200).send(result);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error getting user data`);
     }
 };
@@ -83,7 +82,7 @@ export const findOrCreateUser = async ({
             return newUser;
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 };
 

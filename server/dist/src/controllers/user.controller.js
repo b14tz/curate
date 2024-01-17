@@ -27,7 +27,7 @@ const createUser = ({ firstName, lastName, username, email, }) => __awaiter(void
         return result;
     }
     catch (error) {
-        console.log(`Error with creating a user: ${error}`);
+        console.error(`Error with creating a user: ${error}`);
         return null;
     }
 });
@@ -45,11 +45,10 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 posts: true,
             },
         });
-        console.log(result);
         return res.status(200).send(result);
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error getting user data`);
     }
 });
@@ -75,7 +74,7 @@ const findOrCreateUser = ({ firstName, lastName, username, email, }) => __awaite
         }
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
     }
 });
 exports.findOrCreateUser = findOrCreateUser;

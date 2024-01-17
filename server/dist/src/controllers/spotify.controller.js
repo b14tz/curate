@@ -47,7 +47,6 @@ const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     Buffer.from(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString("base64"),
             },
         });
-        console.log("request access token response: ", response.data);
         res.json(response.data);
     }
     catch (error) {

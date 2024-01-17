@@ -5,14 +5,13 @@ import { sampleSongs } from "../utils/sampleData";
 
 export const createPost = async (req: Request, res: Response) => {
     const data = req.body;
-    console.log(data);
     try {
         const result = await db.post.create({
             data: { ...data, downloads: 0 },
         });
         return res.status(200).send(result);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error creating post`);
     }
 };
@@ -51,7 +50,7 @@ export const getPost = async (req: Request, res: Response) => {
             return res.status(200).send(formattedPost);
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(500).send(`Error getting user data`);
     }
 };

@@ -6,7 +6,6 @@ export const requestAccessToken = async (code: string) => {
 };
 
 export const fetchUserSpotifyID = async (token: string) => {
-    console.log("token: ", token);
     const res = await axiosInstance.post("/spotify/id", { token });
     return res.data;
 };

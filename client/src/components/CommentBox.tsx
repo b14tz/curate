@@ -23,7 +23,6 @@ export default function CommentBox({
                 content,
                 authorId: currentUser.id,
             });
-            console.log("comment: ", comment);
             setPost({ ...post, comments: [comment, ...post.comments] });
             setContent("");
         } else {

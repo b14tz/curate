@@ -57,8 +57,6 @@ export const requestAccessToken = async (req: Request, res: Response) => {
                 },
             }
         );
-
-        console.log("request access token response: ", response.data);
         res.json(response.data);
     } catch (error) {
         console.error(error);
