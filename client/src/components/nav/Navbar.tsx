@@ -187,6 +187,7 @@ export default function Navbar() {
                                     className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
                                     checked={selectedRadio === "appleMusic"}
                                     readOnly
+                                    disabled
                                 />
                             </button>
                         </div>
