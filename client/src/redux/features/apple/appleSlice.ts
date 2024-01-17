@@ -1,40 +1,40 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface SpotifyState {
+interface AppleState {
     accessToken: string | null;
     expirationTime: Date | null;
-    spotifyId: string | null;
+    appleId: string | null;
 }
 
-const initialState: SpotifyState = {
+const initialState: AppleState = {
     accessToken: null,
     expirationTime: null,
-    spotifyId: null,
+    appleId: null,
 };
 
-export const spotifySlice = createSlice({
-    name: "spotify",
+export const appleSlice = createSlice({
+    name: "apple",
     initialState,
     reducers: {
-        setSpotify: (state, action) => {
+        setApple: (state, action) => {
             state.accessToken = action.payload.accessToken;
             state.expirationTime = action.payload.expirationTime;
-            state.spotifyId = action.payload.spotifyId;
+            state.appleId = action.payload.appleId;
         },
-        clearSpotify: (state) => {
+        clearApple: (state) => {
             state.accessToken = null;
             state.expirationTime = null;
-            state.spotifyId = null;
+            state.appleId = null;
         },
     },
 });
 
-export const isSpotifyTokenExpired = (state: SpotifyState) => {
+export const isAppleTokenExpired = (state: AppleState) => {
     if (!state.expirationTime) {
         return true;
     }
     return new Date(state.expirationTime) < new Date();
 };
 
-export const { setSpotify, clearSpotify } = spotifySlice.actions;
-export default spotifySlice.reducer;
+export const { setApple, clearApple } = appleSlice.actions;
+export default appleSlice.reducer;

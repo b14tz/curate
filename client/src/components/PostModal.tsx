@@ -7,6 +7,9 @@ import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Select from "react-select";
 import { fetchAllSpotifyPlaylists } from "~/api/routes/spotify";
+import { Link } from "react-router-dom";
+import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
+import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 
 export default function PostModal({
     open,
@@ -16,9 +19,11 @@ export default function PostModal({
     setOpen: (val: boolean) => void;
 }) {
     const [playlistOptions, setPlaylistOptions] = useState([]);
-    const [selectedRadio, setSelectedRadio] = useState("spotify");
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedRadio, setSelectedRadio] = useState("");
 
     const user = useSelector((state: RootState) => state.userReducer.user);
+    const appleToken = useSelector((state: RootState) => state.appleReducer);
     const spotifyToken = useSelector(
         (state: RootState) => state.spotifyReducer
     );
@@ -26,27 +31,43 @@ export default function PostModal({
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm<PostForm>();
 
     useEffect(() => {
-        async function populateSpotifyPlaylists() {
-            if (spotifyToken.accessToken && spotifyToken.spotifyId) {
-                const playlists = await fetchAllSpotifyPlaylists({
-                    token: spotifyToken.accessToken,
-                    spotifyId: spotifyToken.spotifyId,
-                });
-                console.log("playlists: ", playlists);
-                const formattedPlaylists = playlists.map((playlist: any) => ({
-                    label: playlist.name,
-                    value: playlist,
-                }));
-                console.log(formattedPlaylists);
-                setPlaylistOptions(formattedPlaylists);
-            }
-        }
-        populateSpotifyPlaylists();
+        handleSpotifySelect();
     }, [spotifyToken]);
+
+    async function populateSpotifyPlaylists() {
+        if (spotifyToken.accessToken && spotifyToken.spotifyId) {
+            const playlists = await fetchAllSpotifyPlaylists({
+                token: spotifyToken.accessToken,
+                spotifyId: spotifyToken.spotifyId,
+            });
+            console.log("playlists: ", playlists);
+            const formattedPlaylists = playlists.map((playlist: any) => ({
+                label: playlist.name,
+                value: playlist,
+            }));
+            console.log(formattedPlaylists);
+            setPlaylistOptions(formattedPlaylists);
+        }
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+        setValue("title", "");
+        setValue("description", "");
+        setSelectedOption(null);
+    };
+
+    const handleSelectOption = (val: any) => {
+        setSelectedOption(val);
+        console.log("Selected option:", val); // Debugging
+        setValue("title", val.value.name);
+        setValue("description", val.value.description);
+    };
 
     const handlePost = async (data: PostForm) => {
         if (user) {
@@ -58,11 +79,22 @@ export default function PostModal({
                 authorId: user.id,
             });
         }
-        setOpen(false);
+        handleClose();
     };
 
-    const handleRadioSelect = (value: string) => {
-        setSelectedRadio(value);
+    const handleAppleSelect = async () => {
+        if (selectedRadio != "appleMusic") {
+            setSelectedRadio("appleMusic");
+            //handle populating apple music playlists here
+            setPlaylistOptions([]);
+        }
+    };
+
+    const handleSpotifySelect = async () => {
+        if (selectedRadio != "spotify") {
+            await populateSpotifyPlaylists();
+            setSelectedRadio("spotify");
+        }
     };
 
     return (
@@ -76,39 +108,59 @@ export default function PostModal({
                     <div className="flex space-x-2">
                         <button
                             type="button"
-                            onClick={() => handleRadioSelect("spotify")}
+                            onClick={() => handleSpotifySelect()}
                             className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
-                            disabled={false}
+                            disabled={isSpotifyTokenExpired(spotifyToken)}
                         >
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                Spotify
-                            </span>
+                            <div className="flex flex-col items-start">
+                                <p className="text-sm text-gray-500">Spotify</p>
+                                {isSpotifyTokenExpired(spotifyToken) ? (
+                                    <Link
+                                        type="button"
+                                        className="text-xs underline"
+                                        to="/"
+                                    >
+                                        Connect to Spotify
+                                    </Link>
+                                ) : null}
+                            </div>
                             <input
                                 type="radio"
                                 name="radio-post-origin"
                                 className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
                                 checked={selectedRadio === "spotify"}
                                 readOnly
-                                disabled={false}
+                                disabled={isSpotifyTokenExpired(spotifyToken)}
                             />
                         </button>
 
                         <button
                             type="button"
-                            onClick={() => handleRadioSelect("appleMusic")}
+                            onClick={() => handleAppleSelect()}
                             className="flex p-3 block w-full bg-b-secondary hover:bg-snow border-2 border-b-primary rounded-lg text-sm focus:ring-1 focus:border-salmon focus:ring-salmon"
-                            disabled={true}
+                            disabled={isAppleTokenExpired(appleToken)}
                         >
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                Apple Music
-                            </span>
+                            <div className="flex flex-col items-start">
+                                <p className="text-sm text-gray-500">
+                                    Apple Music
+                                </p>
+                                {isAppleTokenExpired(appleToken) ? (
+                                    <Link
+                                        type="button"
+                                        className="text-xs underline"
+                                        to="/"
+                                    >
+                                        Connect to Apple Music
+                                    </Link>
+                                ) : null}
+                            </div>
                             <input
                                 type="radio"
                                 name="radio-post-origin"
                                 className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
                                 checked={selectedRadio === "appleMusic"}
                                 readOnly
-                                disabled={true}
+                                disabled={isAppleTokenExpired(appleToken)}
                             />
                         </button>
                     </div>
@@ -116,7 +168,19 @@ export default function PostModal({
                     <Select
                         options={playlistOptions}
                         styles={customSelectStyles}
+                        value={selectedOption}
+                        onChange={handleSelectOption}
                         placeholder="Playlist"
+                        theme={(theme) => ({
+                            ...theme,
+                            borderRadius: 0,
+                            colors: {
+                                ...theme.colors,
+                                primary: "#FE346E",
+                                primary50: "#FFC3D4",
+                                primary25: "#FDE8EE",
+                            },
+                        })}
                     />
                 </div>
 
@@ -148,7 +212,7 @@ export default function PostModal({
                 </div>
 
                 <div className="flex flex-row justify-end pt-4">
-                    <button onClick={() => setOpen(false)} type="button">
+                    <button onClick={() => handleClose()} type="button">
                         <p>Cancel</p>
                     </button>
                     <button className="ml-4 bg-salmon text-white drop-shadow-md py-2 px-4 rounded-md">
