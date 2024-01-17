@@ -9,9 +9,11 @@ import Modal from "~/components/Modal";
 import { useForm } from "react-hook-form";
 import { clearUser, setUser } from "~/redux/features/user/userSlice";
 import { getAllUserPosts } from "~/api/routes/post";
+import { clearSpotify } from "~/redux/features/spotify/spotifySlice";
 
 export default function UserPage() {
     const { id } = useParams();
+    const now = new Date();
 
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [changeUsernameOpen, setChangeUsernameOpen] = useState(false);
@@ -32,7 +34,12 @@ export default function UserPage() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const currentUser = useSelector((state: RootState) => state.user);
+    const spotifyToken = useSelector(
+        (state: RootState) => state.spotifyReducer
+    );
+    const currentUser = useSelector(
+        (state: RootState) => state.userReducer.user
+    );
     const isCurrentUser = id === currentUser?.id;
 
     const {
@@ -76,7 +83,9 @@ export default function UserPage() {
             }
         }
         populateUser();
-    }, [id, isCurrentUser, changeUsernameOpen, currentUser]);
+
+        console.log(spotifyToken);
+    }, [id, isCurrentUser, changeUsernameOpen, currentUser, spotifyToken]);
 
     return (
         <>
@@ -120,16 +129,29 @@ export default function UserPage() {
                             Change
                         </button>
                     </div>
-                    <button
-                        className="w-fit underline"
-                        onClick={() => {
-                            window.location.href = `${
-                                import.meta.env.VITE_SERVER_URL
-                            }/spotify/auth`;
-                        }}
-                    >
-                        Connect to Spotify
-                    </button>
+                    {spotifyToken.accessToken &&
+                    spotifyToken.expirationTime &&
+                    spotifyToken.expirationTime > now ? (
+                        <button
+                            className="w-fit underline"
+                            onClick={() => {
+                                dispatch(clearSpotify());
+                            }}
+                        >
+                            Disconnect Spotify Account
+                        </button>
+                    ) : (
+                        <button
+                            className="w-fit underline"
+                            onClick={() => {
+                                window.location.href = `${
+                                    import.meta.env.VITE_SERVER_URL
+                                }/spotify/auth`;
+                            }}
+                        >
+                            Connect Spotify Account
+                        </button>
+                    )}
                     <button
                         className="underline w-fit text-error"
                         onClick={() => {

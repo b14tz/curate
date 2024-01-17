@@ -42,7 +42,9 @@ export default function PostPage() {
     });
     const [showSongs, setShowSongs] = useState(true);
 
-    const currentUser = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector(
+        (state: RootState) => state.userReducer.user
+    );
 
     useEffect(() => {
         async function populatePost() {

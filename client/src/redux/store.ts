@@ -1,6 +1,7 @@
 // src/redux/store.js
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user/userSlice";
+import spotifyReducer from "./features/spotify/spotifySlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -9,7 +10,9 @@ const persistConfig = {
     storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userReducer);
+const combinedReducer = combineReducers({ userReducer, spotifyReducer });
+
+const persistedReducer = persistReducer(persistConfig, combinedReducer);
 
 export const store = configureStore({
     reducer: persistedReducer,

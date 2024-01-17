@@ -18,7 +18,7 @@ export default function Navbar() {
     const [postOpen, setPostOpen] = useState(false);
     const [authOpen, setAuthOpen] = useState(false);
 
-    const user = useSelector((state: RootState) => state.user);
+    const user = useSelector((state: RootState) => state.userReducer.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

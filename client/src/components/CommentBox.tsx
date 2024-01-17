@@ -12,7 +12,9 @@ export default function CommentBox({
     setPost: (val: Post) => void;
 }) {
     const [content, setContent] = useState("");
-    const currentUser = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector(
+        (state: RootState) => state.userReducer.user
+    );
     const { enqueueSnackbar } = useSnackbar();
 
     const handleCreateComment = async () => {

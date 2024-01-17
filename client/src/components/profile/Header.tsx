@@ -16,7 +16,9 @@ export default function Header({
     isCurrentUser: boolean;
     setSettingsOpen: (val: boolean) => void;
 }) {
-    const currentUser = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector(
+        (state: RootState) => state.userReducer.user
+    );
     const { enqueueSnackbar } = useSnackbar();
 
     const [isFollowing, setIsFollowing] = useState(true);

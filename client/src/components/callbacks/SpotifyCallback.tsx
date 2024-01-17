@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import { requestAccessToken } from "~/api/routes/spotify";
+import { setSpotify } from "~/redux/features/spotify/spotifySlice";
+import { getExpirationDate } from "~/utils/time";
 
 export default function SpotifyCallback({}: {}) {
-    const [aToken, setAToken] = useState("");
     const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function handleRequestAccessToken() {
@@ -12,19 +16,24 @@ export default function SpotifyCallback({}: {}) {
             console.log("code: ", code);
             if (code) {
                 const token = await requestAccessToken(code);
-                console.log("token: ", token);
-                setAToken(token);
-                // save the token to a redux store here
+                const expirationTime = await getExpirationDate(
+                    token.expires_in
+                );
+                await dispatch(
+                    setSpotify({
+                        accessToken: token.access_token,
+                        expirationTime: expirationTime,
+                    })
+                );
+                navigate("/");
             }
         }
         handleRequestAccessToken();
     }, [location]);
 
-    return aToken ? (
-        <div>
-            <p>{JSON.stringify(aToken)}</p>
+    return (
+        <div className="w-full h-[400px] flex items-center justify-center">
+            <p>Redirecting...</p>
         </div>
-    ) : (
-        <div>Redirecting...</div>
     );
 }

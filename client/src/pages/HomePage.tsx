@@ -14,7 +14,7 @@ export default function HomePage() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    let currentUser = useSelector((state: RootState) => state.user);
+    let currentUser = useSelector((state: RootState) => state.userReducer.user);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);

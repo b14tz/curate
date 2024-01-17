@@ -14,7 +14,9 @@ export default function Feed({
     setPosts: (val: Post[]) => void;
     emptyMessage: string;
 }) {
-    const currentUser = useSelector((state: RootState) => state.user);
+    const currentUser = useSelector(
+        (state: RootState) => state.userReducer.user
+    );
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
