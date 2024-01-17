@@ -36,10 +36,8 @@ export function formatPostTime(unconvertedDate: string) {
     return `${monthsAgo} mo ago`;
 }
 
-export async function getExpirationDate(seconds: number) {
+export async function getExpirationTime(seconds: number) {
     const now = new Date();
-    console.log("Seconds: ", seconds);
     const expirationTime = new Date(now.getTime() + seconds * 1000);
-    console.log("Expiration Time: ", expirationTime);
     return expirationTime;
 }

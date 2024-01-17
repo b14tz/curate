@@ -12,12 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchSpotify = exports.fetchPlaylistSongs = exports.populateSpotifyFeed = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
+exports.searchSpotify = exports.fetchPlaylistSongs = exports.populateSpotifyFeed = exports.fetchAllUserSpotifyPlaylists = exports.fetchUserSpotifyID = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
 const axios_1 = __importDefault(require("axios"));
 const spotify_client_token_1 = require("../utils/spotify-client-token");
-const crypto_1 = require("crypto");
 const requestSpotifyAuthorization = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const state = (0, crypto_1.randomBytes)(16).toString("base64");
+    // const state = randomBytes(16).toString("base64");
     const scope = "user-read-private playlist-read-private playlist-read-collaborative";
     const { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } = process.env;
     if (!SPOTIFY_CLIENT_ID || !SPOTIFY_REDIRECT_URI) {
@@ -57,6 +56,54 @@ const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.requestAccessToken = requestAccessToken;
+const fetchUserSpotifyID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = req.body.token;
+        if (!token) {
+            return res.status(400).send("No token provided");
+        }
+        const { data } = yield axios_1.default.get("https://api.spotify.com/v1/me", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        res.send(data.id);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving Spotify ID");
+    }
+});
+exports.fetchUserSpotifyID = fetchUserSpotifyID;
+const fetchAllUserSpotifyPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { token, spotifyId } = req.body;
+        if (!token || !spotifyId) {
+            return res.status(400).send("Token or Spotify ID missing");
+        }
+        const { data } = yield axios_1.default.get("https://api.spotify.com/v1/me/playlists", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            params: {
+                limit: 50,
+            },
+        });
+        //only return playlists where current user is the author
+        let authoredPlaylists = [];
+        for (let i = 0; i < data.items.length; i++) {
+            if (data.items[i]["owner"]["id"] === spotifyId) {
+                authoredPlaylists.push(data.items[i]);
+            }
+        }
+        res.send(authoredPlaylists);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving user's Spotify playlists");
+    }
+});
+exports.fetchAllUserSpotifyPlaylists = fetchAllUserSpotifyPlaylists;
 const populateSpotifyFeed = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = yield (0, spotify_client_token_1.getClientToken)();

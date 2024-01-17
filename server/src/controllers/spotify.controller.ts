@@ -8,7 +8,7 @@ export const requestSpotifyAuthorization = async (
     req: Request,
     res: Response
 ) => {
-    const state = randomBytes(16).toString("base64");
+    // const state = randomBytes(16).toString("base64");
     const scope =
         "user-read-private playlist-read-private playlist-read-collaborative";
 
@@ -63,6 +63,58 @@ export const requestAccessToken = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         res.status(400).send("Error retrieving access token");
+    }
+};
+
+export const fetchUserSpotifyID = async (req: Request, res: Response) => {
+    try {
+        const token = req.body.token;
+        if (!token) {
+            return res.status(400).send("No token provided");
+        }
+        const { data } = await axios.get("https://api.spotify.com/v1/me", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        res.send(data.id);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving Spotify ID");
+    }
+};
+
+export const fetchAllUserSpotifyPlaylists = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const { token, spotifyId } = req.body;
+        if (!token || !spotifyId) {
+            return res.status(400).send("Token or Spotify ID missing");
+        }
+        const { data } = await axios.get(
+            "https://api.spotify.com/v1/me/playlists",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                params: {
+                    limit: 50,
+                },
+            }
+        );
+        //only return playlists where current user is the author
+        let authoredPlaylists = [];
+        for (let i = 0; i < data.items.length; i++) {
+            if (data.items[i]["owner"]["id"] === spotifyId) {
+                authoredPlaylists.push(data.items[i]);
+            }
+        }
+        res.send(authoredPlaylists);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error retrieving user's Spotify playlists");
     }
 };
 

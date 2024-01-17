@@ -4,18 +4,19 @@ import {
     populateSpotifyFeed,
     requestSpotifyAuthorization,
     requestAccessToken,
+    fetchAllUserSpotifyPlaylists,
+    fetchUserSpotifyID,
 } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
 
-// public routes
 spotifyRoutes.post("/search", searchSpotify);
 spotifyRoutes.get("/feed", populateSpotifyFeed);
 
 spotifyRoutes.get("/auth", requestSpotifyAuthorization);
 spotifyRoutes.post("/token", requestAccessToken);
-// authentication token goes here
 
-// private routes
+spotifyRoutes.post("/id", fetchUserSpotifyID);
+spotifyRoutes.post("/playlists", fetchAllUserSpotifyPlaylists);
 
 export default spotifyRoutes;

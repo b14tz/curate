@@ -19,6 +19,8 @@ export default function UserPage() {
     const [changeUsernameOpen, setChangeUsernameOpen] = useState(false);
     const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
     const [posts, setPosts] = useState<Post[]>([]);
+    const [spotifyTokenExpirationTime, setSpotifyTokenExpirationTime] =
+        useState(new Date());
     const [userData, setUserData] = useState<User>({
         id: "",
         token: "",
@@ -82,6 +84,18 @@ export default function UserPage() {
                 setPosts(fetchedPosts);
             }
         }
+
+        setSpotifyTokenExpirationTime(
+            new Date(
+                spotifyToken.expirationTime ? spotifyToken.expirationTime : ""
+            )
+        );
+
+        console.log("Testing: ", {
+            accessToken: spotifyToken.accessToken,
+            expirationTime: spotifyToken.expirationTime,
+            now: now,
+        });
         populateUser();
 
         console.log(spotifyToken);
@@ -131,7 +145,7 @@ export default function UserPage() {
                     </div>
                     {spotifyToken.accessToken &&
                     spotifyToken.expirationTime &&
-                    spotifyToken.expirationTime > now ? (
+                    spotifyTokenExpirationTime > now ? (
                         <button
                             className="w-fit underline"
                             onClick={() => {

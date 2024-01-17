@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { requestAccessToken } from "~/api/routes/spotify";
+import { fetchUserSpotifyID, requestAccessToken } from "~/api/routes/spotify";
 import { setSpotify } from "~/redux/features/spotify/spotifySlice";
-import { getExpirationDate } from "~/utils/time";
+import { getExpirationTime } from "~/utils/time";
 
 export default function SpotifyCallback({}: {}) {
     const location = useLocation();
@@ -16,13 +16,16 @@ export default function SpotifyCallback({}: {}) {
             console.log("code: ", code);
             if (code) {
                 const token = await requestAccessToken(code);
-                const expirationTime = await getExpirationDate(
+                const spotifyId = await fetchUserSpotifyID(token.access_token);
+                const expirationTime = await getExpirationTime(
                     token.expires_in
                 );
+                console.log(expirationTime);
                 await dispatch(
                     setSpotify({
                         accessToken: token.access_token,
                         expirationTime: expirationTime,
+                        spotifyId: spotifyId,
                     })
                 );
                 navigate("/");

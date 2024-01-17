@@ -3,11 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const spotify_controller_1 = require("../controllers/spotify.controller");
 const spotifyRoutes = (0, express_1.Router)();
-// public routes
 spotifyRoutes.post("/search", spotify_controller_1.searchSpotify);
 spotifyRoutes.get("/feed", spotify_controller_1.populateSpotifyFeed);
 spotifyRoutes.get("/auth", spotify_controller_1.requestSpotifyAuthorization);
 spotifyRoutes.post("/token", spotify_controller_1.requestAccessToken);
-// authentication token goes here
-// private routes
+spotifyRoutes.post("/id", spotify_controller_1.fetchUserSpotifyID);
+spotifyRoutes.post("/playlists", spotify_controller_1.fetchAllUserSpotifyPlaylists);
 exports.default = spotifyRoutes;
