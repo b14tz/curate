@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAllUserPosts = exports.getAllFollowerPosts = exports.getAllPosts = exports.deletePost = exports.updatePost = exports.getPost = exports.createPost = void 0;
 const db_server_1 = require("../utils/db.server");
 const sampleData_1 = require("../utils/sampleData");
+const spotify_controller_1 = require("./spotify.controller");
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     try {
@@ -45,11 +46,14 @@ const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
         });
         if (post) {
+            const songs = post.isrcs
+                ? yield (0, spotify_controller_1.fetchPlaylistByIsrcs)(post.isrcs)
+                : [];
             const formattedPost = {
                 id: post.id,
                 title: post.title,
                 description: post.description,
-                songs: sampleData_1.sampleSongs,
+                songs: songs,
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
@@ -59,10 +63,13 @@ const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             };
             return res.status(200).send(formattedPost);
         }
+        else {
+            return res.status(404).send({ message: "Post not found" });
+        }
     }
     catch (error) {
         console.error(error);
-        return res.status(500).send(`Error getting user data`);
+        return res.status(500).send(`Error getting post data`);
     }
 });
 exports.getPost = getPost;
@@ -110,18 +117,23 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 createdAt: "desc",
             },
         });
-        const formattedPosts = posts.map((post) => ({
-            id: post.id,
-            title: post.title,
-            description: post.description,
-            songs: sampleData_1.sampleSongs,
-            origin: post.origin,
-            downloads: post.downloads,
-            createdAt: post.createdAt,
-            author: post.author,
-            likes: post.likes || [],
-            comments: post.comments || [],
+        // Create an array of promises
+        const formattedPostsPromises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
+            return ({
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                songs: yield (0, spotify_controller_1.fetchPlaylistByIsrcs)(post.isrcs),
+                origin: post.origin,
+                downloads: post.downloads,
+                createdAt: post.createdAt,
+                author: post.author,
+                likes: post.likes || [],
+                comments: post.comments || [],
+            });
         }));
+        // Await all the promises
+        const formattedPosts = yield Promise.all(formattedPostsPromises);
         return res.status(200).send(formattedPosts);
     }
     catch (error) {
@@ -199,18 +211,23 @@ const getAllUserPosts = (req, res) => __awaiter(void 0, void 0, void 0, function
                 createdAt: "desc",
             },
         });
-        const formattedPosts = posts.map((post) => ({
-            id: post.id,
-            title: post.title,
-            description: post.description,
-            songs: sampleData_1.sampleSongs,
-            origin: post.origin,
-            downloads: post.downloads,
-            createdAt: post.createdAt,
-            author: post.author,
-            likes: post.likes || [],
-            comments: post.comments || [],
+        // Create an array of promises
+        const formattedPostsPromises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
+            return ({
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                songs: yield (0, spotify_controller_1.fetchPlaylistByIsrcs)(post.isrcs),
+                origin: post.origin,
+                downloads: post.downloads,
+                createdAt: post.createdAt,
+                author: post.author,
+                likes: post.likes || [],
+                comments: post.comments || [],
+            });
         }));
+        // Await all the promises
+        const formattedPosts = yield Promise.all(formattedPostsPromises);
         return res.status(200).send(formattedPosts);
     }
     catch (error) {

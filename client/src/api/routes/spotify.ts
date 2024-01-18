@@ -10,7 +10,7 @@ export const fetchUserSpotifyID = async (token: string) => {
     return res.data;
 };
 
-export const fetchAllSpotifyPlaylists = async ({
+export const fetchAllSpotifyPlaylistsByUserId = async ({
     token,
     spotifyId,
 }: {
@@ -20,6 +20,34 @@ export const fetchAllSpotifyPlaylists = async ({
     const res = await axiosInstance.post("/spotify/playlists", {
         token,
         spotifyId,
+    });
+    return res.data;
+};
+
+export const fetchIsrcsByPlaylistId = async ({
+    token,
+    playlistId,
+}: {
+    token: string;
+    playlistId: string;
+}) => {
+    const res = await axiosInstance.post("/spotify/isrcs", {
+        token,
+        playlistId,
+    });
+    return res.data;
+};
+
+export const fetchPlaylistByIsrcs = async ({
+    token,
+    isrcs,
+}: {
+    token: string;
+    isrcs: string;
+}) => {
+    const res = await axiosInstance.post("/spotify/playlist", {
+        token,
+        isrcs,
     });
     return res.data;
 };

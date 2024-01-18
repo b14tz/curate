@@ -6,7 +6,10 @@ import { createPost } from "~/api/routes/post";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Select from "react-select";
-import { fetchAllSpotifyPlaylists } from "~/api/routes/spotify";
+import {
+    fetchAllSpotifyPlaylistsByUserId,
+    fetchIsrcsByPlaylistId,
+} from "~/api/routes/spotify";
 import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 
@@ -18,7 +21,7 @@ export default function PostModal({
     setOpen: (val: boolean) => void;
 }) {
     const [playlistOptions, setPlaylistOptions] = useState([]);
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState<any>(null);
     const [selectedRadio, setSelectedRadio] = useState("");
 
     const user = useSelector((state: RootState) => state.userReducer.user);
@@ -40,7 +43,7 @@ export default function PostModal({
 
     async function populateSpotifyPlaylists() {
         if (spotifyToken.accessToken && spotifyToken.spotifyId) {
-            const playlists = await fetchAllSpotifyPlaylists({
+            const playlists = await fetchAllSpotifyPlaylistsByUserId({
                 token: spotifyToken.accessToken,
                 spotifyId: spotifyToken.spotifyId,
             });
@@ -60,18 +63,31 @@ export default function PostModal({
     };
 
     const handleSelectOption = (val: any) => {
+        console.log("Selected Playlist: ", val);
         setSelectedOption(val);
         setValue("title", val.value.name);
         setValue("description", val.value.description);
     };
 
     const handlePost = async (data: PostForm) => {
-        if (user) {
+        if (
+            user &&
+            selectedOption &&
+            spotifyToken &&
+            spotifyToken.accessToken
+        ) {
+            const isrcs = await fetchIsrcsByPlaylistId({
+                token: spotifyToken.accessToken,
+                playlistId: selectedOption.value.id,
+            });
+
+            console.log("isrcs: ", isrcs);
+
             await createPost({
                 title: data.title,
                 description: "description",
                 origin: "spotify",
-                isrcs: "",
+                isrcs: isrcs,
                 authorId: user.id,
             });
         }
@@ -88,10 +104,11 @@ export default function PostModal({
 
     const handleSpotifySelect = async () => {
         if (selectedRadio != "spotify") {
-            await populateSpotifyPlaylists();
             setSelectedRadio("spotify");
+            await populateSpotifyPlaylists();
         }
     };
+
     return (
         <Modal open={open} handleClose={handleClose} title="Post">
             <form
@@ -152,9 +169,9 @@ export default function PostModal({
                                         type="button"
                                         className="text-xs underline"
                                         onClick={() => {
-                                            console.log(
-                                                "handle connect to spotify here"
-                                            );
+                                            window.location.href = `${
+                                                import.meta.env.VITE_SERVER_URL
+                                            }/spotify/auth`;
                                         }}
                                     >
                                         Connect to Spotify

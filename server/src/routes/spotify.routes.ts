@@ -4,8 +4,10 @@ import {
     populateSpotifyFeed,
     requestSpotifyAuthorization,
     requestAccessToken,
-    fetchAllUserSpotifyPlaylists,
     fetchUserSpotifyID,
+    fetchAllSpotifyPlaylistsByUserId,
+    fetchPlaylistByIsrcs,
+    fetchIsrcsByPlaylistId,
 } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
@@ -17,6 +19,8 @@ spotifyRoutes.get("/auth", requestSpotifyAuthorization);
 spotifyRoutes.post("/token", requestAccessToken);
 
 spotifyRoutes.post("/id", fetchUserSpotifyID);
-spotifyRoutes.post("/playlists", fetchAllUserSpotifyPlaylists);
+spotifyRoutes.post("/isrcs", fetchIsrcsByPlaylistId);
+spotifyRoutes.post("/playlists", fetchAllSpotifyPlaylistsByUserId);
+spotifyRoutes.post("/playlist", fetchPlaylistByIsrcs);
 
 export default spotifyRoutes;
