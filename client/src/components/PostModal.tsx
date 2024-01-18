@@ -85,7 +85,7 @@ export default function PostModal({
 
             await createPost({
                 title: data.title,
-                description: "description",
+                description: data.description,
                 origin: "spotify",
                 isrcs: isrcs,
                 authorId: user.id,
