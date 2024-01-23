@@ -246,7 +246,6 @@ const fetchSpotifyPlaylistById = async (playlistId: string) => {
             artist: song.track?.artists[0].name,
             imageUrl: song.track?.album.images[0]?.url,
         }));
-
         return songs;
     } catch (error) {
         console.error("Error fetch spotify playlist by id", error);

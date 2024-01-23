@@ -82,6 +82,7 @@ export default function PostModal({
             });
         }
         handleClose();
+        location.reload();
     };
 
     const handleAppleSelect = async () => {
