@@ -55,8 +55,8 @@ model Post {
   id          String        @id @default(cuid())
   title       String
   description String
-  isrcs       String
   origin      String
+  originId    String
   downloads   Int
   createdAt   DateTime      @default(now())
   author      User?         @relation(fields: [authorId], references: [id])

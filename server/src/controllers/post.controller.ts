@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
-import { sampleSongs } from "../utils/sampleData";
-import { fetchPlaylistByIsrcs } from "./spotify.controller";
+import { fetchApplePlaylistById } from "./apple.controller";
 import { getClientToken } from "../utils/spotify-client-token";
+import axios from "axios";
 
 export const createPost = async (req: Request, res: Response) => {
     const data = req.body;
@@ -15,51 +15,6 @@ export const createPost = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         return res.status(500).send(`Error creating post`);
-    }
-};
-
-export const getPost = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    try {
-        const post = await db.post.findFirst({
-            where: { id },
-            include: {
-                author: true,
-                likes: true,
-                comments: {
-                    include: {
-                        author: true,
-                    },
-                    orderBy: {
-                        createdAt: "desc",
-                    },
-                },
-            },
-        });
-        if (post) {
-            const songs = post.isrcs
-                ? await fetchPlaylistByIsrcs(post.isrcs)
-                : [];
-
-            const formattedPost = {
-                id: post.id,
-                title: post.title,
-                description: post.description,
-                songs: songs,
-                origin: post.origin,
-                downloads: post.downloads,
-                createdAt: post.createdAt,
-                author: post.author,
-                likes: post.likes || [],
-                comments: post.comments || [],
-            };
-            return res.status(200).send(formattedPost);
-        } else {
-            return res.status(404).send({ message: "Post not found" });
-        }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send(`Error getting post data`);
     }
 };
 
@@ -82,6 +37,48 @@ export const deletePost = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         return res.status(500).send(`Error deleting user`);
+    }
+};
+
+export const getPost = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const post = await db.post.findUnique({
+            where: { id },
+            include: {
+                author: true,
+                likes: true,
+                comments: {
+                    include: {
+                        author: true,
+                    },
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+            },
+        });
+        if (post) {
+            const songs = await fetchSpotifyPlaylistById(post.originId);
+            const formattedPost = {
+                id: post.id,
+                title: post.title,
+                description: post.description,
+                songs: songs,
+                origin: post.origin,
+                downloads: post.downloads,
+                createdAt: post.createdAt,
+                author: post.author,
+                likes: post.likes || [],
+                comments: post.comments || [],
+            };
+            return res.status(200).send(formattedPost);
+        } else {
+            return res.status(404).send({ message: "Post not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(`Error getting post data`);
     }
 };
 
@@ -111,7 +108,10 @@ export const getAllPosts = async (req: Request, res: Response) => {
             id: post.id,
             title: post.title,
             description: post.description,
-            songs: await fetchPlaylistByIsrcs(post.isrcs), // Await the resolution of fetchPlaylistByIsrcs
+            songs:
+                post.origin === "spotify"
+                    ? await fetchSpotifyPlaylistById(post.originId)
+                    : await fetchApplePlaylistById(post.originId),
             origin: post.origin,
             downloads: post.downloads,
             createdAt: post.createdAt,
@@ -122,7 +122,6 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
         // Await all the promises
         const formattedPosts = await Promise.all(formattedPostsPromises);
-
         return res.status(200).send(formattedPosts);
     } catch (error) {
         console.error(error);
@@ -130,7 +129,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
     }
 };
 
-export const getAllFollowerPosts = async (req: Request, res: Response) => {
+export const getFollowerPosts = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
         const follows = await db.follow.findMany({
@@ -158,11 +157,15 @@ export const getAllFollowerPosts = async (req: Request, res: Response) => {
             },
         });
 
-        const formattedPosts = posts.map((post) => ({
+        // Create an array of promises
+        const formattedPostsPromises = posts.map(async (post) => ({
             id: post.id,
             title: post.title,
             description: post.description,
-            songs: sampleSongs,
+            songs:
+                post.origin === "spotify"
+                    ? await fetchSpotifyPlaylistById(post.originId)
+                    : await fetchApplePlaylistById(post.originId),
             origin: post.origin,
             downloads: post.downloads,
             createdAt: post.createdAt,
@@ -171,6 +174,8 @@ export const getAllFollowerPosts = async (req: Request, res: Response) => {
             comments: post.comments || [],
         }));
 
+        // Await all the promises
+        const formattedPosts = await Promise.all(formattedPostsPromises);
         return res.status(200).send(formattedPosts);
     } catch (error) {
         console.error(error);
@@ -178,7 +183,7 @@ export const getAllFollowerPosts = async (req: Request, res: Response) => {
     }
 };
 
-export const getAllUserPosts = async (req: Request, res: Response) => {
+export const getUserPosts = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
         const posts = await db.post.findMany({
@@ -206,7 +211,10 @@ export const getAllUserPosts = async (req: Request, res: Response) => {
             id: post.id,
             title: post.title,
             description: post.description,
-            songs: await fetchPlaylistByIsrcs(post.isrcs), // Await the resolution of fetchPlaylistByIsrcs
+            songs:
+                post.origin === "spotify"
+                    ? await fetchSpotifyPlaylistById(post.originId)
+                    : await fetchApplePlaylistById(post.originId),
             origin: post.origin,
             downloads: post.downloads,
             createdAt: post.createdAt,
@@ -217,9 +225,30 @@ export const getAllUserPosts = async (req: Request, res: Response) => {
 
         // Await all the promises
         const formattedPosts = await Promise.all(formattedPostsPromises);
-
         return res.status(200).send(formattedPosts);
     } catch (error) {
         console.error(error);
+    }
+};
+
+const fetchSpotifyPlaylistById = async (playlistId: string) => {
+    try {
+        const token = await getClientToken();
+        const playlistData = await axios({
+            method: "get",
+            url: `https://api.spotify.com/v1/playlists/${playlistId}`,
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const songs = playlistData.data.tracks.items.map((song: any) => ({
+            id: song.track?.id,
+            title: song.track?.name,
+            artist: song.track?.artists[0].name,
+            imageUrl: song.track?.album.images[0]?.url,
+        }));
+
+        return songs;
+    } catch (error) {
+        console.error("Error fetch spotify playlist by id", error);
     }
 };

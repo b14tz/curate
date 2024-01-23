@@ -2,23 +2,20 @@ import { Router } from "express";
 import {
     createPost,
     deletePost,
-    getAllFollowerPosts,
+    getFollowerPosts,
     getAllPosts,
-    getAllUserPosts,
+    getUserPosts,
     getPost,
     updatePost,
 } from "../controllers/post.controller";
 
 const postRoutes = Router();
 
-// public routes
+postRoutes.get("/", getAllPosts);
 postRoutes.get("/:id", getPost);
-postRoutes.get("/feed/all", getAllPosts);
-postRoutes.get("/feed/:id", getAllFollowerPosts);
-postRoutes.get("/user/:id", getAllUserPosts);
-// authentication token goes here
+postRoutes.get("/user/:id/followers", getFollowerPosts);
+postRoutes.get("/user/:id", getUserPosts);
 
-// private routes
 postRoutes.post("/", createPost);
 postRoutes.post("/:id", updatePost);
 postRoutes.delete("/:id", deletePost);

@@ -1,26 +1,25 @@
 import { Router } from "express";
 import {
     searchSpotify,
-    populateSpotifyFeed,
     requestSpotifyAuthorization,
     requestAccessToken,
     fetchUserSpotifyID,
-    fetchAllSpotifyPlaylistsByUserId,
-    fetchPlaylistByIsrcs,
-    fetchIsrcsByPlaylistId,
+    fetchAllPlaylistsByUserId,
+    fetchTopPlaylists,
+    fetchSpotifyPlaylistById,
 } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
-
-spotifyRoutes.post("/search", searchSpotify);
-spotifyRoutes.get("/feed", populateSpotifyFeed);
 
 spotifyRoutes.get("/auth", requestSpotifyAuthorization);
 spotifyRoutes.post("/token", requestAccessToken);
 
 spotifyRoutes.post("/id", fetchUserSpotifyID);
-spotifyRoutes.post("/isrcs", fetchIsrcsByPlaylistId);
-spotifyRoutes.post("/playlists", fetchAllSpotifyPlaylistsByUserId);
-spotifyRoutes.post("/playlist", fetchPlaylistByIsrcs);
+
+spotifyRoutes.get("/playlist/:id", fetchSpotifyPlaylistById);
+spotifyRoutes.get("/playlists/top", fetchTopPlaylists);
+spotifyRoutes.post("/playlists/user/:id", fetchAllPlaylistsByUserId);
+
+spotifyRoutes.post("/search", searchSpotify);
 
 export default spotifyRoutes;
