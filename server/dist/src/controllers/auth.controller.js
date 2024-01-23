@@ -57,6 +57,6 @@ const googleAuthCallback = (req, res) => __awaiter(void 0, void 0, void 0, funct
         username,
     });
     const token = (0, jsonwebtoken_1.sign)({ user: userInfo }, process.env.JWT_SECRET || generateJWTSecret());
-    res.redirect(`${process.env.CLIENT_URL}?token=${token}`);
+    res.redirect(`${process.env.CLIENT_AUTH_CALLBACK_URL}?token=${token}`);
 });
 exports.googleAuthCallback = googleAuthCallback;

@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import { useSnackbar } from "notistack";
 
-export default function Feed({
+export default function PostFeed({
     posts,
     setPosts,
     emptyMessage,
@@ -123,6 +123,7 @@ export default function Feed({
                                         <i className="ri-music-2-fill"></i>
                                         {post.songs.length}
                                     </p>
+
                                     {isPostLikedByUser(post) ? (
                                         <button
                                             onClick={() =>
@@ -144,7 +145,6 @@ export default function Feed({
                                             </p>
                                         </button>
                                     )}
-
                                     <p>
                                         <i className="ri-chat-1-fill"></i>
                                         {post.comments.length}
@@ -160,7 +160,7 @@ export default function Feed({
                                 <p>
                                     {post.createdAt
                                         ? formatPostTime(post.createdAt)
-                                        : ""}
+                                        : "*"}
                                 </p>
                             </div>
                         </div>

@@ -17,48 +17,23 @@ export const fetchAllSpotifyPlaylistsByUserId = async ({
     token: string;
     spotifyId: string;
 }) => {
-    const res = await axiosInstance.post("/spotify/playlists", {
-        token,
-        spotifyId,
-    });
+    const res = await axiosInstance.post(
+        `/spotify/playlists/user/${spotifyId}`,
+        { token }
+    );
     return res.data;
 };
 
-export const fetchIsrcsByPlaylistId = async ({
-    token,
-    playlistId,
-}: {
-    token: string;
-    playlistId: string;
-}) => {
-    const res = await axiosInstance.post("/spotify/isrcs", {
-        token,
-        playlistId,
-    });
+export const fetchSpotifyPlaylistById = async (playlistId: string) => {
+    const res = await axiosInstance.get(`spotify/playlist/${playlistId}`);
     return res.data;
 };
 
-export const fetchPlaylistByIsrcs = async ({
-    token,
-    isrcs,
-}: {
-    token: string;
-    isrcs: string;
-}) => {
-    const res = await axiosInstance.post("/spotify/playlist", {
-        token,
-        isrcs,
-    });
+export const fetchTopSpotifyPlaylists = async () => {
+    const res = await axiosInstance.get("/spotify/playlists/top");
     return res.data;
 };
 
-// GET /spotify/feed
-export const populateSpotifyFeed = async () => {
-    const res = await axiosInstance.get("/spotify/feed");
-    return res.data;
-};
-
-// POST /spotify/search
 export const searchSpotify = async (search: Search) => {
     search = { ...search, term: encodeURIComponent(search.term) };
     const res = await axiosInstance.post("/spotify/search", search);

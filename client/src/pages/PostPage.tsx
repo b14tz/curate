@@ -2,7 +2,7 @@ import { IconCornerDownRight, IconUser } from "@tabler/icons-react";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { createLike, deleteLike } from "~/api/routes/like";
 import { getPost } from "~/api/routes/post";
 import { ButtonGroup } from "~/components/ButtonGroup";
@@ -10,11 +10,10 @@ import CommentBox from "~/components/CommentBox";
 import { RootState } from "~/redux/store";
 import { formatPostTime } from "~/utils/time";
 
-export default function PostPage() {
+export default function PostPage({ showComments = false }) {
     const { id } = useParams();
 
     const navigate = useNavigate();
-    const location = useLocation();
 
     const { enqueueSnackbar } = useSnackbar();
 
@@ -40,31 +39,10 @@ export default function PostPage() {
         comments: [],
         likes: [],
     });
-    const [showSongs, setShowSongs] = useState(true);
 
     const currentUser = useSelector(
         (state: RootState) => state.userReducer.user
     );
-
-    useEffect(() => {
-        async function populatePost() {
-            if (id) {
-                const data = await getPost(id);
-                setPost(data);
-            }
-        }
-
-        const searchParams = new URLSearchParams(location.search);
-        let path = searchParams.get("path");
-
-        if (!path) {
-            navigate(`${location.pathname}?path=songs`);
-            path = "songs";
-        }
-
-        setShowSongs(path === "songs");
-        populatePost();
-    }, [id, location.search]);
 
     const handleLike = async () => {
         if (currentUser) {
@@ -96,12 +74,23 @@ export default function PostPage() {
     };
 
     const handleShowSongs = () => {
-        navigate(`${location.pathname}?path=songs`);
+        navigate(`/post/${id}`);
     };
 
     const handleShowComments = () => {
-        navigate(`${location.pathname}?path=comments`);
+        navigate(`/post/${id}/comments`);
     };
+
+    useEffect(() => {
+        async function populatePost() {
+            if (id) {
+                const data = await getPost(id);
+                setPost(data);
+            }
+        }
+
+        populatePost();
+    }, [id]);
 
     const renderSongs = () => {
         if (post) {
@@ -113,7 +102,7 @@ export default function PostPage() {
                 );
             } else {
                 return (
-                    <div className="flex flex-col space-y-8 mt-4">
+                    <div className="flex flex-col space-y-2 mt-4">
                         {post?.songs.map((song) => (
                             <div
                                 key={song.imageUrl + song.artist + song.title}
@@ -122,10 +111,10 @@ export default function PostPage() {
                                 <img
                                     key={"image" + song.imageUrl}
                                     src={song.imageUrl}
-                                    className="w-28 h-28"
+                                    className="w-12 h-12"
                                 />
-                                <div className="flex flex-col space-y-2">
-                                    <h3>{song.title}</h3>
+                                <div className="flex flex-col">
+                                    <p className="font-medium">{song.title}</p>
                                     <p>{song.artist}</p>
                                 </div>
                             </div>
@@ -244,7 +233,7 @@ export default function PostPage() {
             />
 
             <div className="flex flex-col space-y-2">
-                {showSongs ? (
+                {!showComments ? (
                     <>{renderSongs()}</>
                 ) : (
                     <div className="flex flex-col space-y-2">

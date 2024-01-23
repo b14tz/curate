@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 
@@ -13,17 +13,17 @@ export const ButtonGroup = ({
     const [activeButton, setActiveButton] = useState("");
 
     useEffect(() => {
-        const path = new URLSearchParams(location.search).get("path");
+        const currentPath = location.pathname;
         const activePath =
-            groupButtons.find((button) => button.value === path)?.value ||
-            groupButtons[0].value;
+            groupButtons.find((button) => currentPath.endsWith(button.value))
+                ?.value || groupButtons[0].value;
         setActiveButton(activePath);
     }, [location, groupButtons]);
 
-    const handleButtonClick = async (value: string, onClick: any) => {
+    const handleButtonClick = async (value: string, onClick?: () => void) => {
         if (value !== activeButton) {
             setActiveButton(value);
-            navigate(`?path=${value}`); // Update the URL parameter
+            navigate(value); // Update to navigate to the sub-route
             if (onClick) {
                 await onClick();
             }

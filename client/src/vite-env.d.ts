@@ -47,7 +47,7 @@ interface SearchResult {
 interface GroupButton {
     label: string;
     value?: any;
-    onClick: React.MouseEventHandler<HTMLButtonElement>;
+    onClick: () => void;
 }
 
 interface ButtonGroup {
@@ -71,6 +71,15 @@ interface Post {
     likes: Like[];
 }
 
+interface TopPlaylist {
+    id: string;
+    title: string;
+    description: string;
+    songs: Song[];
+    origin?: string;
+    author: User;
+}
+
 interface Like {
     userId: string;
     postId: string;
@@ -92,7 +101,7 @@ interface Song {
 interface PostForm {
     title: string;
     description: string;
-    isrcs: string;
+    originId: string;
     origin: string;
     authorId: string;
 }

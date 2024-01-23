@@ -61,5 +61,5 @@ export const googleAuthCallback = async (req: Request, res: Response) => {
         process.env.JWT_SECRET || generateJWTSecret()
     );
 
-    res.redirect(`${process.env.CLIENT_URL}?token=${token}`);
+    res.redirect(`${process.env.CLIENT_AUTH_CALLBACK_URL}?token=${token}`);
 };

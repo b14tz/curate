@@ -41,7 +41,7 @@ export default function Navbar() {
             </NavLink>
             <div className="space-x-8 flex flex-row items-center">
                 <NavbarLink to="/" label="Home" />
-                <NavbarLink to="/discover" label="Discover" />
+                <NavbarLink to="/discover/spotify" label="Discover" />
                 <NavbarLink to="/search" label="Search" />
                 {user ? (
                     <>

@@ -1,4 +1,4 @@
-import Feed from "../components/Feed";
+import Feed from "../components/PostFeed";
 import Header from "~/components/profile/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import Modal from "~/components/Modal";
 import { useForm } from "react-hook-form";
 import { clearUser, setUser } from "~/redux/features/user/userSlice";
-import { getAllUserPosts } from "~/api/routes/post";
 import { clearSpotify } from "~/redux/features/spotify/spotifySlice";
+import { getUserPosts } from "~/api/routes/post";
 
 export default function UserPage() {
     const { id } = useParams();
@@ -92,7 +92,7 @@ export default function UserPage() {
                 setUserData(fetchedUser);
                 setValue("displayName", fetchedUser.displayName);
 
-                const fetchedPosts = await getAllUserPosts(id);
+                const fetchedPosts = await getUserPosts(id);
                 setPosts(fetchedPosts);
             }
         }

@@ -1,47 +1,40 @@
+// discoverpage.tsx
 import { useEffect, useState } from "react";
 import { ButtonGroup } from "../components/ButtonGroup";
-import Feed from "../components/Feed";
-import { populateSpotifyFeed } from "~/api/routes/spotify";
 import { useLocation, useNavigate } from "react-router-dom";
+import { fetchTopSpotifyPlaylists } from "~/api/routes/spotify";
+import TopPlaylistFeed from "~/components/TopPlaylistFeed";
 
 export default function DiscoverPage() {
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [playlists, setPlaylists] = useState<TopPlaylist[]>([]);
     const [emptyMessage, setEmptyMessage] = useState("");
 
-    const location = useLocation();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    useEffect(() => {
-        const searchParams = new URLSearchParams(location.search);
-        let path = searchParams.get("path");
-
-        // Set default path to 'spotify' if none is specified
-        if (!path) {
-            navigate("?path=spotify");
-            path = "spotify";
-        }
-
-        if (path === "spotify") {
-            populateSpotifyPosts();
-        } else if (path === "apple") {
-            populateApplePosts();
-        }
-    }, []);
-
-    async function populateSpotifyPosts() {
+    async function handleFetchTopSpotifyPlaylists() {
         setEmptyMessage(
             "It looks like there aren't any spotify recommendations at this time."
         );
-        const data = await populateSpotifyFeed();
-        setPosts(data);
+        const data = await fetchTopSpotifyPlaylists();
+        setPlaylists(data);
     }
 
-    async function populateApplePosts() {
+    async function handleFetchTopApplePlaylists() {
         setEmptyMessage(
             "It looks like there aren't any apple recommendations at this time."
         );
-        setPosts([]);
+        setPlaylists([]);
     }
+
+    useEffect(() => {
+        const path = location.pathname.split("/").pop();
+        if (path === "apple") {
+            handleFetchTopApplePlaylists();
+        } else {
+            handleFetchTopSpotifyPlaylists();
+        }
+    }, [location.pathname]);
 
     return (
         <div className="space-y-4">
@@ -53,25 +46,20 @@ export default function DiscoverPage() {
                 activeClasses=" border-b-2 border-solid border-salmon"
                 groupButtons={[
                     {
-                        label: "Spotify",
+                        label: "Spotify Top Playlists",
                         value: "spotify",
-                        onClick: async () => {
-                            await populateSpotifyPosts();
-                        },
+                        onClick: () => navigate("/discover/spotify"),
                     },
                     {
-                        label: "Apple",
+                        label: "Apple Music Top Playlists",
                         value: "apple",
-                        onClick: () => {
-                            populateApplePosts();
-                        },
+                        onClick: () => navigate("/discover/apple"),
                     },
                 ]}
             />
 
-            <Feed
-                posts={posts}
-                setPosts={setPosts}
+            <TopPlaylistFeed
+                playlists={playlists}
                 emptyMessage={emptyMessage}
             />
         </div>

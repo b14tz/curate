@@ -6,10 +6,7 @@ import { createPost } from "~/api/routes/post";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Select from "react-select";
-import {
-    fetchAllSpotifyPlaylistsByUserId,
-    fetchIsrcsByPlaylistId,
-} from "~/api/routes/spotify";
+import { fetchAllSpotifyPlaylistsByUserId } from "~/api/routes/spotify";
 import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 
@@ -76,18 +73,11 @@ export default function PostModal({
             spotifyToken &&
             spotifyToken.accessToken
         ) {
-            const isrcs = await fetchIsrcsByPlaylistId({
-                token: spotifyToken.accessToken,
-                playlistId: selectedOption.value.id,
-            });
-
-            console.log("isrcs: ", isrcs);
-
             await createPost({
                 title: data.title,
                 description: data.description,
                 origin: "spotify",
-                isrcs: isrcs,
+                originId: selectedOption.value.id,
                 authorId: user.id,
             });
         }

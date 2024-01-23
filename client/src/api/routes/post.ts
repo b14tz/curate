@@ -26,16 +26,16 @@ export const deletePost = async (id: string) => {
 
 // For the Feed
 export const getAllPosts = async () => {
-    const res = await axiosInstance.get("/post/feed/all");
+    const res = await axiosInstance.get("/post/");
     return res.data;
 };
 
-export const getAllFollowerPosts = async (id: string) => {
-    const res = await axiosInstance.get(`/post/feed/${id}`);
+export const getFollowerPosts = async (id: string) => {
+    const res = await axiosInstance.get(`/post/user/${id}/followers`);
     return res.data;
 };
 
-export const getAllUserPosts = async (id: string) => {
+export const getUserPosts = async (id: string) => {
     const res = await axiosInstance.get(`/post/user/${id}`);
     return res.data;
 };
