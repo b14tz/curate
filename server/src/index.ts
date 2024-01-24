@@ -10,6 +10,8 @@ import authRoutes from "./routes/auth.routes";
 import followRoutes from "./routes/follow.routes";
 import commentRoutes from "./routes/comment.routes";
 import likeRoutes from "./routes/like.routes";
+import { getAppleDeveloperToken } from "./controllers/apple.controller";
+import appleRoutes from "./routes/apple.routes";
 
 dotenv.config();
 
@@ -36,6 +38,7 @@ app.get("/ping", (_req, res) => {
 app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/spotify", spotifyRoutes);
+app.use("/api/apple", appleRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/follow", followRoutes);
 app.use("/api/comment", commentRoutes);

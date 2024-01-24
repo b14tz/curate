@@ -1,15 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface AppleState {
-    accessToken: string | null;
+    musicUserToken: string | null;
     expirationTime: Date | null;
-    appleId: string | null;
 }
 
 const initialState: AppleState = {
-    accessToken: null,
+    musicUserToken: null,
     expirationTime: null,
-    appleId: null,
 };
 
 export const appleSlice = createSlice({
@@ -17,14 +15,12 @@ export const appleSlice = createSlice({
     initialState,
     reducers: {
         setApple: (state, action) => {
-            state.accessToken = action.payload.accessToken;
+            state.musicUserToken = action.payload.musicUserToken;
             state.expirationTime = action.payload.expirationTime;
-            state.appleId = action.payload.appleId;
         },
         clearApple: (state) => {
-            state.accessToken = null;
+            state.musicUserToken = null;
             state.expirationTime = null;
-            state.appleId = null;
         },
     },
 });

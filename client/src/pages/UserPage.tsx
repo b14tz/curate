@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { clearUser, setUser } from "~/redux/features/user/userSlice";
 import { clearSpotify } from "~/redux/features/spotify/spotifySlice";
 import { getUserPosts } from "~/api/routes/post";
+import AppleAuthToggle from "~/components/AppleAuthToggle";
 
 export default function UserPage() {
     const { id } = useParams();
@@ -169,6 +170,7 @@ export default function UserPage() {
                             Connect Spotify Account
                         </button>
                     )}
+                    <AppleAuthToggle />
                     <button
                         className="underline w-fit text-error"
                         onClick={() => {

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
 import { fetchApplePlaylistById } from "./apple.controller";
-import { getClientToken } from "../utils/spotify-client-token";
+import { getClientToken } from "../utils/spotifyClientToken";
 import axios from "axios";
 
 export const createPost = async (req: Request, res: Response) => {

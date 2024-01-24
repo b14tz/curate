@@ -9,6 +9,7 @@ import Select from "react-select";
 import { fetchAllSpotifyPlaylistsByUserId } from "~/api/routes/spotify";
 import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
+import AppleAuthButton from "./AppleAuthButton";
 
 export default function PostModal({
     open,
@@ -170,19 +171,7 @@ export default function PostModal({
                                 ) : null}
                             </div>
                             <div className="w-1/2 pl-3">
-                                {isAppleTokenExpired(appleToken) ? (
-                                    <button
-                                        type="button"
-                                        className="text-xs underline"
-                                        onClick={() => {
-                                            console.log(
-                                                "handle connect to apple music here"
-                                            );
-                                        }}
-                                    >
-                                        Connect to Apple Music
-                                    </button>
-                                ) : null}
+                                <AppleAuthButton />
                             </div>
                         </div>
                     </div>

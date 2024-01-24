@@ -1,8 +1,7 @@
 import axios from "axios";
 import { Request, Response } from "express";
 
-import { getClientToken } from "../utils/spotify-client-token";
-import { randomBytes } from "crypto";
+import { getClientToken } from "../utils/spotifyClientToken";
 
 export const requestSpotifyAuthorization = async (
     req: Request,
@@ -22,7 +21,8 @@ export const requestSpotifyAuthorization = async (
             `response_type=code` +
             `&client_id=${encodeURIComponent(SPOTIFY_CLIENT_ID)}` +
             `&scope=${encodeURIComponent(scope)}` +
-            `&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}`
+            `&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}` +
+            `&show_dialog=true`
     );
 };
 
