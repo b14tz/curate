@@ -8,20 +8,23 @@ import { useEffect, useState } from "react";
 import Modal from "~/components/Modal";
 import { useForm } from "react-hook-form";
 import { clearUser, setUser } from "~/redux/features/user/userSlice";
-import { clearSpotify } from "~/redux/features/spotify/spotifySlice";
+import {
+    clearSpotify,
+    isSpotifyTokenExpired,
+    updateAccessToken,
+} from "~/redux/features/spotify/spotifySlice";
 import { getUserPosts } from "~/api/routes/post";
 import AppleAuthToggle from "~/components/AppleAuthToggle";
+import { getExpirationTime } from "~/utils/time";
+import { refreshAccessToken } from "~/api/routes/spotify";
 
 export default function UserPage() {
     const { id } = useParams();
-    const now = new Date();
 
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [changeUsernameOpen, setChangeUsernameOpen] = useState(false);
     const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
     const [posts, setPosts] = useState<Post[]>([]);
-    const [spotifyTokenExpirationTime, setSpotifyTokenExpirationTime] =
-        useState(new Date());
     const [userData, setUserData] = useState<User>({
         id: "",
         token: "",
@@ -86,8 +89,23 @@ export default function UserPage() {
         setDeleteAccountOpen(false);
     };
 
+    const ensureValidSpotifyToken = async () => {
+        if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
+            const data = await refreshAccessToken(spotifyToken.refreshToken);
+            console.log(data);
+            const expirationTime = getExpirationTime(data.expires_in);
+            await dispatch(
+                updateAccessToken({
+                    accessToken: data.access_token,
+                    expirationTime: expirationTime,
+                })
+            );
+        }
+    };
+
     useEffect(() => {
         async function populateUser() {
+            ensureValidSpotifyToken();
             if (id && currentUser) {
                 const fetchedUser = await getUser(id);
                 setUserData(fetchedUser);
@@ -97,11 +115,7 @@ export default function UserPage() {
                 setPosts(fetchedPosts);
             }
         }
-        setSpotifyTokenExpirationTime(
-            new Date(
-                spotifyToken.expirationTime ? spotifyToken.expirationTime : ""
-            )
-        );
+
         populateUser();
     }, [id, isCurrentUser, changeUsernameOpen, currentUser, spotifyToken]);
 
@@ -147,9 +161,7 @@ export default function UserPage() {
                             Change
                         </button>
                     </div>
-                    {spotifyToken.accessToken &&
-                    spotifyToken.expirationTime &&
-                    spotifyTokenExpirationTime > now ? (
+                    {spotifyToken.refreshToken ? (
                         <button
                             className="w-fit underline"
                             onClick={() => {

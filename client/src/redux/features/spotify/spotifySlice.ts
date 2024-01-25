@@ -30,6 +30,10 @@ export const spotifySlice = createSlice({
             state.spotifyId = null;
             state.refreshToken = null;
         },
+        updateAccessToken: (state, action) => {
+            state.accessToken = action.payload.accessToken;
+            state.expirationTime = action.payload.expirationTime;
+        },
     },
 });
 
@@ -40,5 +44,6 @@ export const isSpotifyTokenExpired = (state: SpotifyState) => {
     return new Date(state.expirationTime) < new Date();
 };
 
-export const { setSpotify, clearSpotify } = spotifySlice.actions;
+export const { setSpotify, clearSpotify, updateAccessToken } =
+    spotifySlice.actions;
 export default spotifySlice.reducer;

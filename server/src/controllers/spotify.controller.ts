@@ -69,22 +69,29 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
     try {
         const { refreshToken } = req.body;
 
-        const clientId = await getClientToken();
+        const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } = process.env;
+        if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
+            return res.status(500).send("Server configuration error");
+        }
 
         const response = await axios.post(
             "https://accounts.spotify.com/api/token",
             {
                 grant_type: "refresh_token",
                 refresh_token: refreshToken,
-                client_id: clientId,
             },
             {
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded",
+                    Authorization:
+                        "Basic " +
+                        Buffer.from(
+                            SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET
+                        ).toString("base64"),
                 },
             }
         );
-        return res.status(200).send(response);
+        return res.status(200).send(response.data);
     } catch (error) {
         console.error(error);
         return res.status(500).send("Error refreshing access token");

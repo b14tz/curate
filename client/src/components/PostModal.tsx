@@ -3,17 +3,21 @@ import Modal from "./Modal";
 import { customSelectStyles } from "~/styles/customStyles";
 import { useForm } from "react-hook-form";
 import { createPost } from "~/api/routes/post";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Select from "react-select";
 import {
     fetchAllSpotifyPlaylistsByUserId,
     refreshAccessToken,
 } from "~/api/routes/spotify";
-import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
+import {
+    isSpotifyTokenExpired,
+    updateAccessToken,
+} from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 import AppleAuthButton from "./AppleAuthButton";
 import { fetchAllPlaylistsByMusicUserToken } from "~/api/routes/apple";
+import { getExpirationTime } from "~/utils/time";
 
 export default function PostModal({
     open,
@@ -25,6 +29,8 @@ export default function PostModal({
     const [playlistOptions, setPlaylistOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState<any>(null);
     const [selectedRadio, setSelectedRadio] = useState("");
+
+    const dispatch = useDispatch();
 
     const user = useSelector((state: RootState) => state.userReducer.user);
     const appleToken = useSelector((state: RootState) => state.appleReducer);
@@ -117,10 +123,15 @@ export default function PostModal({
 
     const ensureValidSpotifyToken = async () => {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
-            const data = refreshAccessToken(spotifyToken.refreshToken);
+            const data = await refreshAccessToken(spotifyToken.refreshToken);
             console.log(data);
-        } else {
-            console.log("not needed");
+            const expirationTime = getExpirationTime(data.expires_in);
+            await dispatch(
+                updateAccessToken({
+                    accessToken: data.access_token,
+                    expirationTime: expirationTime,
+                })
+            );
         }
     };
 
