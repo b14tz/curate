@@ -7,7 +7,7 @@ spotifyRoutes.get("/auth", spotify_controller_1.requestSpotifyAuthorization);
 spotifyRoutes.post("/token", spotify_controller_1.requestAccessToken);
 spotifyRoutes.post("/id", spotify_controller_1.fetchUserSpotifyID);
 spotifyRoutes.get("/playlist/:id", spotify_controller_1.fetchSpotifyPlaylistById);
-spotifyRoutes.get("/playlists/top", spotify_controller_1.fetchTopPlaylists);
+spotifyRoutes.get("/playlists/top", spotify_controller_1.fetchTopSpotifyPlaylists);
 spotifyRoutes.post("/playlists/user/:id", spotify_controller_1.fetchAllPlaylistsByUserId);
 spotifyRoutes.post("/search", spotify_controller_1.searchSpotify);
 exports.default = spotifyRoutes;

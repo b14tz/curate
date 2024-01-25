@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserPosts = exports.getFollowerPosts = exports.getAllPosts = exports.getPost = exports.deletePost = exports.updatePost = exports.createPost = void 0;
+exports.fetchApplePlaylistById = exports.getUserPosts = exports.getFollowerPosts = exports.getAllPosts = exports.getPost = exports.deletePost = exports.updatePost = exports.createPost = void 0;
 const db_server_1 = require("../utils/db.server");
-const apple_controller_1 = require("./apple.controller");
 const spotifyClientToken_1 = require("../utils/spotifyClientToken");
 const axios_1 = __importDefault(require("axios"));
+const apple_controller_1 = require("./apple.controller");
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
     try {
@@ -74,7 +74,9 @@ const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
         });
         if (post) {
-            const songs = yield fetchSpotifyPlaylistById(post.originId);
+            const songs = post.origin === "spotify"
+                ? yield fetchSpotifyPlaylistById(post.originId)
+                : yield (0, exports.fetchApplePlaylistById)(post.originId);
             const formattedPost = {
                 id: post.id,
                 title: post.title,
@@ -127,7 +129,7 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 description: post.description,
                 songs: post.origin === "spotify"
                     ? yield fetchSpotifyPlaylistById(post.originId)
-                    : yield (0, apple_controller_1.fetchApplePlaylistById)(post.originId),
+                    : yield (0, exports.fetchApplePlaylistById)(post.originId),
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
@@ -181,7 +183,7 @@ const getFollowerPosts = (req, res) => __awaiter(void 0, void 0, void 0, functio
                 description: post.description,
                 songs: post.origin === "spotify"
                     ? yield fetchSpotifyPlaylistById(post.originId)
-                    : yield (0, apple_controller_1.fetchApplePlaylistById)(post.originId),
+                    : yield (0, exports.fetchApplePlaylistById)(post.originId),
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
@@ -230,7 +232,7 @@ const getUserPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 description: post.description,
                 songs: post.origin === "spotify"
                     ? yield fetchSpotifyPlaylistById(post.originId)
-                    : yield (0, apple_controller_1.fetchApplePlaylistById)(post.originId),
+                    : yield (0, exports.fetchApplePlaylistById)(post.originId),
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
@@ -268,6 +270,32 @@ const fetchSpotifyPlaylistById = (playlistId) => __awaiter(void 0, void 0, void 
         return songs;
     }
     catch (error) {
-        console.error("Error fetch spotify playlist by id", error);
+        console.error("Error fetching spotify playlist by id: ", error);
+        return [];
     }
 });
+const fetchApplePlaylistById = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const developerToken = yield (0, apple_controller_1.getAppleDeveloperTokenCached)();
+        const playlistData = yield (0, axios_1.default)({
+            method: "get",
+            url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
+            headers: { Authorization: `Bearer ${developerToken}` },
+        });
+        const songs = playlistData.data.data[0].relationships.tracks.data.map((song) => ({
+            id: song.id,
+            title: song.attributes.name,
+            artist: song.attributes.artistName,
+            imageUrl: song.attributes.artwork.url
+                .replace("{w}", "600")
+                .replace("{h}", "600")
+                .replace("bb.jpg", "bb-60.jpg"),
+        }));
+        return songs;
+    }
+    catch (error) {
+        console.error("Error fetching apple playlist by id: ", error);
+        return [];
+    }
+});
+exports.fetchApplePlaylistById = fetchApplePlaylistById;

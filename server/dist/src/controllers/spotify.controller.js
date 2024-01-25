@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchSpotify = exports.fetchSpotifyPlaylistById = exports.fetchTopPlaylists = exports.fetchAllPlaylistsByUserId = exports.fetchUserSpotifyID = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
+exports.searchSpotify = exports.fetchSpotifyPlaylistById = exports.fetchTopSpotifyPlaylists = exports.fetchAllPlaylistsByUserId = exports.fetchUserSpotifyID = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
 const axios_1 = __importDefault(require("axios"));
 const spotifyClientToken_1 = require("../utils/spotifyClientToken");
 const requestSpotifyAuthorization = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,7 +48,7 @@ const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     Buffer.from(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString("base64"),
             },
         });
-        res.json(response.data);
+        return res.json(response.data);
     }
     catch (error) {
         console.error(error);
@@ -67,11 +67,11 @@ const fetchUserSpotifyID = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 Authorization: `Bearer ${token}`,
             },
         });
-        res.send(data.id);
+        return res.send(data.id);
     }
     catch (error) {
         console.error(error);
-        res.status(500).send("Error retrieving Spotify ID");
+        return res.status(500).send("Error retrieving Spotify ID");
     }
 });
 exports.fetchUserSpotifyID = fetchUserSpotifyID;
@@ -90,22 +90,23 @@ const fetchAllPlaylistsByUserId = (req, res) => __awaiter(void 0, void 0, void 0
                 limit: 50,
             },
         });
-        //only return playlists where current user is the author
         let authoredPlaylists = [];
         for (let i = 0; i < data.items.length; i++) {
             if (data.items[i]["owner"]["id"] === spotifyId) {
                 authoredPlaylists.push(data.items[i]);
             }
         }
-        res.status(200).send(authoredPlaylists);
+        return res.status(200).send(authoredPlaylists);
     }
     catch (error) {
         console.error(error);
-        res.status(500).send("Error retrieving user's Spotify playlists");
+        return res
+            .status(500)
+            .send("Error retrieving user's Spotify playlists");
     }
 });
 exports.fetchAllPlaylistsByUserId = fetchAllPlaylistsByUserId;
-const fetchTopPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const fetchTopSpotifyPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = yield (0, spotifyClientToken_1.getClientToken)();
         const playlistResults = yield (0, axios_1.default)({
@@ -135,6 +136,7 @@ const fetchTopPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, functi
             return {
                 id: playlist.id,
                 title: playlist.name,
+                origin: "spotify",
                 author: { displayName: "Spotify" },
                 description: playlist.description.replace(/Cover:.*$/, ""),
                 songs: songs,
@@ -147,7 +149,7 @@ const fetchTopPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, functi
         return res.status(500).send(`Error searching with spotify client`);
     }
 });
-exports.fetchTopPlaylists = fetchTopPlaylists;
+exports.fetchTopSpotifyPlaylists = fetchTopSpotifyPlaylists;
 const fetchSpotifyPlaylistById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const playlistId = req.params.id;
