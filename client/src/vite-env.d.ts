@@ -66,6 +66,8 @@ interface Post {
     origin?: string;
     downloads: number;
     createdAt: string;
+    total: number;
+    next: string;
     author: User;
     comments: Comment[];
     likes: Like[];
@@ -78,6 +80,8 @@ interface TopPlaylist {
     songs: Song[];
     origin?: string;
     author: User;
+    total: number;
+    next: string;
 }
 
 interface Like {

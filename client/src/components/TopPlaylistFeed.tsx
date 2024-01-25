@@ -85,7 +85,7 @@ export default function TopPlaylistFeed({
                                     <p>{playlist.author.displayName}</p>
                                     <p>
                                         <i className="ri-music-2-fill"></i>
-                                        {playlist.songs.length}
+                                        {playlist.total}
                                     </p>
                                 </div>
                                 <p className="text-ellipsis	whitespace-nowrap overflow-hidden">

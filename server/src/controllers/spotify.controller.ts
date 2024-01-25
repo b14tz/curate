@@ -29,7 +29,6 @@ export const requestSpotifyAuthorization = async (
 export const requestAccessToken = async (req: Request, res: Response) => {
     try {
         const code = req.body.code;
-        console.log("CODE: ", code);
         const {
             SPOTIFY_CLIENT_ID,
             SPOTIFY_CLIENT_SECRET,
@@ -57,7 +56,6 @@ export const requestAccessToken = async (req: Request, res: Response) => {
                 },
             }
         );
-        console.log(response.data);
         return res.json(response.data);
     } catch (error) {
         console.error(error);
@@ -159,31 +157,35 @@ export const fetchAllPlaylistsByUserId = async (
 export const fetchTopSpotifyPlaylists = async (req: Request, res: Response) => {
     try {
         const token = await getClientToken();
-        const playlistResults = await axios({
+        const topPlaylistsData = await axios({
             method: "get",
             url: `https://api.spotify.com/v1/browse/featured-playlists?country=US`,
             headers: { Authorization: `Bearer ${token}` },
         });
-        const playlists = playlistResults.data.playlists.items;
+        const playlists = topPlaylistsData.data.playlists.items;
 
-        const fetchPlaylistSongs = async (token: string, url: string) => {
-            const songResults = await axios({
+        const fetchPlaylistData = async (token: string, url: string) => {
+            const playlistResults = await axios({
                 method: "get",
                 url: url,
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            return songResults.data.items.map((song: any) => ({
-                id: song.track?.id,
-                title: song.track?.name,
-                artist: song.track?.artists[0].name,
-                imageUrl: song.track?.album.images[0]?.url,
-            }));
+            return {
+                songs: playlistResults.data.items.map((song: any) => ({
+                    id: song.track?.id,
+                    title: song.track?.name,
+                    artist: song.track?.artists[0].name,
+                    imageUrl: song.track?.album.images[0]?.url,
+                })),
+                total: playlistResults.data.total,
+                next: playlistResults.data.next,
+            };
         };
 
         const result = await Promise.all(
             playlists.map(async (playlist: any) => {
-                const songs = await fetchPlaylistSongs(
+                const songData = await fetchPlaylistData(
                     token,
                     playlist.tracks.href
                 );
@@ -193,11 +195,12 @@ export const fetchTopSpotifyPlaylists = async (req: Request, res: Response) => {
                     origin: "spotify",
                     author: { displayName: "Spotify" },
                     description: playlist.description.replace(/Cover:.*$/, ""),
-                    songs: songs,
+                    songs: songData.songs,
+                    total: songData.total,
+                    next: songData.next,
                 };
             })
         );
-
         return res.json(result);
     } catch (error) {
         console.error(error);
@@ -229,6 +232,8 @@ export const fetchSpotifyPlaylistById = async (req: Request, res: Response) => {
             songs: songs,
             origin: "Spotify",
             author: { displayName: "Spotify" },
+            next: playlistData.data.tracks.next,
+            total: playlistData.data.tracks.total,
         });
     } catch (error) {
         console.error("Error fetch spotify playlist by id", error);

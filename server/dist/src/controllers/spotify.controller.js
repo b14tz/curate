@@ -33,7 +33,6 @@ exports.requestSpotifyAuthorization = requestSpotifyAuthorization;
 const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const code = req.body.code;
-        console.log("CODE: ", code);
         const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI, } = process.env;
         if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
             return res.status(500).send("Server configuration error");
@@ -49,7 +48,6 @@ const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     Buffer.from(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString("base64"),
             },
         });
-        console.log(response.data);
         return res.json(response.data);
     }
     catch (error) {
@@ -136,37 +134,43 @@ exports.fetchAllPlaylistsByUserId = fetchAllPlaylistsByUserId;
 const fetchTopSpotifyPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = yield (0, spotifyClientToken_1.getClientToken)();
-        const playlistResults = yield (0, axios_1.default)({
+        const topPlaylistsData = yield (0, axios_1.default)({
             method: "get",
             url: `https://api.spotify.com/v1/browse/featured-playlists?country=US`,
             headers: { Authorization: `Bearer ${token}` },
         });
-        const playlists = playlistResults.data.playlists.items;
-        const fetchPlaylistSongs = (token, url) => __awaiter(void 0, void 0, void 0, function* () {
-            const songResults = yield (0, axios_1.default)({
+        const playlists = topPlaylistsData.data.playlists.items;
+        const fetchPlaylistData = (token, url) => __awaiter(void 0, void 0, void 0, function* () {
+            const playlistResults = yield (0, axios_1.default)({
                 method: "get",
                 url: url,
                 headers: { Authorization: `Bearer ${token}` },
             });
-            return songResults.data.items.map((song) => {
-                var _a, _b, _c, _d, _e;
-                return ({
-                    id: (_a = song.track) === null || _a === void 0 ? void 0 : _a.id,
-                    title: (_b = song.track) === null || _b === void 0 ? void 0 : _b.name,
-                    artist: (_c = song.track) === null || _c === void 0 ? void 0 : _c.artists[0].name,
-                    imageUrl: (_e = (_d = song.track) === null || _d === void 0 ? void 0 : _d.album.images[0]) === null || _e === void 0 ? void 0 : _e.url,
-                });
-            });
+            return {
+                songs: playlistResults.data.items.map((song) => {
+                    var _a, _b, _c, _d, _e;
+                    return ({
+                        id: (_a = song.track) === null || _a === void 0 ? void 0 : _a.id,
+                        title: (_b = song.track) === null || _b === void 0 ? void 0 : _b.name,
+                        artist: (_c = song.track) === null || _c === void 0 ? void 0 : _c.artists[0].name,
+                        imageUrl: (_e = (_d = song.track) === null || _d === void 0 ? void 0 : _d.album.images[0]) === null || _e === void 0 ? void 0 : _e.url,
+                    });
+                }),
+                total: playlistResults.data.total,
+                next: playlistResults.data.next,
+            };
         });
         const result = yield Promise.all(playlists.map((playlist) => __awaiter(void 0, void 0, void 0, function* () {
-            const songs = yield fetchPlaylistSongs(token, playlist.tracks.href);
+            const songData = yield fetchPlaylistData(token, playlist.tracks.href);
             return {
                 id: playlist.id,
                 title: playlist.name,
                 origin: "spotify",
                 author: { displayName: "Spotify" },
                 description: playlist.description.replace(/Cover:.*$/, ""),
-                songs: songs,
+                songs: songData.songs,
+                total: songData.total,
+                next: songData.next,
             };
         })));
         return res.json(result);
@@ -202,6 +206,8 @@ const fetchSpotifyPlaylistById = (req, res) => __awaiter(void 0, void 0, void 0,
             songs: songs,
             origin: "Spotify",
             author: { displayName: "Spotify" },
+            next: playlistData.data.tracks.next,
+            total: playlistData.data.tracks.total,
         });
     }
     catch (error) {

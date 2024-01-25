@@ -13,6 +13,8 @@ export default function PostPage() {
         description: "",
         songs: [],
         origin: "",
+        total: 0,
+        next: "",
         author: {
             id: "",
             firstName: "",
@@ -54,7 +56,7 @@ export default function PostPage() {
 
     const renderSongs = () => {
         if (playlist) {
-            if (Object.keys(playlist?.songs).length === 0) {
+            if (Object.keys(playlist.songs).length === 0) {
                 return (
                     <div className="h-[300px] flex justify-center items-center">
                         <p>It looks like this playlist is empty.</p>
@@ -63,7 +65,7 @@ export default function PostPage() {
             } else {
                 return (
                     <div className="flex flex-col space-y-2 mt-4">
-                        {playlist?.songs.map((song) => (
+                        {playlist.songs.map((song) => (
                             <div
                                 key={song.imageUrl + song.artist + song.title}
                                 className="flex flex-row space-x-4 items-center"
@@ -88,20 +90,20 @@ export default function PostPage() {
     return (
         <div className="flex flex-col space-y-2">
             <div className="flex flex-col space-y-1">
-                <h3>{playlist?.title}</h3>
-                <p>{playlist?.description}</p>
+                <h3>{playlist.title}</h3>
+                <p>{playlist.description}</p>
             </div>
             <div className="flex flex-row justify-between items-end">
                 <div className="flex flex-row items-center space-x-10">
                     <p>
                         <i className="ri-music-2-fill"></i>
-                        {playlist?.songs.length}
+                        {playlist.total}
                     </p>
                 </div>
 
                 <div className="w-fit flex items-center space-x-1">
                     <IconUser size={20} />
-                    <p>{playlist?.author.displayName}</p>
+                    <p>{playlist.author.displayName}</p>
                 </div>
             </div>
             <hr />

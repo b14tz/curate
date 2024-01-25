@@ -127,11 +127,6 @@ export const fetchTopApplePlaylists = async (req: Request, res: Response) => {
             },
         });
 
-        console.log(
-            "PLAYLISTSS: ",
-            playlistResults.data.results.playlists[0].data[0].attributes
-        );
-
         const playlists = playlistResults.data.results.playlists[0].data;
 
         const fetchPlaylistSongs = async (playlistId: string) => {
@@ -158,14 +153,20 @@ export const fetchTopApplePlaylists = async (req: Request, res: Response) => {
                 const songs = await fetchPlaylistSongs(
                     playlist.attributes.playParams.id
                 );
+                let description;
+                if (playlist.attributes.description) {
+                    description = playlist.attributes.description.short
+                        ? playlist.attributes.description.short
+                        : playlist.attributes.description.standard;
+                } else {
+                    description = "Apple's Top Hits";
+                }
                 return {
                     id: playlist.id,
                     title: playlist.attributes.name,
                     origin: "apple",
                     author: { displayName: "Apple" },
-                    description: playlist.attributes.description.short
-                        ? playlist.attributes.description.short
-                        : playlist.attributes.description.standard,
+                    description: description,
                     songs: songs,
                 };
             })

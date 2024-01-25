@@ -74,18 +74,20 @@ const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             },
         });
         if (post) {
-            const songs = post.origin === "spotify"
+            const fetchedData = post.origin === "spotify"
                 ? yield fetchSpotifyPlaylistById(post.originId)
                 : yield (0, exports.fetchApplePlaylistById)(post.originId);
             const formattedPost = {
                 id: post.id,
                 title: post.title,
                 description: post.description,
-                songs: songs,
+                songs: fetchedData.songs,
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
                 author: post.author,
+                total: fetchedData.total,
+                next: fetchedData.next,
                 likes: post.likes || [],
                 comments: post.comments || [],
             };
@@ -123,20 +125,23 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         });
         // Create an array of promises
         const formattedPostsPromises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
-            return ({
+            const fetchedData = post.origin === "spotify"
+                ? yield fetchSpotifyPlaylistById(post.originId)
+                : yield (0, exports.fetchApplePlaylistById)(post.originId);
+            return {
                 id: post.id,
                 title: post.title,
                 description: post.description,
-                songs: post.origin === "spotify"
-                    ? yield fetchSpotifyPlaylistById(post.originId)
-                    : yield (0, exports.fetchApplePlaylistById)(post.originId),
+                songs: fetchedData.songs,
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
                 author: post.author,
+                total: fetchedData.total,
+                next: fetchedData.next,
                 likes: post.likes || [],
                 comments: post.comments || [],
-            });
+            };
         }));
         // Await all the promises
         const formattedPosts = yield Promise.all(formattedPostsPromises);
@@ -177,20 +182,23 @@ const getFollowerPosts = (req, res) => __awaiter(void 0, void 0, void 0, functio
         });
         // Create an array of promises
         const formattedPostsPromises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
-            return ({
+            const fetchedData = post.origin === "spotify"
+                ? yield fetchSpotifyPlaylistById(post.originId)
+                : yield (0, exports.fetchApplePlaylistById)(post.originId);
+            return {
                 id: post.id,
                 title: post.title,
                 description: post.description,
-                songs: post.origin === "spotify"
-                    ? yield fetchSpotifyPlaylistById(post.originId)
-                    : yield (0, exports.fetchApplePlaylistById)(post.originId),
+                songs: fetchedData.songs,
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
                 author: post.author,
+                total: fetchedData.total,
+                next: fetchedData.next,
                 likes: post.likes || [],
                 comments: post.comments || [],
-            });
+            };
         }));
         // Await all the promises
         const formattedPosts = yield Promise.all(formattedPostsPromises);
@@ -226,20 +234,23 @@ const getUserPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
         // Create an array of promises
         const formattedPostsPromises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
-            return ({
+            const fetchedData = post.origin === "spotify"
+                ? yield fetchSpotifyPlaylistById(post.originId)
+                : yield (0, exports.fetchApplePlaylistById)(post.originId);
+            return {
                 id: post.id,
                 title: post.title,
                 description: post.description,
-                songs: post.origin === "spotify"
-                    ? yield fetchSpotifyPlaylistById(post.originId)
-                    : yield (0, exports.fetchApplePlaylistById)(post.originId),
+                songs: fetchedData.songs,
                 origin: post.origin,
                 downloads: post.downloads,
                 createdAt: post.createdAt,
                 author: post.author,
+                total: fetchedData.total,
+                next: fetchedData.next,
                 likes: post.likes || [],
                 comments: post.comments || [],
-            });
+            };
         }));
         // Await all the promises
         const formattedPosts = yield Promise.all(formattedPostsPromises);
@@ -258,20 +269,23 @@ const fetchSpotifyPlaylistById = (playlistId) => __awaiter(void 0, void 0, void 
             url: `https://api.spotify.com/v1/playlists/${playlistId}`,
             headers: { Authorization: `Bearer ${token}` },
         });
-        const songs = playlistData.data.tracks.items.map((song) => {
-            var _a, _b, _c, _d, _e;
-            return ({
-                id: (_a = song.track) === null || _a === void 0 ? void 0 : _a.id,
-                title: (_b = song.track) === null || _b === void 0 ? void 0 : _b.name,
-                artist: (_c = song.track) === null || _c === void 0 ? void 0 : _c.artists[0].name,
-                imageUrl: (_e = (_d = song.track) === null || _d === void 0 ? void 0 : _d.album.images[0]) === null || _e === void 0 ? void 0 : _e.url,
-            });
-        });
-        return songs;
+        return {
+            songs: playlistData.data.tracks.items.map((song) => {
+                var _a, _b, _c, _d, _e;
+                return ({
+                    id: (_a = song.track) === null || _a === void 0 ? void 0 : _a.id,
+                    title: (_b = song.track) === null || _b === void 0 ? void 0 : _b.name,
+                    artist: (_c = song.track) === null || _c === void 0 ? void 0 : _c.artists[0].name,
+                    imageUrl: (_e = (_d = song.track) === null || _d === void 0 ? void 0 : _d.album.images[0]) === null || _e === void 0 ? void 0 : _e.url,
+                });
+            }),
+            total: playlistData.data.tracks.total,
+            next: playlistData.data.tracks.next,
+        };
     }
     catch (error) {
         console.error("Error fetching spotify playlist by id: ", error);
-        return [];
+        return { songs: [], next: "", total: 0 };
     }
 });
 const fetchApplePlaylistById = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
@@ -282,20 +296,23 @@ const fetchApplePlaylistById = (playlistId) => __awaiter(void 0, void 0, void 0,
             url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
             headers: { Authorization: `Bearer ${developerToken}` },
         });
-        const songs = playlistData.data.data[0].relationships.tracks.data.map((song) => ({
-            id: song.id,
-            title: song.attributes.name,
-            artist: song.attributes.artistName,
-            imageUrl: song.attributes.artwork.url
-                .replace("{w}", "600")
-                .replace("{h}", "600")
-                .replace("bb.jpg", "bb-60.jpg"),
-        }));
-        return songs;
+        return {
+            songs: playlistData.data.data[0].relationships.tracks.data.map((song) => ({
+                id: song.id,
+                title: song.attributes.name,
+                artist: song.attributes.artistName,
+                imageUrl: song.attributes.artwork.url
+                    .replace("{w}", "600")
+                    .replace("{h}", "600")
+                    .replace("bb.jpg", "bb-60.jpg"),
+            })),
+            total: 0,
+            next: "",
+        };
     }
     catch (error) {
         console.error("Error fetching apple playlist by id: ", error);
-        return [];
+        return { songs: [], next: "", total: 0 };
     }
 });
 exports.fetchApplePlaylistById = fetchApplePlaylistById;

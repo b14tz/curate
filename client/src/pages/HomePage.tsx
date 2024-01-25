@@ -23,7 +23,7 @@ export default function HomePage() {
         try {
             const data = await getAllPosts();
             setPosts(data);
-            //console.log("Posts: ", data);
+            console.log("Posts: ", data);
         } catch (error) {
             console.error(error);
         }

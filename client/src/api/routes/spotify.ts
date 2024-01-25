@@ -32,7 +32,7 @@ export const fetchAllSpotifyPlaylistsByUserId = async ({
 };
 
 export const fetchSpotifyPlaylistById = async (playlistId: string) => {
-    const res = await axiosInstance.get(`spotify/playlist/${playlistId}`);
+    const res = await axiosInstance.get(`/spotify/playlist/${playlistId}`);
     return res.data;
 };
 

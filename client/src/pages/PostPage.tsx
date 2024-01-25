@@ -25,6 +25,8 @@ export default function PostPage({ showComments = false }) {
         origin: "",
         downloads: 0,
         createdAt: "",
+        next: "",
+        total: 0,
         author: {
             id: "",
             firstName: "",
@@ -85,6 +87,7 @@ export default function PostPage({ showComments = false }) {
         async function populatePost() {
             if (id) {
                 const data = await getPost(id);
+                console.log("POSTDATA: ", data);
                 setPost(data);
             }
         }
@@ -103,7 +106,7 @@ export default function PostPage({ showComments = false }) {
             } else {
                 return (
                     <div className="flex flex-col space-y-2 mt-4">
-                        {post?.songs.map((song) => (
+                        {post.songs.map((song) => (
                             <div
                                 key={song.imageUrl + song.artist + song.title}
                                 className="flex flex-row space-x-4 items-center"
@@ -171,24 +174,22 @@ export default function PostPage({ showComments = false }) {
                     <button onClick={() => handleShowSongs()}>
                         <p>
                             <i className="ri-music-2-fill"></i>
-                            {post?.songs.length}
+                            {post.total}
                         </p>
                     </button>
                     {currentUser &&
-                    post?.likes.find(
-                        (like) => like.userId == currentUser.id
-                    ) ? (
+                    post.likes.find((like) => like.userId == currentUser.id) ? (
                         <button onClick={() => handleUnlike()}>
                             <p className="text-salmon">
                                 <i className="ri-heart-fill"></i>
-                                {post?.likes.length}
+                                {post.likes.length}
                             </p>
                         </button>
                     ) : (
                         <button onClick={() => handleLike()}>
                             <p>
                                 <i className="ri-heart-fill"></i>
-                                {post?.likes.length}
+                                {post.likes.length}
                             </p>
                         </button>
                     )}
@@ -196,12 +197,12 @@ export default function PostPage({ showComments = false }) {
                     <button onClick={() => handleShowComments()}>
                         <p>
                             <i className="ri-chat-1-fill"></i>
-                            {post?.comments.length}
+                            {post.comments.length}
                         </p>
                     </button>
                     <p>
                         <i className="ri-download-fill"></i>
-                        {post?.downloads}
+                        {post.downloads}
                     </p>
                 </div>
 
@@ -210,7 +211,7 @@ export default function PostPage({ showComments = false }) {
                     onClick={() => navigate(`/user/${post?.author.id}`)}
                 >
                     <IconUser size={20} />
-                    <p>{post?.author.displayName}</p>
+                    <p>{post.author.displayName}</p>
                 </button>
             </div>
             <hr />

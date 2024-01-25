@@ -113,7 +113,6 @@ const fetchTopApplePlaylists = (req, res) => __awaiter(void 0, void 0, void 0, f
                 Authorization: `Bearer ${token}`,
             },
         });
-        console.log("PLAYLISTSS: ", playlistResults.data.results.playlists[0].data[0].attributes);
         const playlists = playlistResults.data.results.playlists[0].data;
         const fetchPlaylistSongs = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
             const songResults = yield (0, axios_1.default)({
@@ -133,14 +132,21 @@ const fetchTopApplePlaylists = (req, res) => __awaiter(void 0, void 0, void 0, f
         });
         const result = yield Promise.all(playlists.map((playlist) => __awaiter(void 0, void 0, void 0, function* () {
             const songs = yield fetchPlaylistSongs(playlist.attributes.playParams.id);
+            let description;
+            if (playlist.attributes.description) {
+                description = playlist.attributes.description.short
+                    ? playlist.attributes.description.short
+                    : playlist.attributes.description.standard;
+            }
+            else {
+                description = "Apple's Top Hits";
+            }
             return {
                 id: playlist.id,
                 title: playlist.attributes.name,
                 origin: "apple",
                 author: { displayName: "Apple" },
-                description: playlist.attributes.description.short
-                    ? playlist.attributes.description.short
-                    : playlist.attributes.description.standard,
+                description: description,
                 songs: songs,
             };
         })));
