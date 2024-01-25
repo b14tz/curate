@@ -26,12 +26,14 @@ const generateAppleDeveloperToken = async () => {
         APPLE_MUSIC_TEAM_ID,
         APPLE_MUSIC_KEY_ID,
         APPLE_MUSIC_PRIVATE_KEY_PATH,
+        APPLE_MUSIC_AUTH_SECRET,
     } = process.env;
 
     if (
         !APPLE_MUSIC_TEAM_ID ||
         !APPLE_MUSIC_KEY_ID ||
-        !APPLE_MUSIC_PRIVATE_KEY_PATH
+        !APPLE_MUSIC_PRIVATE_KEY_PATH ||
+        !APPLE_MUSIC_AUTH_SECRET
     ) {
         throw new Error(
             "Apple Music environment variables are missing or invalid."
@@ -39,8 +41,7 @@ const generateAppleDeveloperToken = async () => {
     }
 
     try {
-        const filePath = path.join(__dirname, APPLE_MUSIC_PRIVATE_KEY_PATH);
-        const privateKey = await fs.readFile(filePath, "utf8");
+        const privateKey = APPLE_MUSIC_AUTH_SECRET.replace(/\\n/g, "\n");
 
         const token = jwt.sign({}, privateKey, {
             algorithm: "ES256",
@@ -139,7 +140,6 @@ export const fetchTopApplePlaylists = async (req: Request, res: Response) => {
                 url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
                 headers: { Authorization: `Bearer ${token}` },
             });
-            //console.log("SONGRESULTS: ", songResults.data);
             return songResults.data.data[0].relationships.tracks.data.map(
                 (song: any) => ({
                     id: song.id,

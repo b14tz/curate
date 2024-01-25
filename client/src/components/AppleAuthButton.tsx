@@ -28,9 +28,6 @@ export default function AppleAuthButton() {
         setAppleTokenExpirationTime(
             new Date(appleToken.expirationTime ? appleToken.expirationTime : "")
         );
-
-        console.log("Redux apple token: ", appleToken);
-
         loadMusicKit();
     }, [appleToken]);
 
@@ -46,7 +43,6 @@ export default function AppleAuthButton() {
                     expirationTime: expirationTime,
                 })
             );
-            console.log("Music User Token:", musicUserToken);
         } catch (error) {
             console.error("Authorization error:", error);
         }

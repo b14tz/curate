@@ -14,8 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fetchApplePlaylistById = exports.fetchTopApplePlaylists = exports.fetchAllPlaylistsByMusicUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const promises_1 = __importDefault(require("fs/promises"));
-const path_1 = __importDefault(require("path"));
 const axios_1 = __importDefault(require("axios"));
 let cachedAppleDeveloperToken = null;
 let tokenExpiry = null;
@@ -33,15 +31,15 @@ const getAppleDeveloperTokenCached = () => __awaiter(void 0, void 0, void 0, fun
 });
 exports.getAppleDeveloperTokenCached = getAppleDeveloperTokenCached;
 const generateAppleDeveloperToken = () => __awaiter(void 0, void 0, void 0, function* () {
-    const { APPLE_MUSIC_TEAM_ID, APPLE_MUSIC_KEY_ID, APPLE_MUSIC_PRIVATE_KEY_PATH, } = process.env;
+    const { APPLE_MUSIC_TEAM_ID, APPLE_MUSIC_KEY_ID, APPLE_MUSIC_PRIVATE_KEY_PATH, APPLE_MUSIC_AUTH_SECRET, } = process.env;
     if (!APPLE_MUSIC_TEAM_ID ||
         !APPLE_MUSIC_KEY_ID ||
-        !APPLE_MUSIC_PRIVATE_KEY_PATH) {
+        !APPLE_MUSIC_PRIVATE_KEY_PATH ||
+        !APPLE_MUSIC_AUTH_SECRET) {
         throw new Error("Apple Music environment variables are missing or invalid.");
     }
     try {
-        const filePath = path_1.default.join(__dirname, APPLE_MUSIC_PRIVATE_KEY_PATH);
-        const privateKey = yield promises_1.default.readFile(filePath, "utf8");
+        const privateKey = APPLE_MUSIC_AUTH_SECRET.replace(/\\n/g, "\n");
         const token = jsonwebtoken_1.default.sign({}, privateKey, {
             algorithm: "ES256",
             expiresIn: "180d",
@@ -123,7 +121,6 @@ const fetchTopApplePlaylists = (req, res) => __awaiter(void 0, void 0, void 0, f
                 url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
                 headers: { Authorization: `Bearer ${token}` },
             });
-            //console.log("SONGRESULTS: ", songResults.data);
             return songResults.data.data[0].relationships.tracks.data.map((song) => ({
                 id: song.id,
                 title: song.attributes.name,

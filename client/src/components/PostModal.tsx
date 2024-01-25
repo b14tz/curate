@@ -44,7 +44,6 @@ export default function PostModal({
     };
 
     const handleSelectOption = (val: any) => {
-        console.log("Selected Playlist: ", val);
         setSelectedOption(val);
         setValue("title", val.value.name);
         setValue("description", val.value.description);

@@ -44,7 +44,6 @@ export default function PostPage() {
         const platform = pathParts[2];
 
         if (platform === "apple") {
-            console.log("Platform is Apple");
             id && handleApplePost(id);
         } else if (platform === "spotify") {
             id && handleSpotifyPost(id);

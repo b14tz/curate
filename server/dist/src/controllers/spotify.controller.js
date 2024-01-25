@@ -289,7 +289,6 @@ exports.searchSpotify = searchSpotify;
 //                 getNext = false;
 //             }
 //         }
-//         //(console.log({tracksWithISRC, tracksWithoutISRC}))
 //         return res.status(200).send(tracksWithISRC.join(","));
 //     } catch (error) {
 //         console.error("Error fetching Spotify playlist:", error);
