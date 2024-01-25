@@ -37,16 +37,21 @@ function AllRoutes() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/following" element={<HomePage />} />
 
-                <Route path="/discover/spotify" element={<DiscoverPage />} />
-                <Route path="/discover/apple" element={<DiscoverPage />} />
+                <Route path="discover/spotify" element={<DiscoverPage />} />
+                <Route path="discover/apple" element={<DiscoverPage />} />
 
-                <Route path="search" element={<SearchPage />} />
                 <Route path="user/:id" element={<UserPage />} />
 
                 <Route path="post/:id" element={<PostPage />} />
                 <Route
                     path="post/:id/comments"
                     element={<PostPage showComments />}
+                />
+
+                <Route path="search/users" element={<SearchPage />} />
+                <Route
+                    path="search/posts"
+                    element={<SearchPage postsSearch />}
                 />
 
                 <Route path="top/spotify/:id" element={<TopPlaylistPage />} />

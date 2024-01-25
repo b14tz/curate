@@ -38,6 +38,7 @@ const follow_routes_1 = __importDefault(require("./routes/follow.routes"));
 const comment_routes_1 = __importDefault(require("./routes/comment.routes"));
 const like_routes_1 = __importDefault(require("./routes/like.routes"));
 const apple_routes_1 = __importDefault(require("./routes/apple.routes"));
+const search_routes_1 = __importDefault(require("./routes/search.routes"));
 dotenv.config();
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -64,6 +65,7 @@ app.use("/api/auth", auth_routes_1.default);
 app.use("/api/follow", follow_routes_1.default);
 app.use("/api/comment", comment_routes_1.default);
 app.use("/api/like", like_routes_1.default);
+app.use("/api/search", search_routes_1.default);
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);

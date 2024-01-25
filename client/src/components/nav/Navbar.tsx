@@ -42,7 +42,7 @@ export default function Navbar() {
             <div className="space-x-8 flex flex-row items-center">
                 <NavbarLink to="/" label="Home" />
                 <NavbarLink to="/discover/spotify" label="Discover" />
-                <NavbarLink to="/search" label="Search" />
+                <NavbarLink to="/search/users" label="Search" />
                 {user ? (
                     <>
                         <Popover placement="bottom-start">

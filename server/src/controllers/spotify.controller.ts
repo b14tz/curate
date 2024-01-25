@@ -29,7 +29,7 @@ export const requestSpotifyAuthorization = async (
 export const requestAccessToken = async (req: Request, res: Response) => {
     try {
         const code = req.body.code;
-
+        console.log("CODE: ", code);
         const {
             SPOTIFY_CLIENT_ID,
             SPOTIFY_CLIENT_SECRET,
@@ -57,10 +57,37 @@ export const requestAccessToken = async (req: Request, res: Response) => {
                 },
             }
         );
+        console.log(response.data);
         return res.json(response.data);
     } catch (error) {
         console.error(error);
         res.status(400).send("Error retrieving access token");
+    }
+};
+
+export const refreshAccessToken = async (req: Request, res: Response) => {
+    try {
+        const { refreshToken } = req.body;
+
+        const clientId = await getClientToken();
+
+        const response = await axios.post(
+            "https://accounts.spotify.com/api/token",
+            {
+                grant_type: "refresh_token",
+                refresh_token: refreshToken,
+                client_id: clientId,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+            }
+        );
+        return res.status(200).send(response);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send("Error refreshing access token");
     }
 };
 

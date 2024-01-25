@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchSpotify = exports.fetchSpotifyPlaylistById = exports.fetchTopSpotifyPlaylists = exports.fetchAllPlaylistsByUserId = exports.fetchUserSpotifyID = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
+exports.searchSpotify = exports.fetchSpotifyPlaylistById = exports.fetchTopSpotifyPlaylists = exports.fetchAllPlaylistsByUserId = exports.fetchUserSpotifyID = exports.refreshAccessToken = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
 const axios_1 = __importDefault(require("axios"));
 const spotifyClientToken_1 = require("../utils/spotifyClientToken");
 const requestSpotifyAuthorization = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -33,6 +33,7 @@ exports.requestSpotifyAuthorization = requestSpotifyAuthorization;
 const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const code = req.body.code;
+        console.log("CODE: ", code);
         const { SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, SPOTIFY_REDIRECT_URI, } = process.env;
         if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
             return res.status(500).send("Server configuration error");
@@ -48,6 +49,7 @@ const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     Buffer.from(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString("base64"),
             },
         });
+        console.log(response.data);
         return res.json(response.data);
     }
     catch (error) {
@@ -56,6 +58,27 @@ const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.requestAccessToken = requestAccessToken;
+const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { refreshToken } = req.body;
+        const clientId = yield (0, spotifyClientToken_1.getClientToken)();
+        const response = yield axios_1.default.post("https://accounts.spotify.com/api/token", {
+            grant_type: "refresh_token",
+            refresh_token: refreshToken,
+            client_id: clientId,
+        }, {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        });
+        return res.status(200).send(response);
+    }
+    catch (error) {
+        console.error(error);
+        return res.status(500).send("Error refreshing access token");
+    }
+});
+exports.refreshAccessToken = refreshAccessToken;
 const fetchUserSpotifyID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.body.token;

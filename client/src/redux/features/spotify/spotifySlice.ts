@@ -4,12 +4,14 @@ interface SpotifyState {
     accessToken: string | null;
     expirationTime: Date | null;
     spotifyId: string | null;
+    refreshToken: string | null;
 }
 
 const initialState: SpotifyState = {
     accessToken: null,
     expirationTime: null,
     spotifyId: null,
+    refreshToken: null,
 };
 
 export const spotifySlice = createSlice({
@@ -20,11 +22,13 @@ export const spotifySlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.expirationTime = action.payload.expirationTime;
             state.spotifyId = action.payload.spotifyId;
+            state.refreshToken = action.payload.refreshToken;
         },
         clearSpotify: (state) => {
             state.accessToken = null;
             state.expirationTime = null;
             state.spotifyId = null;
+            state.refreshToken = null;
         },
     },
 });

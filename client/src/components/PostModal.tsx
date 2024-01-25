@@ -6,7 +6,10 @@ import { createPost } from "~/api/routes/post";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import Select from "react-select";
-import { fetchAllSpotifyPlaylistsByUserId } from "~/api/routes/spotify";
+import {
+    fetchAllSpotifyPlaylistsByUserId,
+    refreshAccessToken,
+} from "~/api/routes/spotify";
 import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 import AppleAuthButton from "./AppleAuthButton";
@@ -56,12 +59,7 @@ export default function PostModal({
     };
 
     const handlePost = async (data: PostForm) => {
-        if (
-            user &&
-            selectedOption &&
-            spotifyToken &&
-            spotifyToken.accessToken
-        ) {
+        if (user && selectedOption) {
             await createPost({
                 title: data.title,
                 description: data.description,
@@ -117,7 +115,17 @@ export default function PostModal({
         }
     };
 
+    const ensureValidSpotifyToken = async () => {
+        if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
+            const data = refreshAccessToken(spotifyToken.refreshToken);
+            console.log(data);
+        } else {
+            console.log("not needed");
+        }
+    };
+
     useEffect(() => {
+        ensureValidSpotifyToken();
         !isSpotifyTokenExpired(spotifyToken) && handleSpotifySelect();
     }, [spotifyToken, appleToken]);
 

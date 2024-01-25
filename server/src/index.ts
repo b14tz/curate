@@ -12,6 +12,7 @@ import commentRoutes from "./routes/comment.routes";
 import likeRoutes from "./routes/like.routes";
 import { getAppleDeveloperToken } from "./controllers/apple.controller";
 import appleRoutes from "./routes/apple.routes";
+import searchRoutes from "./routes/search.routes";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/follow", followRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/like", likeRoutes);
+app.use("/api/search", searchRoutes);
 
 const PORT = process.env.PORT || 3300;
 app.listen(PORT, (): void => {

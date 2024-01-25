@@ -7,12 +7,14 @@ import {
     fetchAllPlaylistsByUserId,
     fetchSpotifyPlaylistById,
     fetchTopSpotifyPlaylists,
+    refreshAccessToken,
 } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
 
 spotifyRoutes.get("/auth", requestSpotifyAuthorization);
 spotifyRoutes.post("/token", requestAccessToken);
+spotifyRoutes.post("/refresh", refreshAccessToken);
 
 spotifyRoutes.post("/id", fetchUserSpotifyID);
 

@@ -5,6 +5,13 @@ export const requestAccessToken = async (code: string) => {
     return res.data;
 };
 
+export const refreshAccessToken = async (refreshToken: string) => {
+    const res = await axiosInstance.post("/spotify/refresh", {
+        refreshToken,
+    });
+    return res.data;
+};
+
 export const fetchUserSpotifyID = async (token: string) => {
     const res = await axiosInstance.post("/spotify/id", { token });
     return res.data;

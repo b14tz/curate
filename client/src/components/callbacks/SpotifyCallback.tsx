@@ -24,6 +24,7 @@ export default function SpotifyCallback({}: {}) {
                         accessToken: token.access_token,
                         expirationTime: expirationTime,
                         spotifyId: spotifyId,
+                        refreshToken: token.refresh_token,
                     })
                 );
                 navigate("/");
