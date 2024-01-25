@@ -1,6 +1,7 @@
 import { IconUser } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { fetchApplePlaylistById } from "~/api/routes/apple";
 import { fetchSpotifyPlaylistById } from "~/api/routes/spotify";
 
 export default function PostPage() {
@@ -25,15 +26,31 @@ export default function PostPage() {
         },
     });
 
-    useEffect(() => {
-        async function populatePost() {
-            if (id) {
-                const data = await fetchSpotifyPlaylistById(id);
-                setPost(data);
-            }
+    async function handleSpotifyPost(playlistId: string) {
+        if (id) {
+            const data = await fetchSpotifyPlaylistById(playlistId);
+            setPost(data);
         }
+    }
 
-        populatePost();
+    async function handleApplePost(playlistId: string) {
+        const data = await fetchApplePlaylistById(playlistId);
+        setPost(data);
+    }
+
+    useEffect(() => {
+        const path = window.location.pathname;
+        const pathParts = path.split("/");
+        const platform = pathParts[2];
+
+        if (platform === "apple") {
+            console.log("Platform is Apple");
+            id && handleApplePost(id);
+        } else if (platform === "spotify") {
+            id && handleSpotifyPost(id);
+        } else {
+            console.log("Platform not recognized");
+        }
     }, [id]);
 
     const renderSongs = () => {

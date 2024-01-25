@@ -20,3 +20,8 @@ export const fetchTopApplePlaylists = async () => {
     const res = await axiosInstance.get(`/apple/playlists/top`);
     return res.data;
 };
+
+export const fetchApplePlaylistById = async (playlistId: string) => {
+    const res = await axiosInstance.get(`/apple/playlist/${playlistId}`);
+    return res.data;
+};

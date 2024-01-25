@@ -6,4 +6,5 @@ const appleRoutes = (0, express_1.Router)();
 appleRoutes.get("/devtoken", apple_controller_1.getAppleDeveloperToken);
 appleRoutes.get("/playlists", apple_controller_1.fetchAllPlaylistsByMusicUserToken);
 appleRoutes.get("/playlists/top", apple_controller_1.fetchTopApplePlaylists);
+appleRoutes.get("/playlist/:id", apple_controller_1.fetchApplePlaylistById);
 exports.default = appleRoutes;

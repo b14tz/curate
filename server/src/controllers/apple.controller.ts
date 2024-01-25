@@ -177,3 +177,41 @@ export const fetchTopApplePlaylists = async (req: Request, res: Response) => {
         return res.status(500).send(`Error searching with spotify client`);
     }
 };
+
+export const fetchApplePlaylistById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const developerToken = await getAppleDeveloperTokenCached();
+        const playlistData = await axios({
+            method: "get",
+            url: `https://api.music.apple.com/v1/catalog/us/playlists/${id}`,
+            headers: { Authorization: `Bearer ${developerToken}` },
+        });
+
+        const playlist = playlistData.data.data[0];
+
+        const songs = playlist.relationships.tracks.data.map((song: any) => ({
+            id: song.id,
+            title: song.attributes.name,
+            artist: song.attributes.artistName,
+            imageUrl: song.attributes.artwork.url
+                .replace("{w}", "600")
+                .replace("{h}", "600")
+                .replace("bb.jpg", "bb-60.jpg"),
+        }));
+
+        return res.send({
+            id: playlist.id,
+            title: playlist.attributes.name,
+            description: playlist.attributes.description.short
+                ? playlist.attributes.description.short
+                : playlist.attributes.description.standard,
+            songs: songs,
+            origin: "Apple",
+            author: { displayName: "Apple" },
+        });
+    } catch (error) {
+        console.error("Error fetching apple playlist by id: ", error);
+        return [];
+    }
+};

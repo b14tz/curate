@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchTopApplePlaylists = exports.fetchAllPlaylistsByMusicUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
+exports.fetchApplePlaylistById = exports.fetchTopApplePlaylists = exports.fetchAllPlaylistsByMusicUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
@@ -155,3 +155,39 @@ const fetchTopApplePlaylists = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.fetchTopApplePlaylists = fetchTopApplePlaylists;
+const fetchApplePlaylistById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    try {
+        const developerToken = yield (0, exports.getAppleDeveloperTokenCached)();
+        const playlistData = yield (0, axios_1.default)({
+            method: "get",
+            url: `https://api.music.apple.com/v1/catalog/us/playlists/${id}`,
+            headers: { Authorization: `Bearer ${developerToken}` },
+        });
+        const playlist = playlistData.data.data[0];
+        const songs = playlist.relationships.tracks.data.map((song) => ({
+            id: song.id,
+            title: song.attributes.name,
+            artist: song.attributes.artistName,
+            imageUrl: song.attributes.artwork.url
+                .replace("{w}", "600")
+                .replace("{h}", "600")
+                .replace("bb.jpg", "bb-60.jpg"),
+        }));
+        return res.send({
+            id: playlist.id,
+            title: playlist.attributes.name,
+            description: playlist.attributes.description.short
+                ? playlist.attributes.description.short
+                : playlist.attributes.description.standard,
+            songs: songs,
+            origin: "Apple",
+            author: { displayName: "Apple" },
+        });
+    }
+    catch (error) {
+        console.error("Error fetching apple playlist by id: ", error);
+        return [];
+    }
+});
+exports.fetchApplePlaylistById = fetchApplePlaylistById;
