@@ -37,6 +37,7 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const follow_routes_1 = __importDefault(require("./routes/follow.routes"));
 const comment_routes_1 = __importDefault(require("./routes/comment.routes"));
 const like_routes_1 = __importDefault(require("./routes/like.routes"));
+const apple_routes_1 = __importDefault(require("./routes/apple.routes"));
 dotenv.config();
 const app = (0, express_1.default)();
 const corsOptions = {
@@ -58,6 +59,7 @@ app.get("/ping", (_req, res) => {
 app.use("/api/user", user_routes_1.default);
 app.use("/api/post", post_routes_1.default);
 app.use("/api/spotify", spotify_routes_1.default);
+app.use("/api/apple", apple_routes_1.default);
 app.use("/api/auth", auth_routes_1.default);
 app.use("/api/follow", follow_routes_1.default);
 app.use("/api/comment", comment_routes_1.default);

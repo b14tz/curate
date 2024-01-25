@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
-import { fetchApplePlaylistById } from "./apple.controller";
 import { getClientToken } from "../utils/spotifyClientToken";
 import axios from "axios";
+import { getAppleDeveloperTokenCached } from "./apple.controller";
 
 export const createPost = async (req: Request, res: Response) => {
     const data = req.body;
@@ -59,7 +59,10 @@ export const getPost = async (req: Request, res: Response) => {
             },
         });
         if (post) {
-            const songs = await fetchSpotifyPlaylistById(post.originId);
+            const songs =
+                post.origin === "spotify"
+                    ? await fetchSpotifyPlaylistById(post.originId)
+                    : await fetchApplePlaylistById(post.originId);
             const formattedPost = {
                 id: post.id,
                 title: post.title,
@@ -248,6 +251,34 @@ const fetchSpotifyPlaylistById = async (playlistId: string) => {
         }));
         return songs;
     } catch (error) {
-        console.error("Error fetch spotify playlist by id", error);
+        console.error("Error fetching spotify playlist by id: ", error);
+        return [];
+    }
+};
+
+export const fetchApplePlaylistById = async (playlistId: string) => {
+    try {
+        const developerToken = await getAppleDeveloperTokenCached();
+        const playlistData = await axios({
+            method: "get",
+            url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
+            headers: { Authorization: `Bearer ${developerToken}` },
+        });
+
+        const songs = playlistData.data.data[0].relationships.tracks.data.map(
+            (song: any) => ({
+                id: song.id,
+                title: song.attributes.name,
+                artist: song.attributes.artistName,
+                imageUrl: song.attributes.artwork.url
+                    .replace("{w}", "600")
+                    .replace("{h}", "600")
+                    .replace("bb.jpg", "bb-60.jpg"),
+            })
+        );
+        return songs;
+    } catch (error) {
+        console.error("Error fetching apple playlist by id: ", error);
+        return [];
     }
 };

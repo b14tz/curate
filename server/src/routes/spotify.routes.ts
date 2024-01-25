@@ -5,8 +5,8 @@ import {
     requestAccessToken,
     fetchUserSpotifyID,
     fetchAllPlaylistsByUserId,
-    fetchTopPlaylists,
     fetchSpotifyPlaylistById,
+    fetchTopSpotifyPlaylists,
 } from "../controllers/spotify.controller";
 
 const spotifyRoutes = Router();
@@ -17,7 +17,7 @@ spotifyRoutes.post("/token", requestAccessToken);
 spotifyRoutes.post("/id", fetchUserSpotifyID);
 
 spotifyRoutes.get("/playlist/:id", fetchSpotifyPlaylistById);
-spotifyRoutes.get("/playlists/top", fetchTopPlaylists);
+spotifyRoutes.get("/playlists/top", fetchTopSpotifyPlaylists);
 spotifyRoutes.post("/playlists/user/:id", fetchAllPlaylistsByUserId);
 
 spotifyRoutes.post("/search", searchSpotify);

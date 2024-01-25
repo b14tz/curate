@@ -10,6 +10,7 @@ import { fetchAllSpotifyPlaylistsByUserId } from "~/api/routes/spotify";
 import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
 import AppleAuthButton from "./AppleAuthButton";
+import { fetchAllPlaylistsByMusicUserToken } from "~/api/routes/apple";
 
 export default function PostModal({
     open,
@@ -35,24 +36,6 @@ export default function PostModal({
         formState: { errors },
     } = useForm<PostForm>();
 
-    useEffect(() => {
-        !isSpotifyTokenExpired(spotifyToken) && handleSpotifySelect();
-    }, [spotifyToken]);
-
-    async function populateSpotifyPlaylists() {
-        if (spotifyToken.accessToken && spotifyToken.spotifyId) {
-            const playlists = await fetchAllSpotifyPlaylistsByUserId({
-                token: spotifyToken.accessToken,
-                spotifyId: spotifyToken.spotifyId,
-            });
-            const formattedPlaylists = playlists.map((playlist: any) => ({
-                label: playlist.name,
-                value: playlist,
-            }));
-            setPlaylistOptions(formattedPlaylists);
-        }
-    }
-
     const handleClose = () => {
         setOpen(false);
         setValue("title", "");
@@ -67,6 +50,12 @@ export default function PostModal({
         setValue("description", val.value.description);
     };
 
+    const handleClearOption = () => {
+        setSelectedOption(null);
+        setValue("title", "");
+        setValue("description", "");
+    };
+
     const handlePost = async (data: PostForm) => {
         if (
             user &&
@@ -77,7 +66,7 @@ export default function PostModal({
             await createPost({
                 title: data.title,
                 description: data.description,
-                origin: "spotify",
+                origin: selectedRadio,
                 originId: selectedOption.value.id,
                 authorId: user.id,
             });
@@ -86,11 +75,39 @@ export default function PostModal({
         location.reload();
     };
 
+    async function populateApplePlaylists() {
+        if (appleToken.musicUserToken) {
+            const playlists = await fetchAllPlaylistsByMusicUserToken(
+                appleToken.musicUserToken
+            );
+            const formattedPlaylists = playlists.map((playlist: any) => ({
+                label: playlist.name,
+                value: playlist,
+            }));
+            handleClearOption();
+            setPlaylistOptions(formattedPlaylists);
+        }
+    }
+
+    async function populateSpotifyPlaylists() {
+        if (spotifyToken.accessToken && spotifyToken.spotifyId) {
+            const playlists = await fetchAllSpotifyPlaylistsByUserId({
+                token: spotifyToken.accessToken,
+                spotifyId: spotifyToken.spotifyId,
+            });
+            const formattedPlaylists = playlists.map((playlist: any) => ({
+                label: playlist.name,
+                value: playlist,
+            }));
+            handleClearOption();
+            setPlaylistOptions(formattedPlaylists);
+        }
+    }
+
     const handleAppleSelect = async () => {
-        if (selectedRadio != "appleMusic") {
-            setSelectedRadio("appleMusic");
-            //handle populating apple music playlists here
-            setPlaylistOptions([]);
+        if (selectedRadio != "apple") {
+            setSelectedRadio("apple");
+            await populateApplePlaylists();
         }
     };
 
@@ -100,6 +117,10 @@ export default function PostModal({
             await populateSpotifyPlaylists();
         }
     };
+
+    useEffect(() => {
+        !isSpotifyTokenExpired(spotifyToken) && handleSpotifySelect();
+    }, [spotifyToken, appleToken]);
 
     return (
         <Modal open={open} handleClose={handleClose} title="Post">
@@ -148,7 +169,7 @@ export default function PostModal({
                                     type="radio"
                                     name="radio-post-origin"
                                     className="accent-salmon shrink-0 ms-auto mt-0.5 border-gray-200 rounded-full text-salmon disabled:opacity-50 disabled:pointer-events-none"
-                                    checked={selectedRadio === "appleMusic"}
+                                    checked={selectedRadio === "apple"}
                                     readOnly
                                     disabled={isAppleTokenExpired(appleToken)}
                                 />

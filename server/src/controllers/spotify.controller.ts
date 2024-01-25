@@ -57,7 +57,7 @@ export const requestAccessToken = async (req: Request, res: Response) => {
                 },
             }
         );
-        res.json(response.data);
+        return res.json(response.data);
     } catch (error) {
         console.error(error);
         res.status(400).send("Error retrieving access token");
@@ -77,10 +77,10 @@ export const fetchUserSpotifyID = async (req: Request, res: Response) => {
             },
         });
 
-        res.send(data.id);
+        return res.send(data.id);
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error retrieving Spotify ID");
+        return res.status(500).send("Error retrieving Spotify ID");
     }
 };
 
@@ -106,7 +106,6 @@ export const fetchAllPlaylistsByUserId = async (
             }
         );
 
-        //only return playlists where current user is the author
         let authoredPlaylists = [];
         for (let i = 0; i < data.items.length; i++) {
             if (data.items[i]["owner"]["id"] === spotifyId) {
@@ -114,14 +113,16 @@ export const fetchAllPlaylistsByUserId = async (
             }
         }
 
-        res.status(200).send(authoredPlaylists);
+        return res.status(200).send(authoredPlaylists);
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error retrieving user's Spotify playlists");
+        return res
+            .status(500)
+            .send("Error retrieving user's Spotify playlists");
     }
 };
 
-export const fetchTopPlaylists = async (req: Request, res: Response) => {
+export const fetchTopSpotifyPlaylists = async (req: Request, res: Response) => {
     try {
         const token = await getClientToken();
         const playlistResults = await axios({
@@ -155,6 +156,7 @@ export const fetchTopPlaylists = async (req: Request, res: Response) => {
                 return {
                     id: playlist.id,
                     title: playlist.name,
+                    origin: "spotify",
                     author: { displayName: "Spotify" },
                     description: playlist.description.replace(/Cover:.*$/, ""),
                     songs: songs,

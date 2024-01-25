@@ -24,34 +24,57 @@ export default function TopPlaylistFeed({
                             key={playlist.id}
                             className="flex flex-row space-x-4 items-center"
                         >
-                            <div className="flex flex-row drop-shadow-xl">
-                                {playlist.songs.map((song, index) => {
-                                    if (index === 0) {
+                            <button
+                                className="flex flex-row drop-shadow-xl"
+                                onClick={() =>
+                                    navigate(
+                                        `/top/${playlist.origin}/${playlist.id}`
+                                    )
+                                }
+                            >
+                                {Array.from({ length: 8 }).map((_, index) => {
+                                    const song = playlist.songs[index];
+                                    const zIndex = 1000 - index;
+                                    const isOverlappingImage = index > 0;
+
+                                    if (song) {
+                                        // Render song image
                                         return (
                                             <img
                                                 key={index}
                                                 src={song.imageUrl}
-                                                className="w-28 h-28"
+                                                className={`w-28 h-28 drop-shadow ${
+                                                    isOverlappingImage
+                                                        ? "ml-[-50px]"
+                                                        : ""
+                                                }`}
+                                                style={{ zIndex }}
                                             />
                                         );
-                                    }
-                                    if (index > 0 && index < 8) {
+                                    } else {
+                                        // Render placeholder if song is not available
                                         return (
-                                            <img
+                                            <div
                                                 key={index}
-                                                src={song.imageUrl}
-                                                className="w-28 h-28 ml-[-50px]"
-                                            />
+                                                className={`w-28 h-28 border border-snow bg-white shadow-inner drop-shadow ${
+                                                    isOverlappingImage
+                                                        ? "ml-[-50px]"
+                                                        : ""
+                                                }`}
+                                                style={{ zIndex }}
+                                            ></div>
                                         );
                                     }
                                 })}
-                            </div>
+                            </button>
 
                             <div className="flex flex-col max-w-[380px]">
                                 <button
                                     className="w-fit"
                                     onClick={() =>
-                                        navigate(`/top/spotify/${playlist.id}`)
+                                        navigate(
+                                            `/top/${playlist.origin}/${playlist.id}`
+                                        )
                                     }
                                 >
                                     <p className="underline">

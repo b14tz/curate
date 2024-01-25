@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUserPosts = exports.getFollowerPosts = exports.getAllPosts = exports.getPost = exports.deletePost = exports.updatePost = exports.createPost = void 0;
 const db_server_1 = require("../utils/db.server");
 const apple_controller_1 = require("./apple.controller");
-const spotify_client_token_1 = require("../utils/spotify-client-token");
+const spotifyClientToken_1 = require("../utils/spotifyClientToken");
 const axios_1 = __importDefault(require("axios"));
 const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
@@ -250,7 +250,7 @@ const getUserPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getUserPosts = getUserPosts;
 const fetchSpotifyPlaylistById = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = yield (0, spotify_client_token_1.getClientToken)();
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
         const playlistData = yield (0, axios_1.default)({
             method: "get",
             url: `https://api.spotify.com/v1/playlists/${playlistId}`,

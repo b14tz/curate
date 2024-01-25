@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.searchSpotify = exports.fetchSpotifyPlaylistById = exports.fetchTopPlaylists = exports.fetchAllPlaylistsByUserId = exports.fetchUserSpotifyID = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
 const axios_1 = __importDefault(require("axios"));
-const spotify_client_token_1 = require("../utils/spotify-client-token");
+const spotifyClientToken_1 = require("../utils/spotifyClientToken");
 const requestSpotifyAuthorization = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // const state = randomBytes(16).toString("base64");
     const scope = "user-read-private playlist-read-private playlist-read-collaborative";
@@ -26,7 +26,8 @@ const requestSpotifyAuthorization = (req, res) => __awaiter(void 0, void 0, void
         `response_type=code` +
         `&client_id=${encodeURIComponent(SPOTIFY_CLIENT_ID)}` +
         `&scope=${encodeURIComponent(scope)}` +
-        `&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}`);
+        `&redirect_uri=${encodeURIComponent(SPOTIFY_REDIRECT_URI)}` +
+        `&show_dialog=true`);
 });
 exports.requestSpotifyAuthorization = requestSpotifyAuthorization;
 const requestAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -106,7 +107,7 @@ const fetchAllPlaylistsByUserId = (req, res) => __awaiter(void 0, void 0, void 0
 exports.fetchAllPlaylistsByUserId = fetchAllPlaylistsByUserId;
 const fetchTopPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = yield (0, spotify_client_token_1.getClientToken)();
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
         const playlistResults = yield (0, axios_1.default)({
             method: "get",
             url: `https://api.spotify.com/v1/browse/featured-playlists?country=US`,
@@ -150,7 +151,7 @@ exports.fetchTopPlaylists = fetchTopPlaylists;
 const fetchSpotifyPlaylistById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const playlistId = req.params.id;
-        const token = yield (0, spotify_client_token_1.getClientToken)();
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
         const playlistData = yield (0, axios_1.default)({
             method: "get",
             url: `https://api.spotify.com/v1/playlists/${playlistId}`,
@@ -183,7 +184,7 @@ const searchSpotify = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const search = req.body;
     const type = encodeURIComponent(search.types.join());
     try {
-        const token = yield (0, spotify_client_token_1.getClientToken)();
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
         const searchResults = yield (0, axios_1.default)({
             method: "get",
             url: `https://api.spotify.com/v1/search?q=${search.term}&type=${type}&limit=${search.limit}&offset=${search.offset}`,

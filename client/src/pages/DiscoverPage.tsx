@@ -4,6 +4,7 @@ import { ButtonGroup } from "../components/ButtonGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchTopSpotifyPlaylists } from "~/api/routes/spotify";
 import TopPlaylistFeed from "~/components/TopPlaylistFeed";
+import { fetchTopApplePlaylists } from "~/api/routes/apple";
 
 export default function DiscoverPage() {
     const [playlists, setPlaylists] = useState<TopPlaylist[]>([]);
@@ -24,7 +25,8 @@ export default function DiscoverPage() {
         setEmptyMessage(
             "It looks like there aren't any apple recommendations at this time."
         );
-        setPlaylists([]);
+        const data = await fetchTopApplePlaylists();
+        setPlaylists(data);
     }
 
     useEffect(() => {
