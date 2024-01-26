@@ -1,7 +1,12 @@
 // app.tsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+} from "react-router-dom";
 
-import Navbar from "./components/nav/Navbar";
+import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HomePage from "./pages/HomePage";
 import UserPage from "./pages/UserPage";
@@ -34,32 +39,41 @@ function AllRoutes() {
     return (
         <>
             <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/following" element={<HomePage />} />
+                <Route path="/" element={<Navigate to="/feed" replace />} />
+                <Route path="/feed" element={<HomePage />} />
+                <Route path="/feed/following" element={<HomePage />} />
 
-                <Route path="discover/spotify" element={<DiscoverPage />} />
-                <Route path="discover/apple" element={<DiscoverPage />} />
-
-                <Route path="search/users" element={<SearchPage />} />
                 <Route
-                    path="search/posts"
+                    path="/discover"
+                    element={<Navigate to="/discover/spotify" replace />}
+                />
+                <Route path="/discover/spotify" element={<DiscoverPage />} />
+                <Route path="/discover/apple" element={<DiscoverPage />} />
+
+                <Route
+                    path="/search"
+                    element={<Navigate to="/search/users" />}
+                />
+                <Route path="/search/users" element={<SearchPage />} />
+                <Route
+                    path="/search/posts"
                     element={<SearchPage postsSearch />}
                 />
 
-                <Route path="user/:id" element={<UserPage />} />
-
-                <Route path="post/:id" element={<PostPage />} />
+                <Route path="/post/:id" element={<PostPage />} />
                 <Route
-                    path="post/:id/comments"
+                    path="/post/:id/comments"
                     element={<PostPage showComments />}
                 />
 
-                <Route path="top/spotify/:id" element={<PlaylistPage />} />
-                <Route path="top/apple/:id" element={<PlaylistPage />} />
+                <Route path="/top/spotify/:id" element={<PlaylistPage />} />
+                <Route path="/top/apple/:id" element={<PlaylistPage />} />
+
+                <Route path="/user/:id" element={<UserPage />} />
 
                 {/* Callbacks */}
-                <Route path="callback/auth" element={<AuthCallback />} />
-                <Route path="callback/spotify" element={<SpotifyCallback />} />
+                <Route path="/callback/auth" element={<AuthCallback />} />
+                <Route path="/callback/spotify" element={<SpotifyCallback />} />
             </Routes>
         </>
     );

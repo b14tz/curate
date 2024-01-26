@@ -4,14 +4,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { IconPlus, IconUser } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux"; // Import useSelector hook
 
-import NavbarLink from "./NavbarLink";
-import Modal from "../Modal";
+import StyledNavLink from "./StyledNavLink";
+import Modal from "./Modal";
 import googleLogo from "~/assets/google.png";
-import { Popover, PopoverContent, PopoverTrigger } from "../Popover";
+import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
 import logo from "~/assets/panda.png";
 import { RootState } from "~/redux/store";
 import { clearUser } from "~/redux/features/user/userSlice";
-import PostModal from "../PostModal";
+import PostModal from "./PostModal";
 
 export default function Navbar() {
     const [postOpen, setPostOpen] = useState(false);
@@ -21,8 +21,6 @@ export default function Navbar() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    const profileRoute = `/user/${user?.id}`;
 
     const logoutWithRedirect = async () => {
         await dispatch(clearUser());
@@ -40,9 +38,24 @@ export default function Navbar() {
                 <h3 className="font-bold">Curate</h3>
             </NavLink>
             <div className="space-x-8 flex flex-row items-center">
-                <NavbarLink to="/" label="Home" />
-                <NavbarLink to="/discover/spotify" label="Discover" />
-                <NavbarLink to="/search/users" label="Search" />
+                <StyledNavLink
+                    to="/feed"
+                    label="Home"
+                    pendingClasses="text-black"
+                    activeClasses="text-salmon"
+                />
+                <StyledNavLink
+                    to="/discover"
+                    label="Discover"
+                    pendingClasses="text-black"
+                    activeClasses="text-salmon"
+                />
+                <StyledNavLink
+                    to="/search"
+                    label="Search"
+                    pendingClasses="text-black"
+                    activeClasses="text-salmon"
+                />
                 {user ? (
                     <>
                         <Popover placement="bottom-start">
@@ -54,9 +67,11 @@ export default function Navbar() {
                             </PopoverTrigger>
                             <PopoverContent>
                                 <div className="flex flex-col items-start px-4 py-2 bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1">
-                                    <NavbarLink
-                                        to={profileRoute}
+                                    <StyledNavLink
+                                        to={`/user/${user?.id}`}
                                         label="Profile"
+                                        pendingClasses="text-black"
+                                        activeClasses="text-salmon"
                                     />
                                     <button
                                         onClick={() => {

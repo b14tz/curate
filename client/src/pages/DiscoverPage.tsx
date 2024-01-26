@@ -1,16 +1,15 @@
 // discoverpage.tsx
 import { useEffect, useState } from "react";
-import { ButtonGroup } from "../components/ButtonGroup";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { fetchTopSpotifyPlaylists } from "~/api/routes/spotify";
 import PlaylistFeed from "~/components/PlaylistFeed";
 import { fetchTopApplePlaylists } from "~/api/routes/apple";
+import StyledNavLink from "~/components/StyledNavLink";
 
 export default function DiscoverPage() {
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
     const [emptyMessage, setEmptyMessage] = useState("");
 
-    const navigate = useNavigate();
     const location = useLocation();
 
     async function handleFetchTopSpotifyPlaylists() {
@@ -43,23 +42,21 @@ export default function DiscoverPage() {
         <div className="space-y-4">
             <h3>Discover</h3>
             <hr />
-            <ButtonGroup
-                buttonClasses=""
-                groupClasses="space-x-8"
-                activeClasses=" border-b-2 border-solid border-salmon"
-                groupButtons={[
-                    {
-                        label: "Spotify Top Playlists",
-                        value: "spotify",
-                        onClick: () => navigate("/discover/spotify"),
-                    },
-                    {
-                        label: "Apple Music Top Playlists",
-                        value: "apple",
-                        onClick: () => navigate("/discover/apple"),
-                    },
-                ]}
-            />
+
+            <div className="flex space-x-4">
+                <StyledNavLink
+                    to="/discover/spotify"
+                    label="Top Spotify Playlists"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                />
+                <StyledNavLink
+                    to="/discover/apple"
+                    label="Top Apple Music Playlists"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                />
+            </div>
 
             <PlaylistFeed playlists={playlists} emptyMessage={emptyMessage} />
         </div>

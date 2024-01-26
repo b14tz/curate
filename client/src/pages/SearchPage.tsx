@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
-import { ButtonGroup } from "../components/ButtonGroup";
 import { useNavigate } from "react-router-dom";
 import { searchPosts, searchUsers } from "~/api/routes/search";
+import StyledNavLink from "~/components/StyledNavLink";
 
 export default function SearchPage({ postsSearch = false }) {
     const [users, setUsers] = useState<User[]>([]);
@@ -67,23 +67,22 @@ export default function SearchPage({ postsSearch = false }) {
         <div className="space-y-4">
             <h3>Search</h3>
             <hr />
-            <ButtonGroup
-                buttonClasses=""
-                groupClasses="space-x-8"
-                activeClasses=" border-b-2 border-solid border-salmon"
-                groupButtons={[
-                    {
-                        label: "Users",
-                        value: "users",
-                        onClick: () => navigate("/search/users"),
-                    },
-                    {
-                        label: "Posts",
-                        value: "posts",
-                        onClick: () => navigate("/search/posts"),
-                    },
-                ]}
-            />
+
+            <div className="flex space-x-4">
+                <StyledNavLink
+                    to="/search/users"
+                    label="Users"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                />
+                <StyledNavLink
+                    to="/search/posts"
+                    label="Posts"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                />
+            </div>
+
             <label
                 title="default-search"
                 className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"

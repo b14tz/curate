@@ -1,17 +1,15 @@
 // homepage.tsx
 import { useEffect, useState } from "react";
-import { ButtonGroup } from "../components/ButtonGroup";
 import { getAllPosts, getFollowerPosts } from "~/api/routes/post";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import PostFeed from "../components/PostFeed";
+import StyledNavLink from "~/components/StyledNavLink";
 
 export default function HomePage() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [emptyMessage, setEmptyMessage] = useState("");
-
-    const navigate = useNavigate();
     const location = useLocation();
 
     let currentUser = useSelector((state: RootState) => state.userReducer.user);
@@ -56,23 +54,21 @@ export default function HomePage() {
         <div className="space-y-4">
             <h3>Home</h3>
             <hr />
-            <ButtonGroup
-                buttonClasses=""
-                groupClasses="space-x-8"
-                activeClasses=" border-b-2 border-solid border-salmon"
-                groupButtons={[
-                    {
-                        label: "For You",
-                        value: "for-you",
-                        onClick: () => navigate("/"),
-                    },
-                    {
-                        label: "Following",
-                        value: "following",
-                        onClick: () => navigate("/following"),
-                    },
-                ]}
-            />
+            <div className="flex space-x-4">
+                <StyledNavLink
+                    to="/feed"
+                    label="For You"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                    end
+                />
+                <StyledNavLink
+                    to="/feed/following"
+                    label="Following"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                />
+            </div>
 
             <PostFeed
                 posts={posts}

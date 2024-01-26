@@ -1,22 +1,25 @@
 import { NavLink } from "react-router-dom";
 
-export default function NavbarLink({
+export default function StyledNavLink({
     to,
     label,
+    end = false,
+    pendingClasses,
+    activeClasses,
 }: {
     to: string;
     label: string;
+    end?: boolean;
+    pendingClasses: string;
+    activeClasses: string;
 }) {
     return (
         <NavLink
             to={to}
             className={({ isActive, isPending }) =>
-                isPending
-                    ? "text-black dark:text-white"
-                    : isActive
-                    ? "text-salmon"
-                    : ""
+                isPending ? pendingClasses : isActive ? activeClasses : ""
             }
+            end={end}
         >
             {label}
         </NavLink>

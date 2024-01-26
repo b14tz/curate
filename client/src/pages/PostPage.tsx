@@ -5,8 +5,8 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { createLike, deleteLike } from "~/api/routes/like";
 import { getPost } from "~/api/routes/post";
-import { ButtonGroup } from "~/components/ButtonGroup";
 import CommentBox from "~/components/CommentBox";
+import StyledNavLink from "~/components/StyledNavLink";
 import { RootState } from "~/redux/store";
 import { formatPostTime } from "~/utils/time";
 
@@ -73,14 +73,6 @@ export default function PostPage({ showComments = false }) {
                 ),
             });
         }
-    };
-
-    const handleShowSongs = () => {
-        navigate(`/post/${id}`);
-    };
-
-    const handleShowComments = () => {
-        navigate(`/post/${id}/comments`);
     };
 
     useEffect(() => {
@@ -171,7 +163,7 @@ export default function PostPage({ showComments = false }) {
             </div>
             <div className="flex flex-row justify-between items-end">
                 <div className="flex flex-row items-center space-x-10">
-                    <button onClick={() => handleShowSongs()}>
+                    <button onClick={() => navigate(`/post/${id}`)}>
                         <p>
                             <i className="ri-music-2-fill"></i>
                             {post.total}
@@ -194,7 +186,7 @@ export default function PostPage({ showComments = false }) {
                         </button>
                     )}
 
-                    <button onClick={() => handleShowComments()}>
+                    <button onClick={() => navigate(`/post/${id}/comments`)}>
                         <p>
                             <i className="ri-chat-1-fill"></i>
                             {post.comments.length}
@@ -215,23 +207,22 @@ export default function PostPage({ showComments = false }) {
                 </button>
             </div>
             <hr />
-            <ButtonGroup
-                buttonClasses=""
-                groupClasses="space-x-8"
-                activeClasses=" border-b-2 border-solid border-salmon"
-                groupButtons={[
-                    {
-                        label: "Songs",
-                        value: "songs",
-                        onClick: () => handleShowSongs(),
-                    },
-                    {
-                        label: "Comments",
-                        value: "comments",
-                        onClick: () => handleShowComments(),
-                    },
-                ]}
-            />
+
+            <div className="flex space-x-4">
+                <StyledNavLink
+                    to={`/post/${id}`}
+                    label="Songs"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                    end
+                />
+                <StyledNavLink
+                    to={`/post/${id}/comments`}
+                    label="Comments"
+                    pendingClasses="text-black"
+                    activeClasses="text-black border-b-2 border-salmon"
+                />
+            </div>
 
             <div className="flex flex-col space-y-2">
                 {!showComments ? (
