@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { ButtonGroup } from "../components/ButtonGroup";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchTopSpotifyPlaylists } from "~/api/routes/spotify";
-import TopPlaylistFeed from "~/components/TopPlaylistFeed";
+import PlaylistFeed from "~/components/PlaylistFeed";
 import { fetchTopApplePlaylists } from "~/api/routes/apple";
 
 export default function DiscoverPage() {
-    const [playlists, setPlaylists] = useState<TopPlaylist[]>([]);
+    const [playlists, setPlaylists] = useState<Playlist[]>([]);
     const [emptyMessage, setEmptyMessage] = useState("");
 
     const navigate = useNavigate();
@@ -61,10 +61,7 @@ export default function DiscoverPage() {
                 ]}
             />
 
-            <TopPlaylistFeed
-                playlists={playlists}
-                emptyMessage={emptyMessage}
-            />
+            <PlaylistFeed playlists={playlists} emptyMessage={emptyMessage} />
         </div>
     );
 }

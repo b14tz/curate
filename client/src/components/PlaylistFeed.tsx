@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-export default function TopPlaylistFeed({
+export default function PlaylistFeed({
     playlists,
     emptyMessage,
 }: {
-    playlists: TopPlaylist[];
+    playlists: Playlist[];
     emptyMessage: string;
 }) {
     const navigate = useNavigate();

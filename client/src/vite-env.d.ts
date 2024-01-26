@@ -58,30 +58,22 @@ interface ButtonGroup {
     value?: any;
 }
 
-interface Post {
+interface Playlist {
     id: string;
     title: string;
     description: string;
     songs: Song[];
-    origin?: string;
-    downloads: number;
-    createdAt: string;
+    origin: string;
+    author: User;
     total: number;
     next: string;
-    author: User;
-    comments: Comment[];
-    likes: Like[];
 }
 
-interface TopPlaylist {
-    id: string;
-    title: string;
-    description: string;
-    songs: Song[];
-    origin?: string;
-    author: User;
-    total: number;
-    next: string;
+interface Post extends Playlist {
+    downloads: number;
+    createdAt: string;
+    comments: Comment[];
+    likes: Like[];
 }
 
 interface Like {

@@ -9,8 +9,8 @@ import SearchPage from "./pages/SearchPage";
 import PostPage from "./pages/PostPage";
 import SpotifyCallback from "./components/callbacks/SpotifyCallback";
 import AuthCallback from "./components/callbacks/AuthCallback";
-import TopPlaylistPage from "./pages/TopPlaylistPage";
 import DiscoverPage from "./pages/DiscoverPage";
+import PlaylistPage from "./pages/PlaylistPage";
 
 export default function App() {
     return (
@@ -40,6 +40,12 @@ function AllRoutes() {
                 <Route path="discover/spotify" element={<DiscoverPage />} />
                 <Route path="discover/apple" element={<DiscoverPage />} />
 
+                <Route path="search/users" element={<SearchPage />} />
+                <Route
+                    path="search/posts"
+                    element={<SearchPage postsSearch />}
+                />
+
                 <Route path="user/:id" element={<UserPage />} />
 
                 <Route path="post/:id" element={<PostPage />} />
@@ -48,14 +54,8 @@ function AllRoutes() {
                     element={<PostPage showComments />}
                 />
 
-                <Route path="search/users" element={<SearchPage />} />
-                <Route
-                    path="search/posts"
-                    element={<SearchPage postsSearch />}
-                />
-
-                <Route path="top/spotify/:id" element={<TopPlaylistPage />} />
-                <Route path="top/apple/:id" element={<TopPlaylistPage />} />
+                <Route path="top/spotify/:id" element={<PlaylistPage />} />
+                <Route path="top/apple/:id" element={<PlaylistPage />} />
 
                 {/* Callbacks */}
                 <Route path="callback/auth" element={<AuthCallback />} />

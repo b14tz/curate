@@ -4,10 +4,10 @@ import { useParams } from "react-router-dom";
 import { fetchApplePlaylistById } from "~/api/routes/apple";
 import { fetchSpotifyPlaylistById } from "~/api/routes/spotify";
 
-export default function PostPage() {
+export default function PlaylistPage() {
     const { id } = useParams();
 
-    const [playlist, setPost] = useState<TopPlaylist>({
+    const [playlist, setPlaylist] = useState<Playlist>({
         id: "",
         title: "",
         description: "",
@@ -31,13 +31,13 @@ export default function PostPage() {
     async function handleSpotifyPost(playlistId: string) {
         if (id) {
             const data = await fetchSpotifyPlaylistById(playlistId);
-            setPost(data);
+            setPlaylist(data);
         }
     }
 
     async function handleApplePost(playlistId: string) {
         const data = await fetchApplePlaylistById(playlistId);
-        setPost(data);
+        setPlaylist(data);
     }
 
     useEffect(() => {
