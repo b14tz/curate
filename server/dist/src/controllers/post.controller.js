@@ -17,7 +17,7 @@ const createPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const data = req.body;
     try {
         const result = yield db_server_1.db.post.create({
-            data: Object.assign(Object.assign({}, data), { downloads: 0 }),
+            data: Object.assign(Object.assign({}, data), { saves: 0 }),
         });
         return res.status(200).send(result);
     }
@@ -187,7 +187,7 @@ function formatPost(post) {
             description: post.description,
             songs: fetchedData.songs,
             origin: post.origin,
-            downloads: post.downloads,
+            saves: post.saves,
             createdAt: post.createdAt,
             author: post.author,
             total: fetchedData.total,

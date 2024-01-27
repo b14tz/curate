@@ -168,7 +168,7 @@ export default function PostFeed({
                                     </p>
                                     <p>
                                         <i className="ri-download-fill"></i>
-                                        {post.downloads}
+                                        {post.saves}
                                     </p>
                                 </div>
                                 <p className="text-ellipsis	whitespace-nowrap overflow-hidden">

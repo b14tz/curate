@@ -62,7 +62,7 @@ interface Playlist {
 }
 
 interface Post extends Playlist {
-    downloads: number;
+    saves: number;
     createdAt: string;
     comments: Comment[];
     likes: Like[];
