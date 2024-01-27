@@ -20,7 +20,7 @@ type Post = {
     origin: string;
     searchTerms: string;
     tags: string;
-    downloadCount: number;
+    saves: number;
     likeCount: number;
     author: User;
     comments?: PostComment[];

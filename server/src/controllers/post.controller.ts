@@ -8,7 +8,7 @@ export const createPost = async (req: Request, res: Response) => {
     const data = req.body;
     try {
         const result = await db.post.create({
-            data: { ...data, downloads: 0 },
+            data: { ...data, saves: 0 },
         });
         return res.status(200).send(result);
     } catch (error) {
@@ -185,7 +185,7 @@ async function formatPost(post: any) {
         description: post.description,
         songs: fetchedData.songs,
         origin: post.origin,
-        downloads: post.downloads,
+        saves: post.saves,
         createdAt: post.createdAt,
         author: post.author,
         total: fetchedData.total,

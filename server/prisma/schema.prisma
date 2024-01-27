@@ -57,7 +57,7 @@ model Post {
   description String
   origin      String
   originId    String
-  downloads   Int
+  saves       Int
   createdAt   DateTime      @default(now())
   author      User?         @relation(fields: [authorId], references: [id])
   authorId    String?
