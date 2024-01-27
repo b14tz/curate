@@ -50,14 +50,6 @@ interface GroupButton {
     onClick: () => void;
 }
 
-interface ButtonGroup {
-    buttonClasses?: string;
-    groupClasses?: string;
-    groupButtons: GroupButton[];
-    activeClasses: string;
-    value?: any;
-}
-
 interface Playlist {
     id: string;
     title: string;

@@ -1,16 +1,16 @@
 import { Router } from "express";
 import {
-    fetchAllPlaylistsByMusicUserToken,
-    fetchApplePlaylistById,
-    fetchTopApplePlaylists,
     getAppleDeveloperToken,
+    getApplePlaylistById,
+    getApplePlaylistsByUserToken,
+    getTopApplePlaylists,
 } from "../controllers/apple.controller";
 
 const appleRoutes = Router();
 
 appleRoutes.get("/devtoken", getAppleDeveloperToken);
-appleRoutes.get("/playlists", fetchAllPlaylistsByMusicUserToken);
-appleRoutes.get("/playlists/top", fetchTopApplePlaylists);
-appleRoutes.get("/playlist/:id", fetchApplePlaylistById);
+appleRoutes.get("/playlists", getApplePlaylistsByUserToken);
+appleRoutes.get("/playlists/top", getTopApplePlaylists);
+appleRoutes.get("/playlist/:id", getApplePlaylistById);
 
 export default appleRoutes;

@@ -1,11 +1,11 @@
 import Feed from "../components/PostFeed";
-import Header from "~/components/profile/Header";
+import Header from "~/components/user/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import { deleteUser, getUser, updateUser } from "~/api/routes/user";
 import { useEffect, useState } from "react";
-import Modal from "~/components/Modal";
+import Modal from "~/components/ui/Modal";
 import { useForm } from "react-hook-form";
 import { clearUser, setUser } from "~/redux/features/user/userSlice";
 import {
@@ -14,7 +14,7 @@ import {
     updateAccessToken,
 } from "~/redux/features/spotify/spotifySlice";
 import { getUserPosts } from "~/api/routes/post";
-import AppleAuthToggle from "~/components/AppleAuthToggle";
+import AppleAuthToggle from "~/components/apple/AppleAuthToggle";
 import { getExpirationTime } from "~/utils/time";
 import { refreshAccessToken } from "~/api/routes/spotify";
 

@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchApplePlaylistById = exports.fetchTopApplePlaylists = exports.fetchAllPlaylistsByMusicUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
+exports.getApplePlaylistByIdInternal = exports.getTopApplePlaylists = exports.getApplePlaylistById = exports.getApplePlaylistsByUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const axios_1 = __importDefault(require("axios"));
 let cachedAppleDeveloperToken = null;
@@ -24,7 +24,6 @@ const getAppleDeveloperTokenCached = () => __awaiter(void 0, void 0, void 0, fun
     else {
         const newToken = yield generateAppleDeveloperToken();
         cachedAppleDeveloperToken = newToken;
-        // Set the tokenExpiry to the appropriate time based on your token's lifespan
         tokenExpiry = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000); // 180 days from now
         return newToken;
     }
@@ -67,7 +66,7 @@ const getAppleDeveloperToken = (req, res) => __awaiter(void 0, void 0, void 0, f
     }
 });
 exports.getAppleDeveloperToken = getAppleDeveloperToken;
-const fetchAllPlaylistsByMusicUserToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getApplePlaylistsByUserToken = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const musicUserToken = req.header("Music-User-Token");
     if (!musicUserToken) {
         console.error("Music User Token is required");
@@ -98,76 +97,53 @@ const fetchAllPlaylistsByMusicUserToken = (req, res) => __awaiter(void 0, void 0
         return res.status(500).send("Failed to fetch playlists");
     }
 });
-exports.fetchAllPlaylistsByMusicUserToken = fetchAllPlaylistsByMusicUserToken;
-const fetchTopApplePlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getApplePlaylistsByUserToken = getApplePlaylistsByUserToken;
+const getApplePlaylistById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    try {
+        const playlist = yield getApplePlaylistDetails(id);
+        return res.send(playlist);
+    }
+    catch (error) {
+        return res.status(500).send("Error fetching apple playlist by id");
+    }
+});
+exports.getApplePlaylistById = getApplePlaylistById;
+const getTopApplePlaylists = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = yield (0, exports.getAppleDeveloperTokenCached)();
-        const playlistResults = yield (0, axios_1.default)({
-            method: "get",
-            url: `https://api.music.apple.com/v1/catalog/us/charts`,
-            params: {
-                limit: 20,
-                types: "playlists", // Can be 'songs', 'albums', 'playlists', etc.
-            },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+        const playlistResults = yield axios_1.default.get(`https://api.music.apple.com/v1/catalog/us/charts`, {
+            params: { limit: 20, types: "playlists" },
+            headers: { Authorization: `Bearer ${token}` },
         });
         const playlists = playlistResults.data.results.playlists[0].data;
-        const fetchPlaylistSongs = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
-            const songResults = yield (0, axios_1.default)({
-                method: "get",
-                url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return songResults.data.data[0].relationships.tracks.data.map((song) => ({
-                id: song.id,
-                title: song.attributes.name,
-                artist: song.attributes.artistName,
-                imageUrl: song.attributes.artwork.url
-                    .replace("{w}", "600")
-                    .replace("{h}", "600")
-                    .replace("bb.jpg", "bb-60.jpg"),
-            }));
-        });
         const result = yield Promise.all(playlists.map((playlist) => __awaiter(void 0, void 0, void 0, function* () {
-            const songs = yield fetchPlaylistSongs(playlist.attributes.playParams.id);
-            let description;
-            if (playlist.attributes.description) {
-                description = playlist.attributes.description.short
-                    ? playlist.attributes.description.short
-                    : playlist.attributes.description.standard;
-            }
-            else {
-                description = "Apple's Top Hits";
-            }
-            return {
-                id: playlist.id,
-                title: playlist.attributes.name,
-                origin: "apple",
-                author: { displayName: "Apple" },
-                description: description,
-                songs: songs,
-            };
+            return yield getApplePlaylistDetails(playlist.id);
         })));
         return res.json(result);
     }
     catch (error) {
         console.error(error);
-        return res.status(500).send(`Error searching with spotify client`);
+        return res.status(500).send(`Error searching with Apple client`);
     }
 });
-exports.fetchTopApplePlaylists = fetchTopApplePlaylists;
-const fetchApplePlaylistById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
+exports.getTopApplePlaylists = getTopApplePlaylists;
+const getApplePlaylistByIdInternal = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const playlistDetails = yield getApplePlaylistDetails(playlistId);
+        return playlistDetails;
+    }
+    catch (error) {
+        console.error("Error in fetching apple playlist by id internal ", error);
+        throw error;
+    }
+});
+exports.getApplePlaylistByIdInternal = getApplePlaylistByIdInternal;
+const getApplePlaylistDetails = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const developerToken = yield (0, exports.getAppleDeveloperTokenCached)();
-        const playlistData = yield (0, axios_1.default)({
-            method: "get",
-            url: `https://api.music.apple.com/v1/catalog/us/playlists/${id}`,
-            headers: { Authorization: `Bearer ${developerToken}` },
-        });
-        const playlist = playlistData.data.data[0];
+        const response = yield axios_1.default.get(`https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`, { headers: { Authorization: `Bearer ${developerToken}` } });
+        const playlist = response.data.data[0];
         const songs = playlist.relationships.tracks.data.map((song) => ({
             id: song.id,
             title: song.attributes.name,
@@ -177,20 +153,20 @@ const fetchApplePlaylistById = (req, res) => __awaiter(void 0, void 0, void 0, f
                 .replace("{h}", "600")
                 .replace("bb.jpg", "bb-60.jpg"),
         }));
-        return res.send({
+        return {
             id: playlist.id,
             title: playlist.attributes.name,
-            description: playlist.attributes.description.short
-                ? playlist.attributes.description.short
-                : playlist.attributes.description.standard,
+            description: playlist.attributes.description
+                ? playlist.attributes.description.short ||
+                    playlist.attributes.description.standard
+                : "Apple's Top Hits",
             songs: songs,
-            origin: "Apple",
+            origin: "apple",
             author: { displayName: "Apple" },
-        });
+        };
     }
     catch (error) {
-        console.error("Error fetching apple playlist by id: ", error);
-        return [];
+        console.error("Error fetching apple playlist details: ", error);
+        throw error;
     }
 });
-exports.fetchApplePlaylistById = fetchApplePlaylistById;

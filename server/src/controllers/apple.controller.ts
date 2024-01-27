@@ -1,6 +1,4 @@
 import jwt from "jsonwebtoken";
-import fs from "fs/promises";
-import path from "path";
 import { Request, Response } from "express";
 import axios from "axios";
 
@@ -13,7 +11,6 @@ export const getAppleDeveloperTokenCached = async () => {
     } else {
         const newToken = await generateAppleDeveloperToken();
         cachedAppleDeveloperToken = newToken;
-        // Set the tokenExpiry to the appropriate time based on your token's lifespan
         tokenExpiry = new Date(
             new Date().getTime() + 180 * 24 * 60 * 60 * 1000
         ); // 180 days from now
@@ -70,7 +67,7 @@ export const getAppleDeveloperToken = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchAllPlaylistsByMusicUserToken = async (
+export const getApplePlaylistsByUserToken = async (
     req: Request,
     res: Response
 ) => {
@@ -112,85 +109,64 @@ export const fetchAllPlaylistsByMusicUserToken = async (
     }
 };
 
-export const fetchTopApplePlaylists = async (req: Request, res: Response) => {
+export const getApplePlaylistById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const playlist = await getApplePlaylistDetails(id);
+        return res.send(playlist);
+    } catch (error) {
+        return res.status(500).send("Error fetching apple playlist by id");
+    }
+};
+
+export const getTopApplePlaylists = async (req: Request, res: Response) => {
     try {
         const token = await getAppleDeveloperTokenCached();
-        const playlistResults = await axios({
-            method: "get",
-            url: `https://api.music.apple.com/v1/catalog/us/charts`,
-            params: {
-                limit: 20, // Adjust as needed for each chart type
-                types: "playlists", // Can be 'songs', 'albums', 'playlists', etc.
-            },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const playlistResults = await axios.get(
+            `https://api.music.apple.com/v1/catalog/us/charts`,
+            {
+                params: { limit: 20, types: "playlists" },
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
 
         const playlists = playlistResults.data.results.playlists[0].data;
 
-        const fetchPlaylistSongs = async (playlistId: string) => {
-            const songResults = await axios({
-                method: "get",
-                url: `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            return songResults.data.data[0].relationships.tracks.data.map(
-                (song: any) => ({
-                    id: song.id,
-                    title: song.attributes.name,
-                    artist: song.attributes.artistName,
-                    imageUrl: song.attributes.artwork.url
-                        .replace("{w}", "600")
-                        .replace("{h}", "600")
-                        .replace("bb.jpg", "bb-60.jpg"),
-                })
-            );
-        };
-
         const result = await Promise.all(
             playlists.map(async (playlist: any) => {
-                const songs = await fetchPlaylistSongs(
-                    playlist.attributes.playParams.id
-                );
-                let description;
-                if (playlist.attributes.description) {
-                    description = playlist.attributes.description.short
-                        ? playlist.attributes.description.short
-                        : playlist.attributes.description.standard;
-                } else {
-                    description = "Apple's Top Hits";
-                }
-                return {
-                    id: playlist.id,
-                    title: playlist.attributes.name,
-                    origin: "apple",
-                    author: { displayName: "Apple" },
-                    description: description,
-                    songs: songs,
-                };
+                return await getApplePlaylistDetails(playlist.id);
             })
         );
 
         return res.json(result);
     } catch (error) {
         console.error(error);
-        return res.status(500).send(`Error searching with spotify client`);
+        return res.status(500).send(`Error searching with Apple client`);
     }
 };
 
-export const fetchApplePlaylistById = async (req: Request, res: Response) => {
-    const id = req.params.id;
+export const getApplePlaylistByIdInternal = async (playlistId: string) => {
+    try {
+        const playlistDetails = await getApplePlaylistDetails(playlistId);
+        return playlistDetails;
+    } catch (error) {
+        console.error(
+            "Error in fetching apple playlist by id internal ",
+            error
+        );
+        throw error;
+    }
+};
+
+const getApplePlaylistDetails = async (playlistId: string) => {
     try {
         const developerToken = await getAppleDeveloperTokenCached();
-        const playlistData = await axios({
-            method: "get",
-            url: `https://api.music.apple.com/v1/catalog/us/playlists/${id}`,
-            headers: { Authorization: `Bearer ${developerToken}` },
-        });
+        const response = await axios.get(
+            `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
+            { headers: { Authorization: `Bearer ${developerToken}` } }
+        );
 
-        const playlist = playlistData.data.data[0];
-
+        const playlist = response.data.data[0];
         const songs = playlist.relationships.tracks.data.map((song: any) => ({
             id: song.id,
             title: song.attributes.name,
@@ -201,18 +177,19 @@ export const fetchApplePlaylistById = async (req: Request, res: Response) => {
                 .replace("bb.jpg", "bb-60.jpg"),
         }));
 
-        return res.send({
+        return {
             id: playlist.id,
             title: playlist.attributes.name,
-            description: playlist.attributes.description.short
-                ? playlist.attributes.description.short
-                : playlist.attributes.description.standard,
+            description: playlist.attributes.description
+                ? playlist.attributes.description.short ||
+                  playlist.attributes.description.standard
+                : "Apple's Top Hits",
             songs: songs,
-            origin: "Apple",
+            origin: "apple",
             author: { displayName: "Apple" },
-        });
+        };
     } catch (error) {
-        console.error("Error fetching apple playlist by id: ", error);
-        return [];
+        console.error("Error fetching apple playlist details: ", error);
+        throw error;
     }
 };

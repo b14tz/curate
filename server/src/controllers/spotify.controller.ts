@@ -96,7 +96,7 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchUserSpotifyID = async (req: Request, res: Response) => {
+export const getSpotifyUserId = async (req: Request, res: Response) => {
     try {
         const token = req.body.token;
         if (!token) {
@@ -116,7 +116,7 @@ export const fetchUserSpotifyID = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchAllPlaylistsByUserId = async (
+export const getSpotifyPlaylistsByUserId = async (
     req: Request,
     res: Response
 ) => {
@@ -154,7 +154,7 @@ export const fetchAllPlaylistsByUserId = async (
     }
 };
 
-export const fetchTopSpotifyPlaylists = async (req: Request, res: Response) => {
+export const getTopSpotifyPlaylists = async (req: Request, res: Response) => {
     try {
         const token = await getClientToken();
         const topPlaylistsData = await axios({
@@ -164,41 +164,38 @@ export const fetchTopSpotifyPlaylists = async (req: Request, res: Response) => {
         });
         const playlists = topPlaylistsData.data.playlists.items;
 
-        const fetchPlaylistData = async (token: string, url: string) => {
-            const playlistResults = await axios({
-                method: "get",
-                url: url,
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            return {
-                songs: playlistResults.data.items.map((song: any) => ({
-                    id: song.track?.id,
-                    title: song.track?.name,
-                    artist: song.track?.artists[0].name,
-                    imageUrl: song.track?.album.images[0]?.url,
-                })),
-                total: playlistResults.data.total,
-                next: playlistResults.data.next,
-            };
-        };
-
         const result = await Promise.all(
             playlists.map(async (playlist: any) => {
-                const songData = await fetchPlaylistData(
-                    token,
-                    playlist.tracks.href
-                );
-                return {
-                    id: playlist.id,
-                    title: playlist.name,
-                    origin: "spotify",
-                    author: { displayName: "Spotify" },
-                    description: playlist.description.replace(/Cover:.*$/, ""),
-                    songs: songData.songs,
-                    total: songData.total,
-                    next: songData.next,
-                };
+                try {
+                    // Use the utility function to fetch playlist details
+                    const playlistDetails = await getSpotifyPlaylistData(
+                        playlist.id
+                    );
+                    return {
+                        ...playlistDetails,
+                        description: playlist.description.replace(
+                            /Cover:.*$/,
+                            ""
+                        ),
+                    };
+                } catch (error) {
+                    console.error(
+                        `Error fetching playlist ${playlist.id}: `,
+                        error
+                    );
+                    // Return a placeholder or partial object on error
+                    return {
+                        id: playlist.id,
+                        title: playlist.name,
+                        songs: [],
+                        description: playlist.description.replace(
+                            /Cover:.*$/,
+                            ""
+                        ),
+                        origin: "spotify",
+                        author: { displayName: "Spotify" },
+                    };
+                }
             })
         );
         return res.json(result);
@@ -208,35 +205,60 @@ export const fetchTopSpotifyPlaylists = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchSpotifyPlaylistById = async (req: Request, res: Response) => {
+export const getSpotifyPlaylistById = async (req: Request, res: Response) => {
     try {
         const playlistId = req.params.id;
-        const token = await getClientToken();
-        const playlistData = await axios({
-            method: "get",
-            url: `https://api.spotify.com/v1/playlists/${playlistId}`,
-            headers: { Authorization: `Bearer ${token}` },
-        });
+        const playlist = await getSpotifyPlaylistData(playlistId);
+        return res.send(playlist);
+    } catch (error) {
+        return res.status(500).send("Error fetching spotify playlist by id");
+    }
+};
 
-        const songs = playlistData.data.tracks.items.map((song: any) => ({
+export const getSpotifyPlaylistByIdInternal = async (playlistId: string) => {
+    try {
+        const playlist = await getSpotifyPlaylistData(playlistId);
+        return playlist;
+    } catch (error) {
+        console.error(
+            "Error in fetching spotify playlist by id internal ",
+            error
+        );
+        throw error;
+    }
+};
+
+const getSpotifyPlaylistData = async (playlistId: string) => {
+    try {
+        const token = await getClientToken();
+        const response = await axios.get(
+            `https://api.spotify.com/v1/playlists/${playlistId}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+
+        const playlistData = response.data;
+        const songs = playlistData.tracks.items.map((song: any) => ({
             id: song.track?.id,
             title: song.track?.name,
             artist: song.track?.artists[0].name,
             imageUrl: song.track?.album.images[0]?.url,
         }));
 
-        return res.send({
-            id: playlistData.data.id,
-            title: playlistData.data.name,
-            description: playlistData.data.description,
+        return {
+            id: playlistData.id,
+            title: playlistData.name,
+            description: playlistData.description,
             songs: songs,
-            origin: "Spotify",
+            origin: "spotify",
             author: { displayName: "Spotify" },
-            next: playlistData.data.tracks.next,
-            total: playlistData.data.tracks.total,
-        });
+            next: playlistData.tracks.next,
+            total: playlistData.tracks.total,
+        };
     } catch (error) {
-        console.error("Error fetch spotify playlist by id", error);
+        console.error("Error fetching spotify playlist: ", error);
+        throw error;
     }
 };
 

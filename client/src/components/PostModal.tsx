@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Modal from "./Modal";
+import Modal from "./ui/Modal";
 import { customSelectStyles } from "~/styles/customStyles";
 import { useForm } from "react-hook-form";
 import { createPost } from "~/api/routes/post";
@@ -15,7 +15,7 @@ import {
     updateAccessToken,
 } from "~/redux/features/spotify/spotifySlice";
 import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
-import AppleAuthButton from "./AppleAuthButton";
+import AppleAuthButton from "./apple/AppleAuthButton";
 import { fetchAllPlaylistsByMusicUserToken } from "~/api/routes/apple";
 import { getExpirationTime } from "~/utils/time";
 

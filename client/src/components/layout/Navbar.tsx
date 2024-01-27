@@ -4,14 +4,14 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { IconPlus, IconUser } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux"; // Import useSelector hook
 
-import StyledNavLink from "./StyledNavLink";
-import Modal from "./Modal";
+import StyledNavLink from "../StyledNavLink";
+import Modal from "../ui/Modal";
 import googleLogo from "~/assets/google.png";
-import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
 import logo from "~/assets/panda.png";
 import { RootState } from "~/redux/store";
 import { clearUser } from "~/redux/features/user/userSlice";
-import PostModal from "./PostModal";
+import PostModal from "../PostModal";
 
 export default function Navbar() {
     const [postOpen, setPostOpen] = useState(false);
