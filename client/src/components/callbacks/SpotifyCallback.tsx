@@ -19,6 +19,7 @@ export default function SpotifyCallback({}: {}) {
                 const expirationTime = await getExpirationTime(
                     token.expires_in
                 );
+                // console.log("Scopes: ", token.scope);
                 await dispatch(
                     setSpotify({
                         accessToken: token.access_token,

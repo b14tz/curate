@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserPosts = exports.getFollowerPosts = exports.getAllPosts = exports.getPost = exports.deletePost = exports.updatePost = exports.createPost = void 0;
+exports.getUserPosts = exports.getFollowerPosts = exports.getAllPosts = exports.getPost = exports.savePost = exports.deletePost = exports.updatePost = exports.createPost = void 0;
 const db_server_1 = require("../utils/db.server");
 const spotify_controller_1 = require("./spotify.controller");
 const apple_controller_1 = require("./apple.controller");
@@ -51,6 +51,78 @@ const deletePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deletePost = deletePost;
+const savePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const { destination, destinationUserToken } = req.body;
+    try {
+        const post = yield db_server_1.db.post.findUnique({
+            where: { id },
+        });
+        if (!post) {
+            return res.status(404).send("Post not found");
+        }
+        const { origin, originId, title, description } = post;
+        let dataForDestination;
+        if (origin === "spotify" && destination === "spotify") {
+            // Spotify to Spotify
+            const trackUris = yield (0, spotify_controller_1.getTrackUrisBySpotifyPlaylistId)(originId);
+            dataForDestination = {
+                title,
+                description,
+                ids: trackUris,
+                accessToken: destinationUserToken,
+            };
+        }
+        else if (origin === "spotify" && destination === "apple") {
+            // Spotify to Apple
+            const isrcs = yield (0, spotify_controller_1.getIsrcsBySpotifyPlaylistId)(originId);
+            const appleTrackUris = yield (0, apple_controller_1.getSongIdsByIsrcs)(isrcs);
+            dataForDestination = {
+                title,
+                description,
+                ids: appleTrackUris,
+                musicUserToken: destinationUserToken,
+            };
+        }
+        else if (origin === "apple" && destination === "apple") {
+            // Apple to Apple
+            const songIds = yield (0, apple_controller_1.getSongIdsByApplePlaylistId)(originId);
+            dataForDestination = {
+                title,
+                description,
+                ids: songIds,
+                musicUserToken: destinationUserToken,
+            };
+        }
+        else if (origin === "apple" && destination === "spotify") {
+            // Apple to Spotify
+            const isrcs = yield (0, apple_controller_1.getIsrcsByApplePlaylistId)(originId);
+            console.log("isrcs: ", isrcs);
+            const trackUris = yield (0, spotify_controller_1.getTrackUrisByIsrcs)(isrcs);
+            dataForDestination = {
+                title,
+                description,
+                ids: trackUris,
+                accessToken: destinationUserToken,
+            };
+            console.log("track uris: ", trackUris);
+        }
+        if (destinationUserToken) {
+            if (destination === "spotify") {
+                yield (0, spotify_controller_1.createSpotifyPlaylist)(dataForDestination);
+            }
+            else if (destination === "apple") {
+                yield (0, apple_controller_1.createApplePlaylist)(dataForDestination);
+            }
+        }
+        return res.status(200).send("Successfully saved playlist");
+    }
+    catch (error) {
+        console.error("Error in saving playlist:", error);
+        return res.status(500).send("Error in saving playlist");
+    }
+});
+exports.savePost = savePost;
 const getPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { createLike, deleteLike } from "~/api/routes/like";
-import { getPost } from "~/api/routes/post";
+import { getPost, savePost } from "~/api/routes/post";
 import CommentBox from "~/components/CommentBox";
 import StyledNavLink from "~/components/StyledNavLink";
 import AppleAuthButton from "~/components/apple/AppleAuthButton";
@@ -83,17 +83,25 @@ export default function PostPage({ showComments = false }) {
         }
     };
 
-    useEffect(() => {
-        async function populatePost() {
-            if (id) {
-                const data = await getPost(id);
-                console.log("POSTDATA: ", data);
-                setPost(data);
-            }
-        }
+    const handleSave = async () => {
+        const postId = post.id;
+        const destination = selectedRadio;
+        let destinationUserToken = "";
 
-        populatePost();
-    }, [id]);
+        if (destination === "spotify" && spotifyToken.accessToken) {
+            destinationUserToken = spotifyToken.accessToken;
+        } else if (destination === "apple" && appleToken.musicUserToken) {
+            destinationUserToken = appleToken.musicUserToken;
+        }
+        console.log({ postId, destination, destinationUserToken });
+
+        try {
+            await savePost({ id: postId, destination, destinationUserToken });
+            setOpenSave(false);
+        } catch (error) {
+            console.error("Error saving post:", error);
+        }
+    };
 
     const renderSongs = () => {
         if (post) {
@@ -163,6 +171,17 @@ export default function PostPage({ showComments = false }) {
         }
     };
 
+    useEffect(() => {
+        async function populatePost() {
+            if (id) {
+                const data = await getPost(id);
+                setPost(data);
+            }
+        }
+
+        populatePost();
+    }, [id]);
+
     return (
         <>
             {" "}
@@ -214,7 +233,6 @@ export default function PostPage({ showComments = false }) {
                                 <i className="ri-download-fill"></i>
                                 <p>{post.saves}</p>
                             </div>
-                            <p>Translate</p>
                         </button>
                     </div>
 
@@ -335,7 +353,10 @@ export default function PostPage({ showComments = false }) {
                             </div>
                         </div>
                     </div>
-                    <button className="self-end w-fit bg-salmon text-white px-3 py-1 rounded-md">
+                    <button
+                        className="self-end w-fit bg-salmon text-white px-3 py-1 rounded-md"
+                        onClick={() => handleSave()}
+                    >
                         Save
                     </button>
                 </div>

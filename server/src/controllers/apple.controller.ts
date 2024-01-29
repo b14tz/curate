@@ -189,7 +189,139 @@ const getApplePlaylistDetails = async (playlistId: string) => {
             author: { displayName: "Apple" },
         };
     } catch (error) {
-        console.error("Error fetching apple playlist details: ", error);
+        console.error("Error getting apple playlist details: ", error);
+        throw error;
+    }
+};
+
+export const getIsrcsByApplePlaylistId = async (playlistId: string) => {
+    try {
+        const developerToken = await getAppleDeveloperTokenCached();
+        const response = await axios.get(
+            `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
+            { headers: { Authorization: `Bearer ${developerToken}` } }
+        );
+
+        const playlist = response.data.data[0];
+        const isrcs: string[] = [];
+
+        if (playlist.relationships && playlist.relationships.tracks) {
+            const tracks = playlist.relationships.tracks.data;
+            for (const track of tracks) {
+                const isrc = track.attributes.isrc;
+                if (isrc) {
+                    isrcs.push(isrc);
+                }
+            }
+        }
+
+        return isrcs;
+    } catch (error) {
+        console.error("Error getting ISRCs from Apple Music playlist: ", error);
+        throw error;
+    }
+};
+
+export const getSongIdsByIsrcs = async (isrcs: string[]) => {
+    try {
+        const developerToken = await getAppleDeveloperTokenCached();
+        const storefront = "us";
+        const songIds: string[] = [];
+
+        for (const isrc of isrcs) {
+            const response = await axios.get(
+                `https://api.music.apple.com/v1/catalog/${storefront}/songs?filter[isrc]=${isrc}`,
+                {
+                    headers: { Authorization: `Bearer ${developerToken}` },
+                }
+            );
+            const searchResults = response.data.data;
+            if (searchResults.length > 0) {
+                const songId = searchResults[0].id;
+                songIds.push(songId);
+            }
+        }
+
+        return songIds;
+    } catch (error) {
+        console.error("Error getting catalog songs by ISRCs: ", error);
+        throw error;
+    }
+};
+
+export const getSongIdsByApplePlaylistId = async (playlistId: string) => {
+    try {
+        const developerToken = await getAppleDeveloperTokenCached();
+        const response = await axios.get(
+            `https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`,
+            {
+                headers: { Authorization: `Bearer ${developerToken}` },
+                params: { include: "tracks" }, // Include track data in the response
+            }
+        );
+
+        const playlist = response.data.data[0];
+        const songIds: string[] = [];
+
+        if (playlist.relationships && playlist.relationships.tracks) {
+            const tracks = playlist.relationships.tracks.data;
+            for (const track of tracks) {
+                const songId = track.id;
+                songIds.push(songId);
+            }
+        }
+
+        return songIds;
+    } catch (error) {
+        console.error(
+            "Error getting song IDs from Apple Music playlist: ",
+            error
+        );
+        throw error;
+    }
+};
+
+export const createApplePlaylist = async ({
+    title,
+    description,
+    ids,
+    musicUserToken,
+}: {
+    title: string;
+    description: string;
+    ids: string[];
+    musicUserToken: string;
+}) => {
+    try {
+        const developerToken = await getAppleDeveloperTokenCached();
+        const playlistResponse = await axios.post(
+            `https://api.music.apple.com/v1/me/library/playlists`,
+            {
+                attributes: {
+                    name: title,
+                    description: description,
+                },
+                relationships: {
+                    tracks: {
+                        data: ids.map((id) => ({
+                            id: id,
+                            type: "songs",
+                        })), // Convert ISRCs to track data
+                    },
+                },
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${developerToken}`,
+                    "Music-User-Token": musicUserToken,
+                },
+            }
+        );
+
+        const playlistId = playlistResponse.data.data[0].id;
+        return playlistId;
+    } catch (error) {
+        console.error("Error creating Apple Music playlist: ", error);
         throw error;
     }
 };

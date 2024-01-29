@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchSpotify = exports.getSpotifyPlaylistByIdInternal = exports.getSpotifyPlaylistById = exports.getTopSpotifyPlaylists = exports.getSpotifyPlaylistsByUserId = exports.getSpotifyUserId = exports.refreshAccessToken = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
+exports.searchSpotify = exports.createSpotifyPlaylist = exports.getTrackUrisBySpotifyPlaylistId = exports.getTrackUrisByIsrcs = exports.getIsrcsBySpotifyPlaylistId = exports.getSpotifyPlaylistByIdInternal = exports.getSpotifyPlaylistById = exports.getTopSpotifyPlaylists = exports.getSpotifyPlaylistsByUserId = exports.getSpotifyUserId = exports.refreshAccessToken = exports.requestAccessToken = exports.requestSpotifyAuthorization = void 0;
 const axios_1 = __importDefault(require("axios"));
 const spotifyClientToken_1 = require("../utils/spotifyClientToken");
 const requestSpotifyAuthorization = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // const state = randomBytes(16).toString("base64");
-    const scope = "user-read-private playlist-read-private playlist-read-collaborative";
+    const scope = "user-read-private playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private";
     const { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } = process.env;
     if (!SPOTIFY_CLIENT_ID || !SPOTIFY_REDIRECT_URI) {
         return res.status(500).send("Server configuration error");
@@ -87,12 +87,8 @@ const getSpotifyUserId = (req, res) => __awaiter(void 0, void 0, void 0, functio
         if (!token) {
             return res.status(400).send("No token provided");
         }
-        const { data } = yield axios_1.default.get("https://api.spotify.com/v1/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return res.send(data.id);
+        const userId = yield getSpotifyUserIdInternal(token);
+        return res.send(userId);
     }
     catch (error) {
         console.error(error);
@@ -100,6 +96,20 @@ const getSpotifyUserId = (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getSpotifyUserId = getSpotifyUserId;
+const getSpotifyUserIdInternal = (accessToken) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { data } = yield axios_1.default.get("https://api.spotify.com/v1/me", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+        return data.id;
+    }
+    catch (error) {
+        console.error(error);
+        throw new Error("Error retrieving Spotify ID");
+    }
+});
 const getSpotifyPlaylistsByUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const spotifyId = req.params.id;
@@ -221,6 +231,96 @@ const getSpotifyPlaylistData = (playlistId) => __awaiter(void 0, void 0, void 0,
         throw error;
     }
 });
+const getIsrcsBySpotifyPlaylistId = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
+        const response = yield axios_1.default.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const playlist = response.data;
+        const isrcs = [];
+        if (playlist.tracks && playlist.tracks.items) {
+            const tracks = playlist.tracks.items;
+            for (const track of tracks) {
+                if (track.track &&
+                    track.track.external_ids &&
+                    track.track.external_ids.isrc) {
+                    const isrc = track.track.external_ids.isrc;
+                    isrcs.push(isrc);
+                }
+            }
+        }
+        return isrcs;
+    }
+    catch (error) {
+        console.error("Error getting Isrcs: ", error);
+        throw error;
+    }
+});
+exports.getIsrcsBySpotifyPlaylistId = getIsrcsBySpotifyPlaylistId;
+const getTrackUrisByIsrcs = (isrcs) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
+        const trackUris = [];
+        for (const isrc of isrcs) {
+            const response = yield axios_1.default.get(`https://api.spotify.com/v1/search?q=isrc:${isrc}&type=track`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            const searchResults = response.data.tracks.items;
+            if (searchResults.length > 0) {
+                const trackUri = searchResults[0].uri;
+                trackUris.push(trackUri);
+            }
+        }
+        return trackUris;
+    }
+    catch (error) {
+        console.error("Error getting track URIs from ISRCs: ", error);
+        throw error;
+    }
+});
+exports.getTrackUrisByIsrcs = getTrackUrisByIsrcs;
+const getTrackUrisBySpotifyPlaylistId = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const token = yield (0, spotifyClientToken_1.getClientToken)();
+        const response = yield axios_1.default.get(`https://api.spotify.com/v1/playlists/${playlistId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        const playlist = response.data;
+        const trackUris = playlist.tracks.items.map((item) => {
+            return item.track.uri;
+        });
+        return trackUris;
+    }
+    catch (error) {
+        console.error("Error getting Track URIs: ", error);
+        throw error;
+    }
+});
+exports.getTrackUrisBySpotifyPlaylistId = getTrackUrisBySpotifyPlaylistId;
+const createSpotifyPlaylist = ({ title, description, ids, accessToken, }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = yield getSpotifyUserIdInternal(accessToken);
+        const playlistResponse = yield axios_1.default.post(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+            name: title,
+            description: description,
+        }, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const playlistId = playlistResponse.data.id;
+        yield axios_1.default.post(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+            uris: ids,
+        }, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        return playlistId;
+    }
+    catch (error) {
+        console.error("Error creating Spotify playlist by ISRCs:", error);
+        throw error;
+    }
+});
+exports.createSpotifyPlaylist = createSpotifyPlaylist;
 const searchSpotify = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const search = req.body;
     const type = encodeURIComponent(search.types.join());

@@ -92,7 +92,6 @@ export default function UserPage() {
     const ensureValidSpotifyToken = async () => {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
-            console.log(data);
             const expirationTime = getExpirationTime(data.expires_in);
             await dispatch(
                 updateAccessToken({

@@ -24,6 +24,22 @@ export const deletePost = async (id: string) => {
     return res.data;
 };
 
+export const savePost = async ({
+    id,
+    destination,
+    destinationUserToken,
+}: {
+    id: string;
+    destination: string;
+    destinationUserToken: string;
+}) => {
+    const res = await axiosInstance.post(`/post/${id}/save`, {
+        destination,
+        destinationUserToken,
+    });
+    return res.data;
+};
+
 // For the Feed
 export const getAllPosts = async () => {
     const res = await axiosInstance.get("/post/");

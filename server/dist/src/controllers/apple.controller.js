@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getApplePlaylistByIdInternal = exports.getTopApplePlaylists = exports.getApplePlaylistById = exports.getApplePlaylistsByUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
+exports.createApplePlaylist = exports.getSongIdsByApplePlaylistId = exports.getSongIdsByIsrcs = exports.getIsrcsByApplePlaylistId = exports.getApplePlaylistByIdInternal = exports.getTopApplePlaylists = exports.getApplePlaylistById = exports.getApplePlaylistsByUserToken = exports.getAppleDeveloperToken = exports.getAppleDeveloperTokenCached = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const axios_1 = __importDefault(require("axios"));
 let cachedAppleDeveloperToken = null;
@@ -166,7 +166,108 @@ const getApplePlaylistDetails = (playlistId) => __awaiter(void 0, void 0, void 0
         };
     }
     catch (error) {
-        console.error("Error fetching apple playlist details: ", error);
+        console.error("Error getting apple playlist details: ", error);
         throw error;
     }
 });
+const getIsrcsByApplePlaylistId = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const developerToken = yield (0, exports.getAppleDeveloperTokenCached)();
+        const response = yield axios_1.default.get(`https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`, { headers: { Authorization: `Bearer ${developerToken}` } });
+        const playlist = response.data.data[0];
+        const isrcs = [];
+        if (playlist.relationships && playlist.relationships.tracks) {
+            const tracks = playlist.relationships.tracks.data;
+            for (const track of tracks) {
+                const isrc = track.attributes.isrc;
+                if (isrc) {
+                    isrcs.push(isrc);
+                }
+            }
+        }
+        return isrcs;
+    }
+    catch (error) {
+        console.error("Error getting ISRCs from Apple Music playlist: ", error);
+        throw error;
+    }
+});
+exports.getIsrcsByApplePlaylistId = getIsrcsByApplePlaylistId;
+const getSongIdsByIsrcs = (isrcs) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const developerToken = yield (0, exports.getAppleDeveloperTokenCached)();
+        const storefront = "us";
+        const songIds = [];
+        for (const isrc of isrcs) {
+            const response = yield axios_1.default.get(`https://api.music.apple.com/v1/catalog/${storefront}/songs?filter[isrc]=${isrc}`, {
+                headers: { Authorization: `Bearer ${developerToken}` },
+            });
+            const searchResults = response.data.data;
+            if (searchResults.length > 0) {
+                const songId = searchResults[0].id;
+                songIds.push(songId);
+            }
+        }
+        return songIds;
+    }
+    catch (error) {
+        console.error("Error getting catalog songs by ISRCs: ", error);
+        throw error;
+    }
+});
+exports.getSongIdsByIsrcs = getSongIdsByIsrcs;
+const getSongIdsByApplePlaylistId = (playlistId) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const developerToken = yield (0, exports.getAppleDeveloperTokenCached)();
+        const response = yield axios_1.default.get(`https://api.music.apple.com/v1/catalog/us/playlists/${playlistId}`, {
+            headers: { Authorization: `Bearer ${developerToken}` },
+            params: { include: "tracks" }, // Include track data in the response
+        });
+        const playlist = response.data.data[0];
+        const songIds = [];
+        if (playlist.relationships && playlist.relationships.tracks) {
+            const tracks = playlist.relationships.tracks.data;
+            for (const track of tracks) {
+                const songId = track.id;
+                songIds.push(songId);
+            }
+        }
+        return songIds;
+    }
+    catch (error) {
+        console.error("Error getting song IDs from Apple Music playlist: ", error);
+        throw error;
+    }
+});
+exports.getSongIdsByApplePlaylistId = getSongIdsByApplePlaylistId;
+const createApplePlaylist = ({ title, description, ids, musicUserToken, }) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const developerToken = yield (0, exports.getAppleDeveloperTokenCached)();
+        const playlistResponse = yield axios_1.default.post(`https://api.music.apple.com/v1/me/library/playlists`, {
+            attributes: {
+                name: title,
+                description: description,
+            },
+            relationships: {
+                tracks: {
+                    data: ids.map((id) => ({
+                        id: id,
+                        type: "songs",
+                    })), // Convert ISRCs to track data
+                },
+            },
+        }, {
+            headers: {
+                Authorization: `Bearer ${developerToken}`,
+                "Music-User-Token": musicUserToken,
+            },
+        });
+        const playlistId = playlistResponse.data.data[0].id;
+        return playlistId;
+    }
+    catch (error) {
+        console.error("Error creating Apple Music playlist: ", error);
+        throw error;
+    }
+});
+exports.createApplePlaylist = createApplePlaylist;

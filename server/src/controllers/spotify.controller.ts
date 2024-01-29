@@ -9,7 +9,7 @@ export const requestSpotifyAuthorization = async (
 ) => {
     // const state = randomBytes(16).toString("base64");
     const scope =
-        "user-read-private playlist-read-private playlist-read-collaborative";
+        "user-read-private playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private";
 
     const { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } = process.env;
     if (!SPOTIFY_CLIENT_ID || !SPOTIFY_REDIRECT_URI) {
@@ -103,16 +103,27 @@ export const getSpotifyUserId = async (req: Request, res: Response) => {
             return res.status(400).send("No token provided");
         }
 
-        const { data } = await axios.get("https://api.spotify.com/v1/me", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const userId = await getSpotifyUserIdInternal(token);
 
-        return res.send(data.id);
+        return res.send(userId);
     } catch (error) {
         console.error(error);
         return res.status(500).send("Error retrieving Spotify ID");
+    }
+};
+
+const getSpotifyUserIdInternal = async (accessToken: string) => {
+    try {
+        const { data } = await axios.get("https://api.spotify.com/v1/me", {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+        return data.id;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Error retrieving Spotify ID");
     }
 };
 
@@ -258,6 +269,129 @@ const getSpotifyPlaylistData = async (playlistId: string) => {
         };
     } catch (error) {
         console.error("Error fetching spotify playlist: ", error);
+        throw error;
+    }
+};
+
+export const getIsrcsBySpotifyPlaylistId = async (playlistId: string) => {
+    try {
+        const token = await getClientToken();
+        const response = await axios.get(
+            `https://api.spotify.com/v1/playlists/${playlistId}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        const playlist = response.data;
+        const isrcs: string[] = [];
+
+        if (playlist.tracks && playlist.tracks.items) {
+            const tracks = playlist.tracks.items;
+            for (const track of tracks) {
+                if (
+                    track.track &&
+                    track.track.external_ids &&
+                    track.track.external_ids.isrc
+                ) {
+                    const isrc = track.track.external_ids.isrc;
+                    isrcs.push(isrc);
+                }
+            }
+        }
+        return isrcs;
+    } catch (error) {
+        console.error("Error getting Isrcs: ", error);
+        throw error;
+    }
+};
+
+export const getTrackUrisByIsrcs = async (isrcs: string[]) => {
+    try {
+        const token = await getClientToken();
+        const trackUris: string[] = [];
+
+        for (const isrc of isrcs) {
+            const response = await axios.get(
+                `https://api.spotify.com/v1/search?q=isrc:${isrc}&type=track`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                }
+            );
+
+            const searchResults = response.data.tracks.items;
+            if (searchResults.length > 0) {
+                const trackUri = searchResults[0].uri;
+                trackUris.push(trackUri);
+            }
+        }
+
+        return trackUris;
+    } catch (error) {
+        console.error("Error getting track URIs from ISRCs: ", error);
+        throw error;
+    }
+};
+
+export const getTrackUrisBySpotifyPlaylistId = async (playlistId: string) => {
+    try {
+        const token = await getClientToken();
+        const response = await axios.get(
+            `https://api.spotify.com/v1/playlists/${playlistId}`,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+        const playlist = response.data;
+
+        const trackUris = playlist.tracks.items.map((item: any) => {
+            return item.track.uri;
+        });
+
+        return trackUris;
+    } catch (error) {
+        console.error("Error getting Track URIs: ", error);
+        throw error;
+    }
+};
+
+export const createSpotifyPlaylist = async ({
+    title,
+    description,
+    ids,
+    accessToken,
+}: {
+    title: string;
+    description: string;
+    ids: string[];
+    accessToken: string;
+}) => {
+    try {
+        const userId = await getSpotifyUserIdInternal(accessToken);
+        const playlistResponse = await axios.post(
+            `https://api.spotify.com/v1/users/${userId}/playlists`,
+            {
+                name: title,
+                description: description,
+            },
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }
+        );
+
+        const playlistId = playlistResponse.data.id;
+        await axios.post(
+            `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+            {
+                uris: ids,
+            },
+            {
+                headers: { Authorization: `Bearer ${accessToken}` },
+            }
+        );
+
+        return playlistId;
+    } catch (error) {
+        console.error("Error creating Spotify playlist by ISRCs:", error);
         throw error;
     }
 };

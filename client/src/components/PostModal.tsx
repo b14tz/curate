@@ -124,7 +124,6 @@ export default function PostModal({
     const ensureValidSpotifyToken = async () => {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
-            console.log(data);
             const expirationTime = getExpirationTime(data.expires_in);
             await dispatch(
                 updateAccessToken({
@@ -240,7 +239,7 @@ export default function PostModal({
                             type="text"
                             placeholder="Title"
                             {...register("title", {
-                                required: "Content is required",
+                                required: "Title is required",
                                 minLength: 2,
                             })}
                             className="p-2 rounded-md shadow-inner bg-b-tertiary dark:bg-db-tertiary w-full"

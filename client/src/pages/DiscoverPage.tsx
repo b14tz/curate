@@ -17,7 +17,6 @@ export default function DiscoverPage() {
             "It looks like there aren't any spotify recommendations at this time."
         );
         const data = await fetchTopSpotifyPlaylists();
-        console.log(data);
         setPlaylists(data);
     }
 

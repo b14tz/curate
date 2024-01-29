@@ -9,5 +9,6 @@ postRoutes.get("/user/:id/followers", post_controller_1.getFollowerPosts);
 postRoutes.get("/user/:id", post_controller_1.getUserPosts);
 postRoutes.post("/", post_controller_1.createPost);
 postRoutes.post("/:id", post_controller_1.updatePost);
+postRoutes.post("/:id/save", post_controller_1.savePost);
 postRoutes.delete("/:id", post_controller_1.deletePost);
 exports.default = postRoutes;

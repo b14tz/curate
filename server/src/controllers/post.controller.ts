@@ -1,8 +1,20 @@
 import { Request, Response } from "express";
 
 import { db } from "../utils/db.server";
-import { getSpotifyPlaylistByIdInternal } from "./spotify.controller";
-import { getApplePlaylistByIdInternal } from "./apple.controller";
+import {
+    createSpotifyPlaylist,
+    getIsrcsBySpotifyPlaylistId,
+    getSpotifyPlaylistByIdInternal,
+    getTrackUrisByIsrcs,
+    getTrackUrisBySpotifyPlaylistId,
+} from "./spotify.controller";
+import {
+    createApplePlaylist,
+    getApplePlaylistByIdInternal,
+    getIsrcsByApplePlaylistId,
+    getSongIdsByApplePlaylistId,
+    getSongIdsByIsrcs,
+} from "./apple.controller";
 
 export const createPost = async (req: Request, res: Response) => {
     const data = req.body;
@@ -36,6 +48,79 @@ export const deletePost = async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         return res.status(500).send(`Error deleting user`);
+    }
+};
+
+export const savePost = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { destination, destinationUserToken } = req.body;
+
+    try {
+        const post = await db.post.findUnique({
+            where: { id },
+        });
+
+        if (!post) {
+            return res.status(404).send("Post not found");
+        }
+
+        const { origin, originId, title, description } = post;
+        let dataForDestination: any;
+
+        if (origin === "spotify" && destination === "spotify") {
+            // Spotify to Spotify
+            const trackUris = await getTrackUrisBySpotifyPlaylistId(originId);
+            dataForDestination = {
+                title,
+                description,
+                ids: trackUris,
+                accessToken: destinationUserToken,
+            };
+        } else if (origin === "spotify" && destination === "apple") {
+            // Spotify to Apple
+            const isrcs = await getIsrcsBySpotifyPlaylistId(originId);
+            const appleTrackUris = await getSongIdsByIsrcs(isrcs);
+            dataForDestination = {
+                title,
+                description,
+                ids: appleTrackUris,
+                musicUserToken: destinationUserToken,
+            };
+        } else if (origin === "apple" && destination === "apple") {
+            // Apple to Apple
+            const songIds = await getSongIdsByApplePlaylistId(originId);
+            dataForDestination = {
+                title,
+                description,
+                ids: songIds,
+                musicUserToken: destinationUserToken,
+            };
+        } else if (origin === "apple" && destination === "spotify") {
+            // Apple to Spotify
+            const isrcs = await getIsrcsByApplePlaylistId(originId);
+            console.log("isrcs: ", isrcs);
+            const trackUris = await getTrackUrisByIsrcs(isrcs);
+            dataForDestination = {
+                title,
+                description,
+                ids: trackUris,
+                accessToken: destinationUserToken,
+            };
+            console.log("track uris: ", trackUris);
+        }
+
+        if (destinationUserToken) {
+            if (destination === "spotify") {
+                await createSpotifyPlaylist(dataForDestination);
+            } else if (destination === "apple") {
+                await createApplePlaylist(dataForDestination);
+            }
+        }
+
+        return res.status(200).send("Successfully saved playlist");
+    } catch (error) {
+        console.error("Error in saving playlist:", error);
+        return res.status(500).send("Error in saving playlist");
     }
 };
 
