@@ -184,7 +184,6 @@ export default function PostPage({ showComments = false }) {
 
     return (
         <>
-            {" "}
             <div className="flex flex-col space-y-2">
                 <div className="flex flex-col space-y-1">
                     <h3>{post?.title}</h3>

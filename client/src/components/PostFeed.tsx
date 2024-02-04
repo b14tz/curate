@@ -7,11 +7,9 @@ import { useSnackbar } from "notistack";
 
 export default function PostFeed({
     posts,
-    setPosts,
     emptyMessage,
 }: {
     posts: Post[];
-    setPosts: (val: Post[]) => void;
     emptyMessage: string;
 }) {
     const currentUser = useSelector(
@@ -63,7 +61,8 @@ export default function PostFeed({
             }
             return post;
         });
-        setPosts(updatedPosts);
+        console.log("Handle updated posts here: ", updatedPosts);
+        // setPosts(updatedPosts);
     };
 
     const renderFeed = () => {
@@ -138,7 +137,7 @@ export default function PostFeed({
                                     </button>
                                     <p>
                                         <i className="ri-music-2-fill"></i>
-                                        {post.songs.length}
+                                        {post.total}
                                     </p>
 
                                     {isPostLikedByUser(post) ? (

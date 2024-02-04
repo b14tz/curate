@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./features/user/userSlice";
 import spotifyReducer from "./features/spotify/spotifySlice";
 import appleReducer from "./features/apple/appleSlice";
+import { apiSlice } from "./api/apiSlice";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 
@@ -15,6 +16,7 @@ const combinedReducer = combineReducers({
     userReducer,
     spotifyReducer,
     appleReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer, // Add the apiSlice reducer
 });
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
@@ -31,8 +33,12 @@ export const store = configureStore({
                     "persist/REHYDRATE",
                     "persist/PURGE",
                 ],
+                // Optionally ignore these field paths in all actions
+                ignoredActionPaths: ["meta.arg", "payload.timestamp"],
+                // Optionally ignore these paths in the state
+                ignoredPaths: ["items.dates"],
             },
-        }),
+        }).concat(apiSlice.middleware),
 });
 export const persistor = persistStore(store);
 

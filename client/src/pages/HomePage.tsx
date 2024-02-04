@@ -1,53 +1,52 @@
-// homepage.tsx
-import { useEffect, useState } from "react";
-import { getAllPosts, getFollowerPosts } from "~/api/routes/post";
 import { useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
 import { useLocation } from "react-router-dom";
+import { skipToken } from "@reduxjs/toolkit/query";
+
+import {
+    useGetAllPostsQuery,
+    useGetFollowerPostsQuery,
+} from "~/redux/api/routes/post";
+import { RootState } from "~/redux/store";
 import PostFeed from "../components/PostFeed";
 import StyledNavLink from "~/components/StyledNavLink";
 
 export default function HomePage() {
-    const [posts, setPosts] = useState<Post[]>([]);
-    const [emptyMessage, setEmptyMessage] = useState("");
     const location = useLocation();
+    const currentUser = useSelector(
+        (state: RootState) => state.userReducer.user
+    );
 
-    let currentUser = useSelector((state: RootState) => state.userReducer.user);
+    const {
+        data: allPosts,
+        isLoading: isLoadingAllPosts,
+        error: allPostsError,
+    } = useGetAllPostsQuery();
 
-    const handleGetAllPosts = async () => {
-        setEmptyMessage(
-            "It looks like no one has ever posted. Be the first to post!"
-        );
-        try {
-            const data = await getAllPosts();
-            setPosts(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const {
+        data: followerPosts,
+        isLoading: isLoadingFollowerPosts,
+        error: followerPostsError,
+    } = useGetFollowerPostsQuery(currentUser?.id ?? skipToken);
+    console.log("Follower Posts: ", followerPosts);
 
-    const handleGetFollowerPosts = async () => {
-        setEmptyMessage("Follow other accounts to populate this feed.");
-        try {
-            if (currentUser) {
-                const data = await getFollowerPosts(currentUser.id);
-                setPosts(data);
-            } else {
-                setPosts([]);
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const emptyMessage = location.pathname.includes("/following")
+        ? "Follow other accounts to populate this feed."
+        : "It looks like no one has ever posted. Be the first to post!";
 
-    useEffect(() => {
-        const path = location.pathname.split("/").pop();
-        if (path === "following") {
-            handleGetFollowerPosts();
-        } else {
-            handleGetAllPosts();
-        }
-    }, [location.pathname]);
+    const postsToShow = location.pathname.includes("/following")
+        ? followerPosts
+        : allPosts;
+
+    const isLoading = location.pathname.includes("/following")
+        ? isLoadingFollowerPosts
+        : isLoadingAllPosts;
+
+    const error = location.pathname.includes("/following")
+        ? followerPostsError
+        : allPostsError;
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error fetching posts</div>;
 
     return (
         <div className="space-y-4">
@@ -68,12 +67,7 @@ export default function HomePage() {
                     activeClasses="text-black border-b-2 border-salmon"
                 />
             </div>
-
-            <PostFeed
-                posts={posts}
-                setPosts={setPosts}
-                emptyMessage={emptyMessage}
-            />
+            <PostFeed posts={postsToShow ?? []} emptyMessage={emptyMessage} />
         </div>
     );
 }

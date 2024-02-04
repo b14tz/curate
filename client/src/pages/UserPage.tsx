@@ -13,18 +13,20 @@ import {
     isSpotifyTokenExpired,
     updateAccessToken,
 } from "~/redux/features/spotify/spotifySlice";
-import { getUserPosts } from "~/api/routes/post";
 import AppleAuthToggle from "~/components/apple/AppleAuthToggle";
 import { getExpirationTime } from "~/utils/time";
 import { refreshAccessToken } from "~/api/routes/spotify";
+import { useGetUserPostsQuery } from "~/redux/api/routes/post";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 export default function UserPage() {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [changeUsernameOpen, setChangeUsernameOpen] = useState(false);
     const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
-    const [posts, setPosts] = useState<Post[]>([]);
     const [userData, setUserData] = useState<User>({
         id: "",
         token: "",
@@ -37,8 +39,12 @@ export default function UserPage() {
         connectedToApple: false,
     });
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm<{ displayName: string }>();
 
     const spotifyToken = useSelector(
         (state: RootState) => state.spotifyReducer
@@ -49,11 +55,10 @@ export default function UserPage() {
     const isCurrentUser = id === currentUser?.id;
 
     const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm<{ displayName: string }>();
+        data: posts,
+        isLoading,
+        error,
+    } = useGetUserPostsQuery(id ?? skipToken);
 
     const handleChangeUsername = async (data: { displayName: string }) => {
         try {
@@ -77,18 +82,6 @@ export default function UserPage() {
         }
     };
 
-    const handleSettingsClose = () => {
-        setSettingsOpen(false);
-    };
-
-    const handleChangeUsernameClose = () => {
-        setChangeUsernameOpen(false);
-    };
-
-    const handleDeleteAccountClose = () => {
-        setDeleteAccountOpen(false);
-    };
-
     const ensureValidSpotifyToken = async () => {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
@@ -109,14 +102,13 @@ export default function UserPage() {
                 const fetchedUser = await getUser(id);
                 setUserData(fetchedUser);
                 setValue("displayName", fetchedUser.displayName);
-
-                const fetchedPosts = await getUserPosts(id);
-                setPosts(fetchedPosts);
             }
         }
-
         populateUser();
-    }, [id, isCurrentUser, changeUsernameOpen, currentUser, spotifyToken]);
+    }, [id, currentUser]);
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error fetching posts</div>;
 
     return (
         <>
@@ -128,8 +120,7 @@ export default function UserPage() {
                     setSettingsOpen={setSettingsOpen}
                 />
                 <Feed
-                    posts={posts}
-                    setPosts={setPosts}
+                    posts={posts ?? []}
                     emptyMessage={
                         isCurrentUser
                             ? "You haven't posted yet. What are you waiting for?"
@@ -140,7 +131,7 @@ export default function UserPage() {
 
             <Modal
                 open={settingsOpen}
-                handleClose={handleSettingsClose}
+                handleClose={() => setSettingsOpen(false)}
                 title="Settings"
             >
                 <div className="flex flex-col space-y-2">
@@ -196,7 +187,7 @@ export default function UserPage() {
 
             <Modal
                 open={changeUsernameOpen}
-                handleClose={handleChangeUsernameClose}
+                handleClose={() => setChangeUsernameOpen(false)}
                 title="Change Username"
             >
                 <form
@@ -228,7 +219,7 @@ export default function UserPage() {
             </Modal>
             <Modal
                 open={deleteAccountOpen}
-                handleClose={handleDeleteAccountClose}
+                handleClose={() => setDeleteAccountOpen(false)}
                 title="Delete Account"
             >
                 <div className="max-w-[400px]">

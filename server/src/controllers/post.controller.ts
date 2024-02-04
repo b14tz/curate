@@ -188,6 +188,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
 };
 
 export const getFollowerPosts = async (req: Request, res: Response) => {
+    console.log("Hit");
     const id = req.params.id;
     try {
         const follows = await db.follow.findMany({
