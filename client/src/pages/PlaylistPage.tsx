@@ -1,115 +1,79 @@
+import { useParams, useLocation } from "react-router-dom";
 import { IconUser } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchApplePlaylistById } from "~/api/routes/apple";
-import { fetchSpotifyPlaylistById } from "~/api/routes/spotify";
+import { useGetSpotifyPlaylistByIdQuery } from "~/redux/api/routes/spotify";
+import { useGetApplePlaylistByIdQuery } from "~/redux/api/routes/apple";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 export default function PlaylistPage() {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
+    const location = useLocation();
 
-    const [playlist, setPlaylist] = useState<Playlist>({
-        id: "",
-        title: "",
-        description: "",
-        songs: [],
-        origin: "",
-        total: 0,
-        next: "",
-        author: {
-            id: "",
-            firstName: "",
-            lastName: "",
-            email: "",
-            displayName: "",
-            bio: "",
-            connectedToSpotify: false,
-            connectedToApple: false,
-            token: "",
-        },
-    });
+    const platform = location.pathname.includes("/spotify/")
+        ? "spotify"
+        : "apple";
 
-    async function handleSpotifyPost(playlistId: string) {
-        if (id) {
-            const data = await fetchSpotifyPlaylistById(playlistId);
-            setPlaylist(data);
-        }
-    }
+    const spotifyResult = useGetSpotifyPlaylistByIdQuery(id ?? skipToken);
+    const appleResult = useGetApplePlaylistByIdQuery(id ?? skipToken);
 
-    async function handleApplePost(playlistId: string) {
-        const data = await fetchApplePlaylistById(playlistId);
-        setPlaylist(data);
-    }
+    const {
+        data: playlist,
+        isLoading,
+        isError,
+    } = platform === "spotify" ? spotifyResult : appleResult;
 
-    useEffect(() => {
-        const path = window.location.pathname;
-        const pathParts = path.split("/");
-        const platform = pathParts[2];
-
-        if (platform === "apple") {
-            id && handleApplePost(id);
-        } else if (platform === "spotify") {
-            id && handleSpotifyPost(id);
-        } else {
-            console.log("Platform not recognized");
-        }
-    }, [id]);
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error fetching playlist</div>;
 
     const renderSongs = () => {
-        if (playlist) {
-            if (Object.keys(playlist.songs).length === 0) {
-                return (
-                    <div className="h-[300px] flex justify-center items-center">
-                        <p>It looks like this playlist is empty.</p>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="flex flex-col space-y-2 mt-4">
-                        {playlist.songs.map((song) => (
-                            <div
-                                key={song.imageUrl + song.artist + song.title}
-                                className="flex flex-row space-x-4 items-center"
-                            >
-                                <img
-                                    key={"image" + song.imageUrl}
-                                    src={song.imageUrl}
-                                    className="w-12 h-12"
-                                />
-                                <div className="flex flex-col">
-                                    <p className="font-medium">{song.title}</p>
-                                    <p>{song.artist}</p>
-                                </div>
+        if (playlist && playlist.songs.length > 0) {
+            return (
+                <div className="flex flex-col space-y-2 mt-4">
+                    {playlist.songs.map((song, index) => (
+                        <div
+                            key={index}
+                            className="flex flex-row space-x-4 items-center"
+                        >
+                            <img
+                                src={song.imageUrl}
+                                alt=""
+                                className="w-12 h-12"
+                            />
+                            <div className="flex flex-col">
+                                <p className="font-medium">{song.title}</p>
+                                <p>{song.artist}</p>
                             </div>
-                        ))}
-                    </div>
-                );
-            }
+                        </div>
+                    ))}
+                </div>
+            );
+        } else {
+            return (
+                <div className="h-[300px] flex justify-center items-center">
+                    <p>It looks like this playlist is empty.</p>
+                </div>
+            );
         }
     };
 
     return (
         <div className="flex flex-col space-y-2">
-            <div className="flex flex-col space-y-1">
-                <h3>{playlist.title}</h3>
-                <p>{playlist.description}</p>
+            <div className="space-y-1">
+                <h3>{playlist?.title}</h3>
+                <p>{playlist?.description}</p>
             </div>
             <div className="flex flex-row justify-between items-end">
-                <div className="flex flex-row items-center space-x-10">
+                <div className="flex items-center space-x-10">
                     <p>
-                        <i className="ri-music-2-fill"></i>
-                        {playlist.total}
+                        <i className="ri-music-2-fill"></i> {playlist?.total}
                     </p>
                 </div>
-
                 <div className="w-fit flex items-center space-x-1">
                     <IconUser size={20} />
-                    <p>{playlist.author.displayName}</p>
+                    <p>{playlist?.author.displayName}</p>
                 </div>
             </div>
             <hr />
-            <div className="flex flex-col space-y-2">
-                <>{renderSongs()}</>
-            </div>
+            {renderSongs()}
         </div>
     );
 }

@@ -1,41 +1,42 @@
-// discoverpage.tsx
-import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { fetchTopSpotifyPlaylists } from "~/api/routes/spotify";
 import PlaylistFeed from "~/components/PlaylistFeed";
-import { fetchTopApplePlaylists } from "~/api/routes/apple";
 import StyledNavLink from "~/components/StyledNavLink";
+import { useGetTopApplePlaylistsQuery } from "~/redux/api/routes/apple";
+import { useGetTopSpotifyPlaylistsQuery } from "~/redux/api/routes/spotify";
 
 export default function DiscoverPage() {
-    const [playlists, setPlaylists] = useState<Playlist[]>([]);
-    const [emptyMessage, setEmptyMessage] = useState("");
-
     const location = useLocation();
 
-    async function handleFetchTopSpotifyPlaylists() {
-        setEmptyMessage(
-            "It looks like there aren't any spotify recommendations at this time."
-        );
-        const data = await fetchTopSpotifyPlaylists();
-        setPlaylists(data);
-    }
+    const {
+        data: spotifyPlaylists,
+        isLoading: isLoadingSpotifyPlaylists,
+        error: spotifyPlaylistsError,
+    } = useGetTopSpotifyPlaylistsQuery();
 
-    async function handleFetchTopApplePlaylists() {
-        setEmptyMessage(
-            "It looks like there aren't any apple recommendations at this time."
-        );
-        const data = await fetchTopApplePlaylists();
-        setPlaylists(data);
-    }
+    const {
+        data: applePlaylists,
+        isLoading: isLoadingApplePlaylists,
+        error: applePlaylistsError,
+    } = useGetTopApplePlaylistsQuery();
 
-    useEffect(() => {
-        const path = location.pathname.split("/").pop();
-        if (path === "apple") {
-            handleFetchTopApplePlaylists();
-        } else {
-            handleFetchTopSpotifyPlaylists();
-        }
-    }, [location.pathname]);
+    const emptyMessage = location.pathname.includes("/spotify")
+        ? "No spotify playlists are recommended at this time."
+        : "No apple music playlists are recommended at this time.";
+
+    const postsToShow = location.pathname.includes("/spotify")
+        ? spotifyPlaylists
+        : applePlaylists;
+
+    const isLoading = location.pathname.includes("/spotify")
+        ? isLoadingSpotifyPlaylists
+        : isLoadingApplePlaylists;
+
+    const error = location.pathname.includes("/spotify")
+        ? spotifyPlaylistsError
+        : applePlaylistsError;
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error fetching posts</div>;
 
     return (
         <div className="space-y-4">
@@ -57,7 +58,10 @@ export default function DiscoverPage() {
                 />
             </div>
 
-            <PlaylistFeed playlists={playlists} emptyMessage={emptyMessage} />
+            <PlaylistFeed
+                playlists={postsToShow ?? []}
+                emptyMessage={emptyMessage}
+            />
         </div>
     );
 }

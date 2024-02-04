@@ -11,6 +11,9 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
         getUserPosts: builder.query<Post[], string>({
             query: (id) => `/post/user/${id}`,
         }),
+        getPost: builder.query<Post, string>({
+            query: (id) => `/post/${id}`,
+        }),
     }),
 });
 
@@ -18,4 +21,5 @@ export const {
     useGetAllPostsQuery,
     useGetFollowerPostsQuery,
     useGetUserPostsQuery,
+    useGetPostQuery,
 } = extendedApiSlice;
