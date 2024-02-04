@@ -183,6 +183,7 @@ const getAllPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getAllPosts = getAllPosts;
 const getFollowerPosts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("Hit");
     const id = req.params.id;
     try {
         const follows = yield db_server_1.db.follow.findMany({

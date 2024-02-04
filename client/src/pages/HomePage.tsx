@@ -27,7 +27,6 @@ export default function HomePage() {
         isLoading: isLoadingFollowerPosts,
         error: followerPostsError,
     } = useGetFollowerPostsQuery(currentUser?.id ?? skipToken);
-    console.log("Follower Posts: ", followerPosts);
 
     const emptyMessage = location.pathname.includes("/following")
         ? "Follow other accounts to populate this feed."
