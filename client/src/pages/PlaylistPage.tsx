@@ -1,7 +1,7 @@
 import { useParams, useLocation } from "react-router-dom";
 import { IconUser } from "@tabler/icons-react";
-import { useGetSpotifyPlaylistByIdQuery } from "~/redux/api/routes/spotify";
-import { useGetApplePlaylistByIdQuery } from "~/redux/api/routes/apple";
+import { useGetSpotifyPlaylistByIdQuery } from "@/redux/api/routes/spotify";
+import { useGetApplePlaylistByIdQuery } from "@/redux/api/routes/apple";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 export default function PlaylistPage() {

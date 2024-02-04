@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAppleDeveloperToken } from "~/api/routes/apple";
-import { setApple } from "~/redux/features/apple/appleSlice";
-import { RootState } from "~/redux/store";
-import { getExpirationTime } from "~/utils/time";
+import { getAppleDeveloperToken } from "@/api/routes/apple";
+import { setApple } from "@/redux/features/apple/appleSlice";
+import { RootState } from "@/redux/store";
+import { getExpirationTime } from "@/utils/time";
 
 export default function AppleAuthButton() {
     const [appleTokenExpirationTime, setAppleTokenExpirationTime] = useState(

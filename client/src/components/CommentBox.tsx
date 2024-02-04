@@ -1,8 +1,8 @@
 import { useSnackbar } from "notistack";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { createComment } from "~/api/routes/comment";
-import { RootState } from "~/redux/store";
+import { createComment } from "@/api/routes/comment";
+import { RootState } from "@/redux/store";
 
 export default function CommentBox({
     post,
@@ -42,7 +42,7 @@ export default function CommentBox({
                 onChange={(e) => setContent(e.target.value)}
             ></textarea>
             <button
-                className="py-2 px-4 rounded bg-salmon text-white w-fit self-end "
+                className="py-2 px-4 rounded bg-salmon w-fit self-end "
                 onClick={handleCreateComment}
             >
                 Comment

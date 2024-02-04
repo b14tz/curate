@@ -1,23 +1,23 @@
 import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
-import { customSelectStyles } from "~/styles/customStyles";
+import { customSelectStyles } from "@/styles/customStyles";
 import { useForm } from "react-hook-form";
-import { createPost } from "~/api/routes/post";
+import { createPost } from "@/api/routes/post";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
+import { RootState } from "@/redux/store";
 import Select from "react-select";
 import {
     fetchAllSpotifyPlaylistsByUserId,
     refreshAccessToken,
-} from "~/api/routes/spotify";
+} from "@/api/routes/spotify";
 import {
     isSpotifyTokenExpired,
     updateAccessToken,
-} from "~/redux/features/spotify/spotifySlice";
-import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
+} from "@/redux/features/spotify/spotifySlice";
+import { isAppleTokenExpired } from "@/redux/features/apple/appleSlice";
 import AppleAuthButton from "./apple/AppleAuthButton";
-import { fetchAllPlaylistsByMusicUserToken } from "~/api/routes/apple";
-import { getExpirationTime } from "~/utils/time";
+import { fetchAllPlaylistsByMusicUserToken } from "@/api/routes/apple";
+import { getExpirationTime } from "@/utils/time";
 
 export default function PostModal({
     open,

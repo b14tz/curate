@@ -5,10 +5,10 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import {
     useGetAllPostsQuery,
     useGetFollowerPostsQuery,
-} from "~/redux/api/routes/post";
-import { RootState } from "~/redux/store";
+} from "@/redux/api/routes/post";
+import { RootState } from "@/redux/store";
 import PostFeed from "../components/PostFeed";
-import StyledNavLink from "~/components/StyledNavLink";
+import StyledNavLink from "@/components/StyledNavLink";
 
 export default function HomePage() {
     const location = useLocation();

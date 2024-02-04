@@ -1,9 +1,8 @@
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { createFollow, deleteFollow } from "~/api/routes/follow";
-
-import { RootState } from "~/redux/store";
+import { createFollow, deleteFollow } from "@/api/routes/follow";
+import { RootState } from "@/redux/store";
 
 export default function Header({
     user,

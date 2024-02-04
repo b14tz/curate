@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux"; // Import useSelector ho
 
 import StyledNavLink from "../StyledNavLink";
 import Modal from "../ui/Modal";
-import googleLogo from "~/assets/google.png";
+import googleLogo from "@/assets/google.png";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-//import logo from "~/assets/panda.png";
-import { RootState } from "~/redux/store";
-import { clearUser } from "~/redux/features/user/userSlice";
+//import logo from "@/assets/panda.png";
+import { RootState } from "@/redux/store";
+import { clearUser } from "@/redux/features/user/userSlice";
 import PostModal from "../PostModal";
 
 export default function Navbar() {
@@ -80,7 +80,7 @@ export default function Navbar() {
                         </Popover>
                         <button
                             onClick={() => setPostOpen(true)}
-                            className="bg-salmon text-white rounded-full flex items-center space-x-2 pl-2 pr-4 py-1"
+                            className="rounded-full flex items-center space-x-2 pl-2 pr-4 py-1"
                         >
                             <IconPlus size={20} />
                             <p>Post</p>

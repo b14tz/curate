@@ -1,22 +1,22 @@
 import Feed from "../components/PostFeed";
-import Header from "~/components/user/Header";
+import Header from "@/components/user/Header";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
-import { deleteUser, getUser, updateUser } from "~/api/routes/user";
+import { RootState } from "@/redux/store";
+import { deleteUser, getUser, updateUser } from "@/api/routes/user";
 import { useEffect, useState } from "react";
-import Modal from "~/components/ui/Modal";
+import Modal from "@/components/ui/Modal";
 import { useForm } from "react-hook-form";
-import { clearUser, setUser } from "~/redux/features/user/userSlice";
+import { clearUser, setUser } from "@/redux/features/user/userSlice";
 import {
     clearSpotify,
     isSpotifyTokenExpired,
     updateAccessToken,
-} from "~/redux/features/spotify/spotifySlice";
-import AppleAuthToggle from "~/components/apple/AppleAuthToggle";
-import { getExpirationTime } from "~/utils/time";
-import { refreshAccessToken } from "~/api/routes/spotify";
-import { useGetUserPostsQuery } from "~/redux/api/routes/post";
+} from "@/redux/features/spotify/spotifySlice";
+import AppleAuthToggle from "@/components/apple/AppleAuthToggle";
+import { getExpirationTime } from "@/utils/time";
+import { refreshAccessToken } from "@/api/routes/spotify";
+import { useGetUserPostsQuery } from "@/redux/api/routes/post";
 import { skipToken } from "@reduxjs/toolkit/query";
 
 export default function UserPage() {

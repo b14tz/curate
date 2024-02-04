@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { formatPostTime } from "../utils/time";
-import { createLike, deleteLike } from "~/api/routes/like";
+import { createLike, deleteLike } from "@/api/routes/like";
 import { useSelector } from "react-redux";
-import { RootState } from "~/redux/store";
+import { RootState } from "@/redux/store";
 import { useSnackbar } from "notistack";
 import { CircleUserRound, Heart, MessageCircle } from "lucide-react";
 

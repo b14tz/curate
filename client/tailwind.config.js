@@ -1,38 +1,77 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-    content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-    theme: {
-        colors: {
-            // light mode color palette
-            "t-primary": "#121318", // for: majority of text/icons, headers
-            "t-secondary": "#7F839D", // for: sub headings, descriptions
-            "t-tertiary": "#838FA1", // for: input field text
-            "t-interactive": "#4942E4", // for: hyperlinks
-            "t-error": "#FD6566", // for: error messages
-            "b-primary": "#F7F8F9", // for: fullscreen backgrounds
-            "b-secondary": "#FFFFFF", // for: modals, tooltips, popups, widgets
-            "b-tertiary": "#F8FAFB", // for: input fields, hrs
-            // dark mode color palette
-            "dt-primary": "#FFFFFF", // for: majority of text/icons, headers
-            "dt-secondary": "#6F6F78", // for: sub headings, descriptions
-            "dt-tertiary": "#8D8D99", // for: input field text
-            "dt-interactive": "#FFFFFF", // for: hyperlinks
-            "dt-error": "#FD6566", // for: error messages
-            "db-primary": "#131314", // for: backgrounds
-            "db-secondary": "#27272C", // for: modals, tooltips, popups, widgets
-            "db-tertiary": "#40404A", // for: input fields, hrs
-            // error
-            error: "#E24444",
-            // other colors
-            black: "#1E1E1E",
-            gray: "#27272C",
-            white: "#FFFFFF",
-            green: "#13CE66",
-            orange: "#F63F0A",
-            salmon: "#FE346E",
-            snow: "#FFF8FA",
-        },
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
+  prefix: "",
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
     },
-    plugins: [],
-    darkMode: "class",
-};
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}

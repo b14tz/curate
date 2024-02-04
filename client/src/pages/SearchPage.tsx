@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { searchPosts, searchUsers } from "~/api/routes/search";
-import StyledNavLink from "~/components/StyledNavLink";
+import { searchPosts, searchUsers } from "@/api/routes/search";
+import StyledNavLink from "@/components/StyledNavLink";
 
 export default function SearchPage({ postsSearch = false }) {
     const [users, setUsers] = useState<User[]>([]);

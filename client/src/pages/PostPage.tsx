@@ -4,16 +4,16 @@ import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { createLike, deleteLike } from "~/api/routes/like";
-import { getPost, savePost } from "~/api/routes/post";
-import CommentBox from "~/components/CommentBox";
-import StyledNavLink from "~/components/StyledNavLink";
-import AppleAuthButton from "~/components/apple/AppleAuthButton";
-import Modal from "~/components/ui/Modal";
-import { isAppleTokenExpired } from "~/redux/features/apple/appleSlice";
-import { isSpotifyTokenExpired } from "~/redux/features/spotify/spotifySlice";
-import { RootState } from "~/redux/store";
-import { formatPostTime } from "~/utils/time";
+import { createLike, deleteLike } from "@/api/routes/like";
+import { getPost, savePost } from "@/api/routes/post";
+import CommentBox from "@/components/CommentBox";
+import StyledNavLink from "@/components/StyledNavLink";
+import AppleAuthButton from "@/components/apple/AppleAuthButton";
+import Modal from "@/components/ui/Modal";
+import { isAppleTokenExpired } from "@/redux/features/apple/appleSlice";
+import { isSpotifyTokenExpired } from "@/redux/features/spotify/spotifySlice";
+import { RootState } from "@/redux/store";
+import { formatPostTime } from "@/utils/time";
 
 export default function PostPage({ showComments = false }) {
     const { id } = useParams();
