@@ -187,6 +187,9 @@ const getApplePlaylistDetails = async (playlistId: string) => {
             songs: songs,
             origin: "apple",
             author: { displayName: "Apple" },
+            total: playlist.relationships.tracks.meta
+                ? playlist.relationships.tracks.meta.total
+                : songs.length,
         };
     } catch (error) {
         console.error("Error getting apple playlist details: ", error);

@@ -21,7 +21,7 @@ export default function App() {
     return (
         <>
             <Router>
-                <div className="min-h-screen m-auto max-w-[1064px] flex flex-col justify-between md:p-14 p-10">
+                <div className="min-h-screen m-auto max-w-[920px] flex flex-col justify-between md:p-14 p-10">
                     <div>
                         <Navbar />
                         <div className="my-10">

@@ -4,6 +4,7 @@ import { createLike, deleteLike } from "~/api/routes/like";
 import { useSelector } from "react-redux";
 import { RootState } from "~/redux/store";
 import { useSnackbar } from "notistack";
+import { CircleUserRound, Heart, MessageCircle } from "lucide-react";
 
 export default function PostFeed({
     posts,
@@ -74,7 +75,7 @@ export default function PostFeed({
             );
         } else {
             return (
-                <div className="flex flex-col space-y-8">
+                <div className="flex flex-col space-y-6">
                     {posts.map((post) => (
                         <div
                             key={post.id}
@@ -84,7 +85,7 @@ export default function PostFeed({
                                 className="flex flex-row drop-shadow-xl"
                                 onClick={() => navigate(`/post/${post.id}`)}
                             >
-                                {Array.from({ length: 8 }).map((_, index) => {
+                                {Array.from({ length: 6 }).map((_, index) => {
                                     const song = post.songs[index];
                                     const zIndex = 1000 - index;
                                     const isOverlappingImage = index > 0;
@@ -120,63 +121,62 @@ export default function PostFeed({
                                 })}
                             </button>
 
-                            <div className="flex flex-col max-w-[380px]">
+                            <div className="flex flex-col max-w-[380px] self-start mt-2 space-y-1">
                                 <button
                                     className="w-fit"
                                     onClick={() => navigate(`/post/${post.id}`)}
                                 >
-                                    <p className="underline">{post.title}</p>
+                                    <p className="text-xl font-bold">
+                                        {post.title}
+                                    </p>
                                 </button>
-                                <div className="flex flex-row space-x-10">
+                                <div className="flex flex-row space-x-8 items-center">
                                     <button
+                                        className="flex space-x-1 items-center"
                                         onClick={() =>
                                             navigate(`/user/${post.author.id}`)
                                         }
                                     >
+                                        <CircleUserRound size={18} />
                                         <p>{post.author.displayName}</p>
                                     </button>
-                                    <p>
-                                        <i className="ri-music-2-fill"></i>
-                                        {post.total}
-                                    </p>
+                                    <p>{post.total} songs</p>
 
                                     {isPostLikedByUser(post) ? (
                                         <button
+                                            className="flex space-x-1 items-center"
                                             onClick={() =>
                                                 handleUnlike(post.id)
                                             }
                                         >
-                                            <p className="text-salmon">
-                                                <i className="ri-heart-fill"></i>
-                                                {post.likes.length}
-                                            </p>
+                                            <Heart
+                                                size={18}
+                                                color="salmon"
+                                                fill="salmon"
+                                            />
+                                            <p>{post.likes.length}</p>
                                         </button>
                                     ) : (
                                         <button
+                                            className="flex space-x-1 items-center"
                                             onClick={() => handleLike(post.id)}
                                         >
-                                            <p>
-                                                <i className="ri-heart-fill"></i>
-                                                {post.likes.length}
-                                            </p>
+                                            <Heart size={18} />
+                                            <p>{post.likes.length}</p>
                                         </button>
                                     )}
+                                    <div className="flex space-x-1 items-center">
+                                        <MessageCircle size={18} />
+                                        <p>{post.comments.length}</p>
+                                    </div>
                                     <p>
-                                        <i className="ri-chat-1-fill"></i>
-                                        {post.comments.length}
-                                    </p>
-                                    <p>
-                                        <i className="ri-download-fill"></i>
-                                        {post.saves}
+                                        {post.createdAt
+                                            ? formatPostTime(post.createdAt)
+                                            : "*"}
                                     </p>
                                 </div>
                                 <p className="text-ellipsis	whitespace-nowrap overflow-hidden">
-                                    {post.description ? post.description : "-"}
-                                </p>
-                                <p>
-                                    {post.createdAt
-                                        ? formatPostTime(post.createdAt)
-                                        : "*"}
+                                    {post.description ?? ""}
                                 </p>
                             </div>
                         </div>

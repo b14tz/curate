@@ -1,6 +1,5 @@
-// client/src/components/Navbar.tsx
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IconPlus, IconUser } from "@tabler/icons-react";
 import { useDispatch, useSelector } from "react-redux"; // Import useSelector hook
 
@@ -8,7 +7,7 @@ import StyledNavLink from "../StyledNavLink";
 import Modal from "../ui/Modal";
 import googleLogo from "~/assets/google.png";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import logo from "~/assets/panda.png";
+//import logo from "~/assets/panda.png";
 import { RootState } from "~/redux/store";
 import { clearUser } from "~/redux/features/user/userSlice";
 import PostModal from "../PostModal";
@@ -32,12 +31,8 @@ export default function Navbar() {
     };
 
     return (
-        <div className="flex justify-between items-center text-black dark:text-white">
-            <NavLink to="/" className="flex items-center space-x-2">
-                <img className="w-7 h-7 mt-1" src={logo} />
-                <h3 className="font-bold">Curate</h3>
-            </NavLink>
-            <div className="space-x-8 flex flex-row items-center">
+        <div className="flex justify-center text-black">
+            <div className="space-x-8 flex flex-row items-center rounded-full border pl-5 pr-3">
                 <StyledNavLink
                     to="/feed"
                     label="Home"
@@ -60,7 +55,7 @@ export default function Navbar() {
                     <>
                         <Popover placement="bottom-start">
                             <PopoverTrigger>
-                                <div className="pl-3 pr-4 py-2 rounded-lg border flex space-x-2 items-center">
+                                <div className="pl-3 pr-4 py-2 rounded-full border flex space-x-2 items-center box-border">
                                     <IconUser size={20} />
                                     <p>{user.displayName}</p>
                                 </div>
@@ -85,7 +80,7 @@ export default function Navbar() {
                         </Popover>
                         <button
                             onClick={() => setPostOpen(true)}
-                            className="bg-salmon text-white rounded-lg py-2 pl-3 pr-4 flex items-center space-x-2"
+                            className="bg-salmon text-white rounded-full py-2 pl-3 pr-4 flex items-center space-x-2 m-2"
                         >
                             <IconPlus size={20} />
                             <p>Post</p>

@@ -36,7 +36,7 @@ export default function SearchPage({ postsSearch = false }) {
                                     className="flex space-x-4"
                                 >
                                     <p> {post.title}</p>
-                                    <p>-</p>
+                                    <p>●</p>
                                     <p>{post.author.displayName}</p>
                                 </button>
                             </li>
@@ -64,23 +64,24 @@ export default function SearchPage({ postsSearch = false }) {
     };
 
     return (
-        <div className="space-y-4">
-            <h3>Search</h3>
-            <hr />
-
-            <div className="flex space-x-4">
-                <StyledNavLink
-                    to="/search/users"
-                    label="Users"
-                    pendingClasses="text-black"
-                    activeClasses="text-black border-b-2 border-salmon"
-                />
-                <StyledNavLink
-                    to="/search/posts"
-                    label="Posts"
-                    pendingClasses="text-black"
-                    activeClasses="text-black border-b-2 border-salmon"
-                />
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <h3>Search</h3>
+                <hr />
+                <div className="flex space-x-4">
+                    <StyledNavLink
+                        to="/search/users"
+                        label="Users"
+                        pendingClasses="text-black"
+                        activeClasses="text-black border-b-2 border-salmon"
+                    />
+                    <StyledNavLink
+                        to="/search/posts"
+                        label="Posts"
+                        pendingClasses="text-black"
+                        activeClasses="text-black border-b-2 border-salmon"
+                    />
+                </div>
             </div>
 
             <label

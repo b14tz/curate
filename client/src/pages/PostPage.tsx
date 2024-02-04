@@ -1,4 +1,5 @@
 import { IconCornerDownRight, IconUser } from "@tabler/icons-react";
+import { Heart, MessageCircle, RefreshCcwDot } from "lucide-react";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -192,10 +193,7 @@ export default function PostPage({ showComments = false }) {
                 <div className="flex flex-row justify-between items-end">
                     <div className="flex flex-row items-center space-x-10">
                         <button onClick={() => navigate(`/post/${id}`)}>
-                            <p>
-                                <i className="ri-music-2-fill"></i>
-                                {post.total}
-                            </p>
+                            <p>{post.total} songs</p>
                         </button>
                         {currentUser &&
                         post.likes.find(
@@ -203,33 +201,37 @@ export default function PostPage({ showComments = false }) {
                         ) ? (
                             <button onClick={() => handleUnlike()}>
                                 <p className="text-salmon">
-                                    <i className="ri-heart-fill"></i>
+                                    <Heart
+                                        size={18}
+                                        color="salmon"
+                                        fill="salmon"
+                                    />
                                     {post.likes.length}
                                 </p>
                             </button>
                         ) : (
-                            <button onClick={() => handleLike()}>
-                                <p>
-                                    <i className="ri-heart-fill"></i>
-                                    {post.likes.length}
-                                </p>
+                            <button
+                                className="flex space-x-1 items-center"
+                                onClick={() => handleLike()}
+                            >
+                                <Heart size={18} />
+                                <p>{post.likes.length}</p>
                             </button>
                         )}
 
                         <button
+                            className="flex space-x-1 items-center"
                             onClick={() => navigate(`/post/${id}/comments`)}
                         >
-                            <p>
-                                <i className="ri-chat-1-fill"></i>
-                                {post.comments.length}
-                            </p>
+                            <MessageCircle size={18} />
+                            <p>{post.comments.length}</p>
                         </button>
                         <button
                             className="flex space-x-2 items-center"
                             onClick={() => setOpenSave(true)}
                         >
-                            <div className="flex">
-                                <i className="ri-download-fill"></i>
+                            <div className="flex items-center space-x-1">
+                                <RefreshCcwDot size={18} />
                                 <p>{post.saves}</p>
                             </div>
                         </button>

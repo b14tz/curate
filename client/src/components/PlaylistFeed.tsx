@@ -8,7 +8,7 @@ export default function PlaylistFeed({
     emptyMessage: string;
 }) {
     const navigate = useNavigate();
-
+    console.log(playlists);
     const renderFeed = () => {
         if (Object.keys(playlists).length === 0) {
             return (
@@ -18,7 +18,7 @@ export default function PlaylistFeed({
             );
         } else {
             return (
-                <div className="flex flex-col space-y-8">
+                <div className="flex flex-col space-y-6">
                     {playlists.map((playlist) => (
                         <div
                             key={playlist.id}
@@ -32,7 +32,7 @@ export default function PlaylistFeed({
                                     )
                                 }
                             >
-                                {Array.from({ length: 8 }).map((_, index) => {
+                                {Array.from({ length: 6 }).map((_, index) => {
                                     const song = playlist.songs[index];
                                     const zIndex = 1000 - index;
                                     const isOverlappingImage = index > 0;
@@ -68,7 +68,7 @@ export default function PlaylistFeed({
                                 })}
                             </button>
 
-                            <div className="flex flex-col max-w-[380px]">
+                            <div className="flex flex-col max-w-[380px] self-start mt-2 space-y-1">
                                 <button
                                     className="w-fit"
                                     onClick={() =>
@@ -77,21 +77,17 @@ export default function PlaylistFeed({
                                         )
                                     }
                                 >
-                                    <p className="underline">
+                                    <p className="text-xl font-bold">
                                         {playlist.title}
                                     </p>
                                 </button>
-                                <div className="flex flex-row space-x-10">
+                                <div className="flex flex-row space-x-8">
                                     <p>{playlist.author.displayName}</p>
-                                    <p>
-                                        <i className="ri-music-2-fill"></i>
-                                        {playlist.total}
-                                    </p>
+                                    <p>{playlist.total} songs</p>
                                 </div>
                                 <p className="text-ellipsis	whitespace-nowrap overflow-hidden">
                                     {playlist.description}
                                 </p>
-                                <p>-</p>
                             </div>
                         </div>
                     ))}

@@ -48,23 +48,25 @@ export default function HomePage() {
     if (error) return <div>Error fetching posts</div>;
 
     return (
-        <div className="space-y-4">
-            <h3>Home</h3>
-            <hr />
-            <div className="flex space-x-4">
-                <StyledNavLink
-                    to="/feed"
-                    label="For You"
-                    pendingClasses="text-black"
-                    activeClasses="text-black border-b-2 border-salmon"
-                    end
-                />
-                <StyledNavLink
-                    to="/feed/following"
-                    label="Following"
-                    pendingClasses="text-black"
-                    activeClasses="text-black border-b-2 border-salmon"
-                />
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <h3>Home</h3>
+                <hr />
+                <div className="flex space-x-4">
+                    <StyledNavLink
+                        to="/feed"
+                        label="For You"
+                        pendingClasses="text-black"
+                        activeClasses="text-black border-b-2 border-salmon"
+                        end
+                    />
+                    <StyledNavLink
+                        to="/feed/following"
+                        label="Following"
+                        pendingClasses="text-black"
+                        activeClasses="text-black border-b-2 border-salmon"
+                    />
+                </div>
             </div>
             <PostFeed posts={postsToShow ?? []} emptyMessage={emptyMessage} />
         </div>
