@@ -163,6 +163,9 @@ const getApplePlaylistDetails = (playlistId) => __awaiter(void 0, void 0, void 0
             songs: songs,
             origin: "apple",
             author: { displayName: "Apple" },
+            total: playlist.relationships.tracks.meta
+                ? playlist.relationships.tracks.meta.total
+                : songs.length,
         };
     }
     catch (error) {

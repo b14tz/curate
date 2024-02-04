@@ -32,7 +32,7 @@ export default function Navbar() {
 
     return (
         <div className="flex justify-center text-black">
-            <div className="space-x-8 flex flex-row items-center rounded-full border pl-5 pr-3">
+            <div className="space-x-8 flex flex-row items-center rounded-full border py-1.5 pl-3 pr-1.5">
                 <StyledNavLink
                     to="/feed"
                     label="Home"
@@ -55,13 +55,13 @@ export default function Navbar() {
                     <>
                         <Popover placement="bottom-start">
                             <PopoverTrigger>
-                                <div className="pl-3 pr-4 py-2 rounded-full border flex space-x-2 items-center box-border">
+                                <div className="flex space-x-2 items-center border-b-2">
                                     <IconUser size={20} />
                                     <p>{user.displayName}</p>
                                 </div>
                             </PopoverTrigger>
                             <PopoverContent>
-                                <div className="flex flex-col items-start px-4 py-2 bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1">
+                                <div className="flex flex-col items-start bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1 p-2">
                                     <StyledNavLink
                                         to={`/user/${user?.id}`}
                                         label="Profile"
@@ -80,7 +80,7 @@ export default function Navbar() {
                         </Popover>
                         <button
                             onClick={() => setPostOpen(true)}
-                            className="bg-salmon text-white rounded-full py-2 pl-3 pr-4 flex items-center space-x-2 m-2"
+                            className="bg-salmon text-white rounded-full flex items-center space-x-2 pl-2 pr-4 py-1"
                         >
                             <IconPlus size={20} />
                             <p>Post</p>
@@ -88,7 +88,7 @@ export default function Navbar() {
                     </>
                 ) : (
                     <button
-                        className="px-4 py-2 rounded-lg border"
+                        className="rounded-full border px-2 py-1"
                         onClick={() => setAuthOpen(true)}
                     >
                         Login
@@ -98,7 +98,7 @@ export default function Navbar() {
 
             <Modal open={authOpen} handleClose={handleAuthClose} title="Login">
                 <button
-                    className="bg-b-tertiary text-black drop-shadow-md py-2 pl-3 pr-5 rounded-md flex flex-row justify-center items-center"
+                    className="bg-b-tertiary text-black drop-shadow-md rounded-md flex flex-row justify-center items-center p-2"
                     onClick={() => {
                         window.location.href = `${
                             import.meta.env.VITE_SERVER_URL
