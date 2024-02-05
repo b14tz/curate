@@ -37,11 +37,13 @@ import {
 } from "./ui/select";
 
 export default function PostModal({ children }: { children: JSX.Element }) {
-    const [playlistOptions, setPlaylistOptions] = useState([]);
-    const [selectedOption, setSelectedOption] = useState<SelectOption>({
-        value: "",
-        label: "",
-    });
+    const [playlistOptions, setPlaylistOptions] = useState<
+        {
+            label: string;
+            value: any;
+        }[]
+    >([]);
+    const [selectedOption, setSelectedOption] = useState<string>("");
     const [selectedRadio, setSelectedRadio] = useState("");
 
     const dispatch = useDispatch();
@@ -62,34 +64,19 @@ export default function PostModal({ children }: { children: JSX.Element }) {
     const handleClose = () => {
         setValue("title", "");
         setValue("description", "");
-        setSelectedOption({ value: "", label: "" });
+        setSelectedOption("");
     };
 
     const handleSelectOption = (val: string) => {
-        console.log("new selected option: ", val);
-        // setSelectedOption(val);
-        // setValue("title", val.value.name);
-        // setValue("description", val.value.description);
+        setSelectedOption(val);
+        setValue("title", playlistOptions[+val].value.name);
+        setValue("description", playlistOptions[+val].value.description);
     };
 
     const handleClearOption = () => {
-        setSelectedOption({ value: "", label: "" });
+        setSelectedOption("");
         setValue("title", "");
         setValue("description", "");
-    };
-
-    const handlePost = async (data: PostForm) => {
-        if (user && selectedOption) {
-            await createPost({
-                title: data.title,
-                description: data.description,
-                origin: selectedRadio,
-                originId: selectedOption.value.id,
-                authorId: user.id,
-            });
-        }
-        handleClose();
-        location.reload();
     };
 
     async function populateApplePlaylists() {
@@ -121,14 +108,15 @@ export default function PostModal({ children }: { children: JSX.Element }) {
         }
     }
 
-    const renderPlaylistOptions = playlistOptions.map((option: any) => {
-        console.log(option);
-        return (
-            <SelectItem key={option.value.id} value={option.value.id}>
-                {option.label}
-            </SelectItem>
-        );
-    });
+    const renderPlaylistOptions = playlistOptions.map(
+        (option: any, index: number) => {
+            return (
+                <SelectItem key={index} value={index.toString()}>
+                    {option.label}
+                </SelectItem>
+            );
+        }
+    );
 
     const handleAppleSelect = async () => {
         if (selectedRadio != "apple") {
@@ -155,6 +143,21 @@ export default function PostModal({ children }: { children: JSX.Element }) {
                 })
             );
         }
+    };
+
+    const handlePost = async (data: PostForm) => {
+        console.log("hi");
+        if (user && selectedOption) {
+            await createPost({
+                title: data.title,
+                description: data.description,
+                origin: selectedRadio,
+                originId: playlistOptions[+selectedOption].value.id,
+                authorId: user.id,
+            });
+        }
+        handleClose();
+        location.reload();
     };
 
     useEffect(() => {
@@ -252,7 +255,7 @@ export default function PostModal({ children }: { children: JSX.Element }) {
 
                             <Select
                                 onValueChange={handleSelectOption}
-                                value={selectedOption.value}
+                                value={selectedOption}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Origin Playlist" />
@@ -284,11 +287,11 @@ export default function PostModal({ children }: { children: JSX.Element }) {
                                 placeholder="Description"
                                 {...register("description", {})}
                             />
+                            <DialogFooter>
+                                <Button type="submit">Save Changes</Button>
+                            </DialogFooter>
                         </div>
                     </form>
-                    <DialogFooter>
-                        <Button type="submit">Save Changes</Button>
-                    </DialogFooter>
                 </DialogContent>
             </Dialog>
         </>
