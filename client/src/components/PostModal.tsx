@@ -38,7 +38,10 @@ import {
 
 export default function PostModal({ children }: { children: JSX.Element }) {
     const [playlistOptions, setPlaylistOptions] = useState([]);
-    const [selectedOption, setSelectedOption] = useState<any>(null);
+    const [selectedOption, setSelectedOption] = useState<SelectOption>({
+        value: "",
+        label: "",
+    });
     const [selectedRadio, setSelectedRadio] = useState("");
 
     const dispatch = useDispatch();
@@ -59,17 +62,18 @@ export default function PostModal({ children }: { children: JSX.Element }) {
     const handleClose = () => {
         setValue("title", "");
         setValue("description", "");
-        setSelectedOption(null);
+        setSelectedOption({ value: "", label: "" });
     };
 
-    const handleSelectOption = (val: any) => {
-        setSelectedOption(val);
-        setValue("title", val.value.name);
-        setValue("description", val.value.description);
+    const handleSelectOption = (val: string) => {
+        console.log("new selected option: ", val);
+        // setSelectedOption(val);
+        // setValue("title", val.value.name);
+        // setValue("description", val.value.description);
     };
 
     const handleClearOption = () => {
-        setSelectedOption(null);
+        setSelectedOption({ value: "", label: "" });
         setValue("title", "");
         setValue("description", "");
     };
@@ -120,7 +124,7 @@ export default function PostModal({ children }: { children: JSX.Element }) {
     const renderPlaylistOptions = playlistOptions.map((option: any) => {
         console.log(option);
         return (
-            <SelectItem key={option.value.id} value={option}>
+            <SelectItem key={option.value.id} value={option.value.id}>
                 {option.label}
             </SelectItem>
         );
@@ -248,7 +252,7 @@ export default function PostModal({ children }: { children: JSX.Element }) {
 
                             <Select
                                 onValueChange={handleSelectOption}
-                                value={selectedOption}
+                                value={selectedOption.value}
                             >
                                 <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Origin Playlist" />

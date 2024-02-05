@@ -4,6 +4,7 @@ import { getAppleDeveloperToken } from "@/api/routes/apple";
 import { clearApple, setApple } from "@/redux/features/apple/appleSlice";
 import { RootState } from "@/redux/store";
 import { getExpirationTime } from "@/utils/time";
+import { Button } from "../ui/button";
 
 export default function AppleAuthToggle() {
     const [appleTokenExpirationTime, setAppleTokenExpirationTime] = useState(
@@ -59,13 +60,21 @@ export default function AppleAuthToggle() {
             {appleToken.musicUserToken &&
             appleToken.expirationTime &&
             appleTokenExpirationTime > now ? (
-                <button className="underline" onClick={unauthorize}>
+                <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={unauthorize}
+                >
                     Disconnect Apple Music Account
-                </button>
+                </Button>
             ) : (
-                <button className="underline" onClick={authorize}>
+                <Button
+                    variant="secondary"
+                    className="w-full"
+                    onClick={authorize}
+                >
                     Connect Apple Music Account
-                </button>
+                </Button>
             )}
         </div>
     );

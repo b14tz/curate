@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { createFollow, deleteFollow } from "@/api/routes/follow";
 import { RootState } from "@/redux/store";
+import SettingsModal from "../SettingsModal";
+import { Button } from "../ui/button";
 
 export default function Header({
     user,
     setUser,
     isCurrentUser,
-    setSettingsOpen,
 }: {
     user: User;
     setUser: (val: User) => void;
     isCurrentUser: boolean;
-    setSettingsOpen: (val: boolean) => void;
 }) {
     const currentUser = useSelector(
         (state: RootState) => state.userReducer.user
@@ -78,28 +78,17 @@ export default function Header({
                     <h3>{user?.displayName}</h3>
                     <div className="flex flex-row">
                         {isCurrentUser ? (
-                            <>
-                                <button
-                                    className="bg-salmon rounded shadow px-4 py-1 bg-primary"
-                                    onClick={() => setSettingsOpen(true)}
-                                >
-                                    Settings
-                                </button>
-                            </>
+                            <SettingsModal user={user}>
+                                <Button>Settings</Button>
+                            </SettingsModal>
                         ) : isFollowing ? (
-                            <button
-                                className="bg-salmon rounded shadow px-4 py-1 bg-primary"
-                                onClick={() => handleUnfollow()}
-                            >
+                            <Button onClick={() => handleUnfollow()}>
                                 Unfollow
-                            </button>
+                            </Button>
                         ) : (
-                            <button
-                                className="bg-salmon rounded shadow px-4 py-1 bg-primary"
-                                onClick={() => handleFollow()}
-                            >
+                            <Button onClick={() => handleFollow()}>
                                 Follow
-                            </button>
+                            </Button>
                         )}
                     </div>
                 </div>
