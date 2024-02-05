@@ -8,11 +8,9 @@ import { Button } from "../ui/button";
 
 export default function Header({
     user,
-    setUser,
     isCurrentUser,
 }: {
     user: User;
-    setUser: (val: User) => void;
     isCurrentUser: boolean;
 }) {
     const currentUser = useSelector(
@@ -40,12 +38,12 @@ export default function Header({
                 followingId: currentUser.id,
             });
 
-            const newFollowers = [
-                ...(user.followers || []),
-                { followerId: user.id, followingId: currentUser.id },
-            ];
+            // const newFollowers = [
+            //     ...(user.followers || []),
+            //     { followerId: user.id, followingId: currentUser.id },
+            // ];
 
-            setUser({ ...user, followers: newFollowers });
+            // setUser({ ...user, followers: newFollowers });
             setIsFollowing(true);
         } else {
             enqueueSnackbar("You must be logged in to follow users.", {
@@ -61,11 +59,11 @@ export default function Header({
                 followingId: currentUser.id,
             });
 
-            const newFollowers = user.followers?.filter((follower) => {
-                return currentUser && follower.followingId !== currentUser.id;
-            });
+            // const newFollowers = user.followers?.filter((follower) => {
+            //     return currentUser && follower.followingId !== currentUser.id;
+            // });
 
-            setUser({ ...user, followers: newFollowers });
+            //setUser({ ...user, followers: newFollowers });
             setIsFollowing(false); // Set follow status to false
         }
     };

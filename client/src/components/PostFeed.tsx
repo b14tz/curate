@@ -85,7 +85,7 @@ export default function PostFeed({
                                 className="flex flex-row drop-shadow-xl"
                                 onClick={() => navigate(`/post/${post.id}`)}
                             >
-                                {Array.from({ length: 6 }).map((_, index) => {
+                                {Array.from({ length: 7 }).map((_, index) => {
                                     const song = post.songs[index];
                                     const zIndex = 1000 - index;
                                     const isOverlappingImage = index > 0;

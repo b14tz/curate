@@ -3,8 +3,7 @@ import Header from "@/components/user/Header";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { getUser } from "@/api/routes/user";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
     isSpotifyTokenExpired,
     updateAccessToken,
@@ -13,22 +12,11 @@ import { getExpirationTime } from "@/utils/time";
 import { refreshAccessToken } from "@/api/routes/spotify";
 import { useGetUserPostsQuery } from "@/redux/api/routes/post";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useGetUserQuery } from "@/redux/api/routes/user";
 
 export default function UserPage() {
     const { id } = useParams();
     const dispatch = useDispatch();
-
-    const [userData, setUserData] = useState<User>({
-        id: "",
-        token: "",
-        firstName: "",
-        lastName: "",
-        displayName: "",
-        email: "",
-        bio: "",
-        connectedToSpotify: false,
-        connectedToApple: false,
-    });
 
     const spotifyToken = useSelector(
         (state: RootState) => state.spotifyReducer
@@ -38,9 +26,15 @@ export default function UserPage() {
     );
 
     const {
+        data: user,
+        isLoading: isLoadingUser,
+        error: userError,
+    } = useGetUserQuery(id ?? skipToken);
+
+    const {
         data: posts,
-        isLoading,
-        error,
+        isLoading: isLoadingPosts,
+        error: postsError,
     } = useGetUserPostsQuery(id ?? skipToken);
 
     const isCurrentUser = id === currentUser?.id;
@@ -59,27 +53,17 @@ export default function UserPage() {
     };
 
     useEffect(() => {
-        async function populateUser() {
-            ensureValidSpotifyToken();
-            if (id && currentUser) {
-                const fetchedUser = await getUser(id);
-                setUserData(fetchedUser);
-            }
-        }
-        populateUser();
-    }, [id, currentUser]);
+        ensureValidSpotifyToken();
+    }, [id]);
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error fetching posts</div>;
+    if (isLoadingPosts || isLoadingUser) return <div>Loading...</div>;
+    if (postsError) return <div>Error fetching posts</div>;
+    if (userError || !user) return <div>Error fetching user</div>;
 
     return (
         <>
             <div className="space-y-8">
-                <Header
-                    user={userData}
-                    setUser={setUserData}
-                    isCurrentUser={isCurrentUser}
-                />
+                <Header user={user} isCurrentUser={isCurrentUser} />
                 <Feed
                     posts={posts ?? []}
                     emptyMessage={

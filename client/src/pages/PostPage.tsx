@@ -1,11 +1,11 @@
 import { IconCornerDownRight, IconUser } from "@tabler/icons-react";
 import { Heart, MessageCircle, RefreshCcwDot } from "lucide-react";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { createLike, deleteLike } from "@/api/routes/like";
-import { getPost, savePost } from "@/api/routes/post";
+import { savePost } from "@/api/routes/post";
 import CommentBox from "@/components/CommentBox";
 import StyledNavLink from "@/components/StyledNavLink";
 import AppleAuthButton from "@/components/apple/AppleAuthButton";
@@ -14,9 +14,13 @@ import { isAppleTokenExpired } from "@/redux/features/apple/appleSlice";
 import { isSpotifyTokenExpired } from "@/redux/features/spotify/spotifySlice";
 import { RootState } from "@/redux/store";
 import { formatPostTime } from "@/utils/time";
+import { useGetPostQuery } from "@/redux/api/routes/post";
 
 export default function PostPage({ showComments = false }) {
     const { id } = useParams();
+
+    if (!id) return <p>Error identifying post</p>;
+
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const [openSave, setOpenSave] = useState(false);
@@ -30,41 +34,21 @@ export default function PostPage({ showComments = false }) {
         (state: RootState) => state.spotifyReducer
     );
 
-    const [post, setPost] = useState<Post>({
-        id: "",
-        title: "",
-        description: "",
-        songs: [],
-        origin: "",
-        saves: 0,
-        createdAt: "",
-        next: "",
-        total: 0,
-        author: {
-            id: "",
-            firstName: "",
-            lastName: "",
-            email: "",
-            displayName: "",
-            bio: "",
-            connectedToSpotify: false,
-            connectedToApple: false,
-            token: "",
-        },
-        comments: [],
-        likes: [],
-    });
+    const { data: post, isLoading, isError } = useGetPostQuery(id);
+
+    if (isLoading) return <div>Loading...</div>;
+    if (isError || !post) return <div>Error fetching playlist</div>;
 
     const handleLike = async () => {
         if (currentUser) {
             await createLike(post.id, { userId: currentUser.id });
-            setPost({
-                ...post,
-                likes: [
-                    ...post.likes,
-                    { userId: currentUser.id, postId: post.id },
-                ],
-            });
+            // setPost({
+            //     ...post,
+            //     likes: [
+            //         ...post.likes,
+            //         { userId: currentUser.id, postId: post.id },
+            //     ],
+            // });
         } else {
             enqueueSnackbar("You must be logged in to like a post.", {
                 autoHideDuration: 2000,
@@ -73,14 +57,14 @@ export default function PostPage({ showComments = false }) {
     };
 
     const handleUnlike = async () => {
-        if (currentUser && post) {
+        if (currentUser) {
             await deleteLike(post.id, { userId: currentUser.id });
-            setPost({
-                ...post,
-                likes: post.likes.filter(
-                    (like) => like.userId !== currentUser.id
-                ),
-            });
+            // setPost({
+            //     ...post,
+            //     likes: post.likes.filter(
+            //         (like) => like.userId !== currentUser.id
+            //     ),
+            // });
         }
     };
 
@@ -97,7 +81,11 @@ export default function PostPage({ showComments = false }) {
         console.log({ postId, destination, destinationUserToken });
 
         try {
-            await savePost({ id: postId, destination, destinationUserToken });
+            await savePost({
+                id: postId,
+                destination,
+                destinationUserToken,
+            });
             setOpenSave(false);
         } catch (error) {
             console.error("Error saving post:", error);
@@ -105,83 +93,68 @@ export default function PostPage({ showComments = false }) {
     };
 
     const renderSongs = () => {
-        if (post) {
-            if (Object.keys(post?.songs).length === 0) {
-                return (
-                    <div className="h-[300px] flex justify-center items-center">
-                        <p>It looks like this playlist is empty.</p>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="flex flex-col space-y-2 mt-4">
-                        {post.songs.map((song) => (
-                            <div
-                                key={song.imageUrl + song.artist + song.title}
-                                className="flex flex-row space-x-4 items-center"
-                            >
-                                <img
-                                    key={"image" + song.imageUrl}
-                                    src={song.imageUrl}
-                                    className="w-12 h-12"
-                                />
-                                <div className="flex flex-col">
-                                    <p className="font-medium">{song.title}</p>
-                                    <p className="text-silver">{song.artist}</p>
-                                </div>
+        if (Object.keys(post?.songs).length === 0) {
+            return (
+                <div className="h-[300px] flex justify-center items-center">
+                    <p>It looks like this playlist is empty.</p>
+                </div>
+            );
+        } else {
+            return (
+                <div className="flex flex-col space-y-2 mt-4">
+                    {post.songs.map((song) => (
+                        <div
+                            key={song.imageUrl + song.artist + song.title}
+                            className="flex flex-row space-x-4 items-center"
+                        >
+                            <img
+                                key={"image" + song.imageUrl}
+                                src={song.imageUrl}
+                                className="w-12 h-12"
+                            />
+                            <div className="flex flex-col">
+                                <p className="font-medium">{song.title}</p>
+                                <p className="text-silver">{song.artist}</p>
                             </div>
-                        ))}
-                    </div>
-                );
-            }
+                        </div>
+                    ))}
+                </div>
+            );
         }
     };
 
     const renderComments = () => {
-        if (post) {
-            if (Object.keys(post?.comments).length === 0) {
-                return (
-                    <div className="h-[100px] flex justify-center items-center">
-                        <p>
-                            There's no comments on this post yet. You could be
-                            the first!
-                        </p>
-                    </div>
-                );
-            } else {
-                return (
-                    <div className="flex flex-col space-y-4">
-                        {post?.comments.map((comment) => (
-                            <div
-                                key={comment.author + comment.content}
-                                className="flex flex-col"
-                            >
-                                <div className="flex flex-row w-full justify-between">
-                                    <p>{comment.author.displayName}</p>
-                                    <p>{formatPostTime(comment.createdAt)}</p>
-                                </div>
-                                <div className="flex items-center">
-                                    <IconCornerDownRight />
-                                    <p>{comment.content}</p>
-                                </div>
+        if (Object.keys(post?.comments).length === 0) {
+            return (
+                <div className="h-[100px] flex justify-center items-center">
+                    <p>
+                        There's no comments on this post yet. You could be the
+                        first!
+                    </p>
+                </div>
+            );
+        } else {
+            return (
+                <div className="flex flex-col space-y-4">
+                    {post?.comments.map((comment) => (
+                        <div
+                            key={comment.author + comment.content}
+                            className="flex flex-col"
+                        >
+                            <div className="flex flex-row w-full justify-between">
+                                <p>{comment.author.displayName}</p>
+                                <p>{formatPostTime(comment.createdAt)}</p>
                             </div>
-                        ))}
-                    </div>
-                );
-            }
+                            <div className="flex items-center">
+                                <IconCornerDownRight />
+                                <p>{comment.content}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            );
         }
     };
-
-    useEffect(() => {
-        async function populatePost() {
-            if (id) {
-                const data = await getPost(id);
-                setPost(data);
-            }
-        }
-
-        populatePost();
-    }, [id]);
 
     return (
         <>
@@ -271,7 +244,10 @@ export default function PostPage({ showComments = false }) {
                         <>{renderSongs()}</>
                     ) : (
                         <div className="flex flex-col space-y-2">
-                            <CommentBox post={post} setPost={setPost} />
+                            <CommentBox
+                                post={post}
+                                setPost={() => console.log("fix this later")}
+                            />
                             <div>{renderComments()}</div>
                         </div>
                     )}

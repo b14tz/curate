@@ -10,7 +10,6 @@ import authRoutes from "./routes/auth.routes";
 import followRoutes from "./routes/follow.routes";
 import commentRoutes from "./routes/comment.routes";
 import likeRoutes from "./routes/like.routes";
-import { getAppleDeveloperToken } from "./controllers/apple.controller";
 import appleRoutes from "./routes/apple.routes";
 import searchRoutes from "./routes/search.routes";
 
@@ -22,6 +21,7 @@ const corsOptions = {
         "http://localhost:5173",
         "https://cureight.vercel.app",
         "https://curate-api.vercel.app",
+        "https://jookbox.co",
     ],
     credentials: true,
 };

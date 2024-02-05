@@ -32,7 +32,7 @@ export default function PlaylistFeed({
                                     )
                                 }
                             >
-                                {Array.from({ length: 6 }).map((_, index) => {
+                                {Array.from({ length: 7 }).map((_, index) => {
                                     const song = playlist.songs[index];
                                     const zIndex = 1000 - index;
                                     const isOverlappingImage = index > 0;

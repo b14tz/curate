@@ -27,61 +27,73 @@ export default function Navbar() {
 
     return (
         <div className="flex justify-center">
-            <div className="space-x-1 flex flex-row items-center rounded-lg border py-2 px-2">
-                <Button onClick={() => navigate("/")} variant="ghost">
-                    Home
+            <div className="justify-between flex flex-row items-center py-2 w-full">
+                <Button
+                    onClick={() => navigate("/")}
+                    className="logo-text text-4xl w-[100px]"
+                    variant="ghost"
+                >
+                    jookbox
                 </Button>
-                <Button onClick={() => navigate("/discover")} variant="ghost">
-                    Discover
-                </Button>
-                <Button onClick={() => navigate("/search")} variant="ghost">
-                    Search
-                </Button>
-                {user ? (
-                    <>
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger>
-                                        {user.displayName}
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent>
-                                        <div className="flex flex-col items-start bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1 p-2 min-w-[90px]">
-                                            <Button
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/user/${user?.id}`
-                                                    )
-                                                }
-                                                variant={"ghost"}
-                                            >
-                                                Profile
-                                            </Button>
-                                            <Button
-                                                onClick={() => {
-                                                    logoutWithRedirect();
-                                                }}
-                                                variant={"ghost"}
-                                            >
-                                                Logout
-                                            </Button>
-                                        </div>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                        <PostModal>
-                            <Button>
-                                <IconPlus className="ml-[-4px] mr-2 h-4 w-4" />{" "}
-                                Post
-                            </Button>
-                        </PostModal>
-                    </>
-                ) : (
-                    <AuthModal>
-                        <Button variant={"ghost"}>Login</Button>
-                    </AuthModal>
-                )}
+                <div className="flex flex-row items-center space-x-1">
+                    <Button onClick={() => navigate("/")} variant="ghost">
+                        Home
+                    </Button>
+                    <Button
+                        onClick={() => navigate("/discover")}
+                        variant="ghost"
+                    >
+                        Discover
+                    </Button>
+                    <Button onClick={() => navigate("/search")} variant="ghost">
+                        Search
+                    </Button>
+                    {user ? (
+                        <>
+                            <NavigationMenu>
+                                <NavigationMenuList>
+                                    <NavigationMenuItem>
+                                        <NavigationMenuTrigger>
+                                            {user.displayName}
+                                        </NavigationMenuTrigger>
+                                        <NavigationMenuContent>
+                                            <div className="flex flex-col items-start bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1 p-2 min-w-[90px]">
+                                                <Button
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/user/${user?.id}`
+                                                        )
+                                                    }
+                                                    variant={"ghost"}
+                                                >
+                                                    Profile
+                                                </Button>
+                                                <Button
+                                                    onClick={() => {
+                                                        logoutWithRedirect();
+                                                    }}
+                                                    variant={"ghost"}
+                                                >
+                                                    Logout
+                                                </Button>
+                                            </div>
+                                        </NavigationMenuContent>
+                                    </NavigationMenuItem>
+                                </NavigationMenuList>
+                            </NavigationMenu>
+                            <PostModal>
+                                <Button>
+                                    <IconPlus className="ml-[-4px] mr-2 h-4 w-4" />{" "}
+                                    Post
+                                </Button>
+                            </PostModal>
+                        </>
+                    ) : (
+                        <AuthModal>
+                            <Button variant={"ghost"}>Login</Button>
+                        </AuthModal>
+                    )}
+                </div>
             </div>
         </div>
     );
