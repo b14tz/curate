@@ -21,7 +21,7 @@ export default function Modal({
                     onClick={(e) => {
                         e.stopPropagation();
                     }}
-                    className="flex flex-col bg-b-secondary py-4 px-6 mt-10 rounded-lg drop-shadow-md max-w-[700px] h-fit"
+                    className="flex flex-col bg-popover py-4 px-6 mt-10 rounded-lg drop-shadow-md max-w-[700px] h-fit"
                 >
                     <div className="flex flex-row justify-between items-center space-x-6 mb-4">
                         <h3>{title}</h3>

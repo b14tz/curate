@@ -130,7 +130,7 @@ export default function PostFeed({
                                         {post.title}
                                     </p>
                                 </button>
-                                <div className="flex flex-row space-x-8 items-center">
+                                <div className="flex flex-row space-x-8 items-center text-silver">
                                     <button
                                         className="flex space-x-1 items-center"
                                         onClick={() =>
@@ -175,7 +175,7 @@ export default function PostFeed({
                                             : "*"}
                                     </p>
                                 </div>
-                                <p className="text-ellipsis	whitespace-nowrap overflow-hidden">
+                                <p className="text-ellipsis	whitespace-nowrap overflow-hidden text-silver">
                                     {post.description ?? ""}
                                 </p>
                             </div>

@@ -99,3 +99,8 @@ interface ResponseError extends Error {
         data: string;
     };
 }
+
+interface SelectOption {
+    label: string;
+    value: any;
+}

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { createComment } from "@/api/routes/comment";
 import { RootState } from "@/redux/store";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 export default function CommentBox({
     post,
@@ -34,19 +36,15 @@ export default function CommentBox({
 
     return (
         <div className="mt-2 space-y-4 flex flex-col">
-            <textarea
-                className="w-full p-2 text-sm border rounded resize-none shadow-inner bg-b-tertiary"
+            <Textarea
                 rows={5}
                 placeholder="Add a comment..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-            ></textarea>
-            <button
-                className="py-2 px-4 rounded bg-salmon w-fit self-end "
-                onClick={handleCreateComment}
-            >
+            ></Textarea>
+            <Button className="self-end " onClick={handleCreateComment}>
                 Comment
-            </button>
+            </Button>
         </div>
     );
 }

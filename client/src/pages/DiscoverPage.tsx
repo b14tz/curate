@@ -3,6 +3,7 @@ import PlaylistFeed from "@/components/PlaylistFeed";
 import StyledNavLink from "@/components/StyledNavLink";
 import { useGetTopApplePlaylistsQuery } from "@/redux/api/routes/apple";
 import { useGetTopSpotifyPlaylistsQuery } from "@/redux/api/routes/spotify";
+import { Separator } from "@/components/ui/separator";
 
 export default function DiscoverPage() {
     const location = useLocation();
@@ -42,19 +43,19 @@ export default function DiscoverPage() {
         <div className="space-y-6">
             <div className="space-y-2">
                 <h3>Discover</h3>
-                <hr />
+                <Separator />
                 <div className="flex space-x-4">
                     <StyledNavLink
                         to="/discover/spotify"
                         label="Top Spotify Playlists"
-                        pendingClasses="text-black"
-                        activeClasses="text-black border-b-2 border-salmon"
+                        pendingClasses=""
+                        activeClasses="border-b-2 border-primary"
                     />
                     <StyledNavLink
                         to="/discover/apple"
                         label="Top Apple Music Playlists"
-                        pendingClasses="text-black"
-                        activeClasses="text-black border-b-2 border-salmon"
+                        pendingClasses=""
+                        activeClasses="border-b-2 border-primary"
                     />
                 </div>
             </div>

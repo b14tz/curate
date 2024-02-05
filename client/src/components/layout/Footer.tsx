@@ -1,4 +1,5 @@
 import "remixicon/fonts/remixicon.css";
+import { Separator } from "../ui/separator";
 
 export default function Footer() {
     function renderCurrentYear() {
@@ -8,7 +9,7 @@ export default function Footer() {
 
     return (
         <div className="">
-            <hr />
+            <Separator />
             <div className="flex flex-row">
                 <p>
                     <i className="ri-copyright-line"></i> Curate{" "}

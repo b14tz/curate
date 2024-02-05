@@ -81,11 +81,11 @@ export default function PlaylistFeed({
                                         {playlist.title}
                                     </p>
                                 </button>
-                                <div className="flex flex-row space-x-8">
+                                <div className="flex flex-row space-x-8 text-silver">
                                     <p>{playlist.author.displayName}</p>
                                     <p>{playlist.total} songs</p>
                                 </div>
-                                <p className="text-ellipsis	whitespace-nowrap overflow-hidden">
+                                <p className="text-ellipsis	whitespace-nowrap overflow-hidden text-silver">
                                     {playlist.description}
                                 </p>
                             </div>

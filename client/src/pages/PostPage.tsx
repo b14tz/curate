@@ -127,7 +127,7 @@ export default function PostPage({ showComments = false }) {
                                 />
                                 <div className="flex flex-col">
                                     <p className="font-medium">{song.title}</p>
-                                    <p>{song.artist}</p>
+                                    <p className="text-silver">{song.artist}</p>
                                 </div>
                             </div>
                         ))}
@@ -199,13 +199,16 @@ export default function PostPage({ showComments = false }) {
                         post.likes.find(
                             (like) => like.userId == currentUser.id
                         ) ? (
-                            <button onClick={() => handleUnlike()}>
+                            <button
+                                className="flex space-x-1 items-center"
+                                onClick={() => handleUnlike()}
+                            >
+                                <Heart
+                                    size={18}
+                                    color="primary"
+                                    fill="salmon"
+                                />
                                 <p className="text-salmon">
-                                    <Heart
-                                        size={18}
-                                        color="salmon"
-                                        fill="salmon"
-                                    />
                                     {post.likes.length}
                                 </p>
                             </button>
@@ -251,15 +254,15 @@ export default function PostPage({ showComments = false }) {
                     <StyledNavLink
                         to={`/post/${id}`}
                         label="Songs"
-                        pendingClasses="text-black"
-                        activeClasses="text-black border-b-2 border-salmon"
+                        pendingClasses=""
+                        activeClasses="border-b-2 border-primary"
                         end
                     />
                     <StyledNavLink
                         to={`/post/${id}/comments`}
                         label="Comments"
-                        pendingClasses="text-black"
-                        activeClasses="text-black border-b-2 border-salmon"
+                        pendingClasses=""
+                        activeClasses="border-b-2 border-primary"
                     />
                 </div>
 

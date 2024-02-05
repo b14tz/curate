@@ -9,6 +9,7 @@ import {
 import { RootState } from "@/redux/store";
 import PostFeed from "../components/PostFeed";
 import StyledNavLink from "@/components/StyledNavLink";
+import { Separator } from "@/components/ui/separator";
 
 export default function HomePage() {
     const location = useLocation();
@@ -51,20 +52,20 @@ export default function HomePage() {
         <div className="space-y-6">
             <div className="space-y-2">
                 <h3>Home</h3>
-                <hr />
+                <Separator />
                 <div className="flex space-x-4">
                     <StyledNavLink
                         to="/feed"
                         label="For You"
-                        pendingClasses="text-black"
-                        activeClasses="text-black border-b-2 border-salmon"
+                        pendingClasses=""
+                        activeClasses="border-b-2 border-primary"
                         end
                     />
                     <StyledNavLink
                         to="/feed/following"
                         label="Following"
-                        pendingClasses="text-black"
-                        activeClasses="text-black border-b-2 border-salmon"
+                        pendingClasses=""
+                        activeClasses="border-b-2 border-primary"
                     />
                 </div>
             </div>

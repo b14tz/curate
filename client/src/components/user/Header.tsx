@@ -71,16 +71,16 @@ export default function Header({
     };
 
     return (
-        <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 bg-white items-center justify-between">
+        <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 border border-border items-center justify-between">
             <div className="flex flex-row items-center space-x-4">
-                <div className="w-20 h-20 rounded-full bg-salmon"></div>
+                <div className="w-20 h-20 rounded-full bg-primary"></div>
                 <div className="flex flex-col space-y-2">
                     <h3>{user?.displayName}</h3>
                     <div className="flex flex-row">
                         {isCurrentUser ? (
                             <>
                                 <button
-                                    className="bg-salmon rounded shadow px-4 py-1 text-white"
+                                    className="bg-salmon rounded shadow px-4 py-1 bg-primary"
                                     onClick={() => setSettingsOpen(true)}
                                 >
                                     Settings
@@ -88,14 +88,14 @@ export default function Header({
                             </>
                         ) : isFollowing ? (
                             <button
-                                className="bg-salmon rounded shadow px-4 py-1 text-white"
+                                className="bg-salmon rounded shadow px-4 py-1 bg-primary"
                                 onClick={() => handleUnfollow()}
                             >
                                 Unfollow
                             </button>
                         ) : (
                             <button
-                                className="bg-salmon rounded shadow px-4 py-1 text-white"
+                                className="bg-salmon rounded shadow px-4 py-1 bg-primary"
                                 onClick={() => handleFollow()}
                             >
                                 Follow

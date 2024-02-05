@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IconPlus, IconUser } from "@tabler/icons-react";
-import { useDispatch, useSelector } from "react-redux"; // Import useSelector hook
+import { IconPlus } from "@tabler/icons-react";
+import { useDispatch, useSelector } from "react-redux";
 
-import StyledNavLink from "../StyledNavLink";
 import Modal from "../ui/Modal";
 import googleLogo from "@/assets/google.png";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-//import logo from "@/assets/panda.png";
 import { RootState } from "@/redux/store";
 import { clearUser } from "@/redux/features/user/userSlice";
 import PostModal from "../PostModal";
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuItem,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+} from "../ui/navigation-menu";
+import { Button } from "../ui/button";
 
 export default function Navbar() {
-    const [postOpen, setPostOpen] = useState(false);
     const [authOpen, setAuthOpen] = useState(false);
 
     const user = useSelector((state: RootState) => state.userReducer.user);
@@ -31,74 +35,85 @@ export default function Navbar() {
     };
 
     return (
-        <div className="flex justify-center text-black">
-            <div className="space-x-8 flex flex-row items-center rounded-full border py-1.5 pl-3 pr-1.5">
-                <StyledNavLink
+        <div className="flex justify-center">
+            <div className="space-x-1 flex flex-row items-center rounded-lg border py-1.5 px-1.5">
+                {/* <StyledNavLink
                     to="/feed"
                     label="Home"
-                    pendingClasses="text-black"
-                    activeClasses="text-salmon"
+                    pendingClasses=""
+                    activeClasses="text-primary"
                 />
                 <StyledNavLink
                     to="/discover"
                     label="Discover"
-                    pendingClasses="text-black"
-                    activeClasses="text-salmon"
+                    pendingClasses=""
+                    activeClasses="text-primary"
                 />
                 <StyledNavLink
                     to="/search"
                     label="Search"
-                    pendingClasses="text-black"
-                    activeClasses="text-salmon"
-                />
+                    pendingClasses=""
+                    activeClasses="text-primary"
+                /> */}
+                <Button onClick={() => navigate("/")} variant="ghost">
+                    Home
+                </Button>
+                <Button onClick={() => navigate("/discover")} variant="ghost">
+                    Discover
+                </Button>
+                <Button onClick={() => navigate("/search")} variant="ghost">
+                    Search
+                </Button>
                 {user ? (
                     <>
-                        <Popover placement="bottom-start">
-                            <PopoverTrigger>
-                                <div className="flex space-x-2 items-center border-b-2">
-                                    <IconUser size={20} />
-                                    <p>{user.displayName}</p>
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                                <div className="flex flex-col items-start bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1 p-2">
-                                    <StyledNavLink
-                                        to={`/user/${user?.id}`}
-                                        label="Profile"
-                                        pendingClasses="text-black"
-                                        activeClasses="text-salmon"
-                                    />
-                                    <button
-                                        onClick={() => {
-                                            logoutWithRedirect();
-                                        }}
-                                    >
-                                        Logout
-                                    </button>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                        <button
-                            onClick={() => setPostOpen(true)}
-                            className="rounded-full flex items-center space-x-2 pl-2 pr-4 py-1"
-                        >
-                            <IconPlus size={20} />
-                            <p>Post</p>
-                        </button>
+                        <NavigationMenu>
+                            <NavigationMenuList>
+                                <NavigationMenuItem>
+                                    <NavigationMenuTrigger>
+                                        {user.displayName}
+                                    </NavigationMenuTrigger>
+                                    <NavigationMenuContent>
+                                        <div className="flex flex-col items-start bg-b-secondary drop-shadow dark:bg-db-secondary rounded-md space-y-1 p-2 min-w-[90px]">
+                                            <Button
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/user/${user?.id}`
+                                                    )
+                                                }
+                                                variant={"ghost"}
+                                            >
+                                                Profile
+                                            </Button>
+                                            <Button
+                                                onClick={() => {
+                                                    logoutWithRedirect();
+                                                }}
+                                                variant={"ghost"}
+                                            >
+                                                Logout
+                                            </Button>
+                                        </div>
+                                    </NavigationMenuContent>
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </NavigationMenu>
+                        <PostModal>
+                            <Button>
+                                <IconPlus className="ml-[-4px] mr-2 h-4 w-4" />{" "}
+                                Post
+                            </Button>
+                        </PostModal>
                     </>
                 ) : (
-                    <button
-                        className="rounded-full border px-2 py-1"
-                        onClick={() => setAuthOpen(true)}
-                    >
+                    <Button onClick={() => setAuthOpen(true)} variant={"ghost"}>
                         Login
-                    </button>
+                    </Button>
                 )}
             </div>
 
             <Modal open={authOpen} handleClose={handleAuthClose} title="Login">
                 <button
-                    className="bg-b-tertiary text-black drop-shadow-md rounded-md flex flex-row justify-center items-center p-2"
+                    className="bg-b-tertiary drop-shadow-md rounded-md flex flex-row justify-center items-center p-2"
                     onClick={() => {
                         window.location.href = `${
                             import.meta.env.VITE_SERVER_URL
@@ -110,7 +125,7 @@ export default function Navbar() {
                 </button>
             </Modal>
 
-            <PostModal open={postOpen} setOpen={setPostOpen} />
+            {/* <PostModal open={postOpen} setOpen={setPostOpen} /> */}
         </div>
     );
 }
