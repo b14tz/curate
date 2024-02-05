@@ -30,7 +30,7 @@ export default function Navbar() {
             <div className="justify-between flex flex-row items-center py-2 w-full">
                 <Button
                     onClick={() => navigate("/")}
-                    className="logo-text text-4xl w-[100px]"
+                    className="logo-text text-4xl w-[110px]"
                     variant="ghost"
                 >
                     jookbox
