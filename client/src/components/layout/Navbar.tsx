@@ -27,7 +27,7 @@ export default function Navbar() {
 
     return (
         <div className="flex justify-center">
-            <div className="space-x-1 flex flex-row items-center rounded-lg border py-1.5 px-1.5">
+            <div className="space-x-1 flex flex-row items-center rounded-lg border py-2 px-2">
                 <Button onClick={() => navigate("/")} variant="ghost">
                     Home
                 </Button>
