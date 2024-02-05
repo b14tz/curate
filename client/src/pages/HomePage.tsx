@@ -51,7 +51,6 @@ export default function HomePage() {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <h3>Home</h3>
                 <Separator />
                 <div className="flex space-x-4">
                     <StyledNavLink

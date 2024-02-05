@@ -42,7 +42,6 @@ export default function DiscoverPage() {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <h3>Discover</h3>
                 <Separator />
                 <div className="flex space-x-4">
                     <StyledNavLink

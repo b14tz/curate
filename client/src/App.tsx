@@ -24,7 +24,7 @@ export default function App() {
                 <div className="min-h-screen m-auto max-w-[920px] flex flex-col justify-between p-5">
                     <div>
                         <Navbar />
-                        <div className="my-5">
+                        <div className="mt-2 mb-8">
                             <AllRoutes />
                         </div>
                     </div>
