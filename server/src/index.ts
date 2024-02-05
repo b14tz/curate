@@ -20,6 +20,7 @@ const corsOptions = {
     origin: [
         "https://jookbox.co",
         "https://www.jookbox.co",
+        "https://www.jookbox.co/",
         "http://localhost:5173",
         "https://cureight.vercel.app",
         "https://curate-api.vercel.app",
