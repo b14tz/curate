@@ -46,6 +46,7 @@ const corsOptions = {
         "http://localhost:5173",
         "https://cureight.vercel.app",
         "https://curate-api.vercel.app",
+        "https://jookbox.co",
     ],
     credentials: true,
 };
