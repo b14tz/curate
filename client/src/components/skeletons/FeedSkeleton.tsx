@@ -4,7 +4,6 @@ export default function FeedSkeleton() {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <hr />
                 <div className="flex space-x-4">
                     <Skeleton className="h-6 w-[100px]" />
                     <Skeleton className="h-6 w-[100px]" />

@@ -67,7 +67,6 @@ export default function SearchPage({ postsSearch = false }) {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <hr />
                 <div className="flex space-x-4">
                     <StyledNavLink
                         to="/search/users"

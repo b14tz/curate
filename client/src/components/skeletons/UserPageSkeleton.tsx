@@ -4,7 +4,6 @@ export default function UserPageSkeleton() {
     return (
         <div className="space-y-6">
             <div>
-                <hr />
                 <div className="flex flex-row items-center justify-between py-4">
                     <div className="flex flex-row items-center space-x-4">
                         <Skeleton className="w-20 h-20 rounded-full" />

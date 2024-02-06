@@ -3,7 +3,6 @@ import PlaylistFeed from "@/components/PlaylistFeed";
 import StyledNavLink from "@/components/StyledNavLink";
 import { useGetTopApplePlaylistsQuery } from "@/redux/api/routes/apple";
 import { useGetTopSpotifyPlaylistsQuery } from "@/redux/api/routes/spotify";
-import { Separator } from "@/components/ui/separator";
 import FeedSkeleton from "@/components/skeletons/FeedSkeleton";
 
 export default function DiscoverPage() {
@@ -43,7 +42,6 @@ export default function DiscoverPage() {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <Separator />
                 <div className="flex space-x-4">
                     <StyledNavLink
                         to="/discover/spotify"

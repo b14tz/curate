@@ -9,7 +9,6 @@ import {
 import { RootState } from "@/redux/store";
 import PostFeed from "../components/PostFeed";
 import StyledNavLink from "@/components/StyledNavLink";
-import { Separator } from "@/components/ui/separator";
 import FeedSkeleton from "@/components/skeletons/FeedSkeleton";
 
 export default function HomePage() {
@@ -52,7 +51,6 @@ export default function HomePage() {
     return (
         <div className="space-y-6">
             <div className="space-y-2">
-                <Separator />
                 <div className="flex space-x-4">
                     <StyledNavLink
                         to="/feed"

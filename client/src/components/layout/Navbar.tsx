@@ -26,7 +26,7 @@ export default function Navbar() {
     };
 
     return (
-        <div className="flex justify-center">
+        <div className="flex flex-col justify-center space-y-2">
             <div className="justify-between flex flex-row items-center py-2 w-full">
                 <Button
                     onClick={() => navigate("/")}
@@ -95,6 +95,7 @@ export default function Navbar() {
                     )}
                 </div>
             </div>
+            <hr />
         </div>
     );
 }

@@ -71,8 +71,7 @@ export default function Header({
 
     return (
         <div>
-            <hr />
-            <div className="flex flex-row items-center justify-between py-4">
+            <div className="flex flex-row items-center justify-between pt-2 pb-4">
                 <div className="flex flex-row items-center space-x-4">
                     <div className="w-20 h-20 rounded-full bg-primary"></div>
                     <div className="flex flex-col space-y-2">
