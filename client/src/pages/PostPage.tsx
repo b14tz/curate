@@ -15,7 +15,7 @@ import { formatPostTime } from "@/utils/time";
 import { useGetPostQuery } from "@/redux/api/routes/post";
 import ViewSkeleton from "@/components/skeletons/ViewSkeleton";
 import { Button } from "@/components/ui/button";
-import SaveModal from "@/components/SaveModal";
+import SavePostModal from "@/components/SavePostModal";
 
 export default function PostPage({ showComments = false }) {
     const { id } = useParams();
@@ -176,7 +176,7 @@ export default function PostPage({ showComments = false }) {
                             <MessageCircle size={18} />
                             <p>{post.comments.length}</p>
                         </Button>
-                        <SaveModal post={post}>
+                        <SavePostModal post={post}>
                             <Button
                                 variant="outline"
                                 className="flex space-x-2 items-center"
@@ -186,7 +186,7 @@ export default function PostPage({ showComments = false }) {
                                     <p>{post.saves}</p>
                                 </div>
                             </Button>
-                        </SaveModal>
+                        </SavePostModal>
                     </div>
 
                     <Button

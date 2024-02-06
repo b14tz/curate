@@ -5,7 +5,8 @@ import { createFollow, deleteFollow } from "@/api/routes/follow";
 import { RootState } from "@/redux/store";
 import SettingsModal from "../SettingsModal";
 import { Button } from "../ui/button";
-import pfp from "../../../public/jookbox-pfp.png";
+import modpfp from "@/assets/pfp-marsh.png";
+import pfp from "@/assets/pfp.png";
 
 export default function Header({
     user,
@@ -76,7 +77,7 @@ export default function Header({
                 <div className="flex flex-row items-center space-x-4">
                     <img
                         className="w-20 h-20 rounded-full bg-primary"
-                        src={pfp}
+                        src={user.displayName === "marsh" ? modpfp : pfp}
                     />
                     <div className="flex flex-col space-y-2">
                         <h3>{user?.displayName}</h3>

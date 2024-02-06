@@ -4,9 +4,9 @@ export default function ViewSkeleton() {
     return (
         <div className="flex flex-col space-y-4">
             <div className="flex flex-col space-y-2">
-                <Skeleton className="h-6 w-[300px] " />
-                <Skeleton className="h-5 w-[100px] " />
-                <Skeleton className="h-5 w-full " />
+                <Skeleton className="h-8 w-[300px] " />
+                <Skeleton className="h-6 w-[100px] " />
+                <Skeleton className="h-8 w-full" />
                 <hr />
             </div>
             <div className="flex flex-col space-y-2">
