@@ -15,6 +15,7 @@ import { isSpotifyTokenExpired } from "@/redux/features/spotify/spotifySlice";
 import { RootState } from "@/redux/store";
 import { formatPostTime } from "@/utils/time";
 import { useGetPostQuery } from "@/redux/api/routes/post";
+import ViewSkeleton from "@/components/skeletons/ViewSkeleton";
 
 export default function PostPage({ showComments = false }) {
     const { id } = useParams();
@@ -36,7 +37,7 @@ export default function PostPage({ showComments = false }) {
 
     const { data: post, isLoading, isError } = useGetPostQuery(id);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <ViewSkeleton />;
     if (isError || !post) return <div>Error fetching playlist</div>;
 
     const handleLike = async () => {
@@ -158,11 +159,9 @@ export default function PostPage({ showComments = false }) {
 
     return (
         <>
-            <div className="flex flex-col space-y-2">
-                <div className="flex flex-col space-y-1">
-                    <h3>{post?.title}</h3>
-                    <p>{post?.description}</p>
-                </div>
+            <div className="flex flex-col space-y-1">
+                <h3>{post?.title}</h3>
+                <p>{post?.description}</p>
                 <div className="flex flex-row justify-between items-end">
                     <div className="flex flex-row items-center space-x-10">
                         <button onClick={() => navigate(`/post/${id}`)}>

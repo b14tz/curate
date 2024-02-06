@@ -3,6 +3,7 @@ import { IconUser } from "@tabler/icons-react";
 import { useGetSpotifyPlaylistByIdQuery } from "@/redux/api/routes/spotify";
 import { useGetApplePlaylistByIdQuery } from "@/redux/api/routes/apple";
 import { skipToken } from "@reduxjs/toolkit/query";
+import ViewSkeleton from "@/components/skeletons/ViewSkeleton";
 
 export default function PlaylistPage() {
     const { id } = useParams<{ id: string }>();
@@ -21,7 +22,7 @@ export default function PlaylistPage() {
         isError,
     } = platform === "spotify" ? spotifyResult : appleResult;
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <ViewSkeleton />;
     if (isError) return <div>Error fetching playlist</div>;
 
     const renderSongs = () => {
