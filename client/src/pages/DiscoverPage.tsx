@@ -4,6 +4,7 @@ import StyledNavLink from "@/components/StyledNavLink";
 import { useGetTopApplePlaylistsQuery } from "@/redux/api/routes/apple";
 import { useGetTopSpotifyPlaylistsQuery } from "@/redux/api/routes/spotify";
 import { Separator } from "@/components/ui/separator";
+import FeedSkeleton from "@/components/skeletons/FeedSkeleton";
 
 export default function DiscoverPage() {
     const location = useLocation();
@@ -36,7 +37,7 @@ export default function DiscoverPage() {
         ? spotifyPlaylistsError
         : applePlaylistsError;
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <FeedSkeleton />;
     if (error) return <div>Error fetching posts</div>;
 
     return (

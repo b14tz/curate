@@ -13,6 +13,7 @@ import { refreshAccessToken } from "@/api/routes/spotify";
 import { useGetUserPostsQuery } from "@/redux/api/routes/post";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useGetUserQuery } from "@/redux/api/routes/user";
+import UserPageSkeleton from "@/components/skeletons/UserPageSkeleton";
 
 export default function UserPage() {
     const { id } = useParams();
@@ -21,6 +22,7 @@ export default function UserPage() {
     const spotifyToken = useSelector(
         (state: RootState) => state.spotifyReducer
     );
+
     const currentUser = useSelector(
         (state: RootState) => state.userReducer.user
     );
@@ -56,7 +58,7 @@ export default function UserPage() {
         ensureValidSpotifyToken();
     }, [id]);
 
-    if (isLoadingPosts || isLoadingUser) return <div>Loading...</div>;
+    if (isLoadingPosts || isLoadingUser) return <UserPageSkeleton />;
     if (postsError) return <div>Error fetching posts</div>;
     if (userError || !user) return <div>Error fetching user</div>;
 

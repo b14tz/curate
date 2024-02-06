@@ -16,6 +16,7 @@ export default function Header({
     const currentUser = useSelector(
         (state: RootState) => state.userReducer.user
     );
+
     const { enqueueSnackbar } = useSnackbar();
 
     const [isFollowing, setIsFollowing] = useState(true);
@@ -69,49 +70,53 @@ export default function Header({
     };
 
     return (
-        <div className="flex flex-row rounded-xl drop-shadow-xl py-6 px-8 border border-border items-center justify-between">
-            <div className="flex flex-row items-center space-x-4">
-                <div className="w-20 h-20 rounded-full bg-primary"></div>
-                <div className="flex flex-col space-y-2">
-                    <h3>{user?.displayName}</h3>
-                    <div className="flex flex-row">
-                        {isCurrentUser ? (
-                            <SettingsModal user={user}>
-                                <Button>Settings</Button>
-                            </SettingsModal>
-                        ) : isFollowing ? (
-                            <Button onClick={() => handleUnfollow()}>
-                                Unfollow
-                            </Button>
-                        ) : (
-                            <Button onClick={() => handleFollow()}>
-                                Follow
-                            </Button>
-                        )}
+        <div>
+            <hr />
+            <div className="flex flex-row items-center justify-between py-4">
+                <div className="flex flex-row items-center space-x-4">
+                    <div className="w-20 h-20 rounded-full bg-primary"></div>
+                    <div className="flex flex-col space-y-2">
+                        <h3>{user?.displayName}</h3>
+                        <div className="flex flex-row">
+                            {isCurrentUser ? (
+                                <SettingsModal user={user}>
+                                    <Button>Settings</Button>
+                                </SettingsModal>
+                            ) : isFollowing ? (
+                                <Button onClick={() => handleUnfollow()}>
+                                    Unfollow
+                                </Button>
+                            ) : (
+                                <Button onClick={() => handleFollow()}>
+                                    Follow
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-row space-x-4">
+                    <div className="flex flex-col items-center">
+                        <h3>{user.posts?.length || 0}</h3>
+                        <p>Posts</p>
+                    </div>
+                    <div className="border-l" />
+                    <div className="flex flex-col items-center">
+                        <h3>{user.saves?.length || 0}</h3>
+                        <p>Saves</p>
+                    </div>
+                    <div className="border-l" />
+                    <div className="flex flex-col items-center">
+                        <h3>{user.followers?.length || 0}</h3>
+                        <p>Followers</p>
+                    </div>
+                    <div className="border-l" />
+                    <div className="flex flex-col items-center">
+                        <h3>{user.following?.length || 0}</h3>
+                        <p>Following</p>
                     </div>
                 </div>
             </div>
-            <div className="flex flex-row space-x-4">
-                <div className="flex flex-col items-center">
-                    <h3>{user.posts?.length || 0}</h3>
-                    <p>Posts</p>
-                </div>
-                <div className="border-l" />
-                <div className="flex flex-col items-center">
-                    <h3>{user.saves?.length || 0}</h3>
-                    <p>Saves</p>
-                </div>
-                <div className="border-l" />
-                <div className="flex flex-col items-center">
-                    <h3>{user.followers?.length || 0}</h3>
-                    <p>Followers</p>
-                </div>
-                <div className="border-l" />
-                <div className="flex flex-col items-center">
-                    <h3>{user.following?.length || 0}</h3>
-                    <p>Following</p>
-                </div>
-            </div>
+            <hr />
         </div>
     );
 }

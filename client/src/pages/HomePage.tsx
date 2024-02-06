@@ -10,6 +10,7 @@ import { RootState } from "@/redux/store";
 import PostFeed from "../components/PostFeed";
 import StyledNavLink from "@/components/StyledNavLink";
 import { Separator } from "@/components/ui/separator";
+import FeedSkeleton from "@/components/skeletons/FeedSkeleton";
 
 export default function HomePage() {
     const location = useLocation();
@@ -45,8 +46,8 @@ export default function HomePage() {
         ? followerPostsError
         : allPostsError;
 
-    if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error fetching posts</div>;
+    if (isLoading) return <FeedSkeleton />;
 
     return (
         <div className="space-y-6">
