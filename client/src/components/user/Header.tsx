@@ -5,6 +5,7 @@ import { createFollow, deleteFollow } from "@/api/routes/follow";
 import { RootState } from "@/redux/store";
 import SettingsModal from "../SettingsModal";
 import { Button } from "../ui/button";
+import pfp from "../../../public/jookbox-pfp.png";
 
 export default function Header({
     user,
@@ -73,16 +74,24 @@ export default function Header({
         <div>
             <div className="flex flex-row items-center justify-between pt-2 pb-4">
                 <div className="flex flex-row items-center space-x-4">
-                    <div className="w-20 h-20 rounded-full bg-primary"></div>
+                    <img
+                        className="w-20 h-20 rounded-full bg-primary"
+                        src={pfp}
+                    />
                     <div className="flex flex-col space-y-2">
                         <h3>{user?.displayName}</h3>
                         <div className="flex flex-row">
                             {isCurrentUser ? (
                                 <SettingsModal user={user}>
-                                    <Button>Settings</Button>
+                                    <Button variant="secondary">
+                                        Settings
+                                    </Button>
                                 </SettingsModal>
                             ) : isFollowing ? (
-                                <Button onClick={() => handleUnfollow()}>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => handleUnfollow()}
+                                >
                                     Unfollow
                                 </Button>
                             ) : (

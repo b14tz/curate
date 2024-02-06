@@ -1,5 +1,4 @@
 import { useParams, useLocation } from "react-router-dom";
-import { IconUser } from "@tabler/icons-react";
 import { useGetSpotifyPlaylistByIdQuery } from "@/redux/api/routes/spotify";
 import { useGetApplePlaylistByIdQuery } from "@/redux/api/routes/apple";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -64,12 +63,9 @@ export default function PlaylistPage() {
             </div>
             <div className="flex flex-row justify-between items-end">
                 <div className="flex items-center space-x-10">
-                    <p>
-                        <i className="ri-music-2-fill"></i> {playlist?.total}
-                    </p>
+                    <p>{playlist?.total} songs</p>
                 </div>
                 <div className="w-fit flex items-center space-x-1">
-                    <IconUser size={20} />
                     <p>{playlist?.author.displayName}</p>
                 </div>
             </div>

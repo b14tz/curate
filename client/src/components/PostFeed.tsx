@@ -151,8 +151,7 @@ export default function PostFeed({
                                         >
                                             <Heart
                                                 size={18}
-                                                color="salmon"
-                                                fill="salmon"
+                                                className="fill-primary text-primary"
                                             />
                                             <p>{post.likes.length}</p>
                                         </button>
