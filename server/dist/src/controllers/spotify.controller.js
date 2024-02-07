@@ -73,7 +73,13 @@ const refreshAccessToken = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     Buffer.from(SPOTIFY_CLIENT_ID + ":" + SPOTIFY_CLIENT_SECRET).toString("base64"),
             },
         });
-        return res.status(200).send(response.data);
+        const { access_token, expires_in, refresh_token: newRefreshToken, } = response.data;
+        const expirationTime = new Date(new Date().getTime() + expires_in * 1000);
+        return res.status(200).json({
+            accessToken: access_token,
+            refreshToken: newRefreshToken || refreshToken,
+            expirationTime: expirationTime.toISOString(), // Convert to ISO string for easy handling on the client side
+        });
     }
     catch (error) {
         console.error(error);

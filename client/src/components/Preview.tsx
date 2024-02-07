@@ -77,7 +77,7 @@ export default function Preview({
                                 height: `${imageSideLength}px`,
                                 width: `${imageSideLength}px`,
                             }}
-                            className="drop-shadow flex items-center justify-center bg-gradient-to-r from-background to-[#29050A]"
+                            className="drop-shadow flex items-center justify-center bg-gradient-to-r from-background to-[#221A17]"
                         >
                             {/* Optional: Content or icons inside the div */}
                         </div>
