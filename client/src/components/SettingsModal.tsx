@@ -7,15 +7,18 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "./ui/dialog";
-import { clearSpotify } from "@/redux/features/spotify/spotifySlice";
 import { RootState } from "@/redux/store";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { deleteUser, updateUser } from "@/api/routes/user";
 import { clearUser, setUser } from "@/redux/features/user/userSlice";
+import { clearSpotify } from "@/redux/features/spotify/spotifySlice";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+    useDeleteUserMutation,
+    useUpdateUserMutation,
+} from "@/redux/api/routes/user";
 
 export default function SettingsModal({
     user,
@@ -26,6 +29,9 @@ export default function SettingsModal({
 }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    const [updateUser] = useUpdateUserMutation();
+    const [deleteUser] = useDeleteUserMutation();
 
     const [displayName, setDisplayName] = useState<string>("");
 
@@ -38,7 +44,7 @@ export default function SettingsModal({
 
     const handleChangeUsername = async () => {
         try {
-            await updateUser(user.id, { displayName: displayName });
+            await updateUser({ id: user.id, displayName: displayName });
             dispatch(setUser({ ...currentUser, displayName: displayName }));
         } catch (error) {
             console.error(error);
@@ -47,7 +53,7 @@ export default function SettingsModal({
 
     const handleDeleteAccount = async () => {
         try {
-            await deleteUser(user.id);
+            await deleteUser(user.id).unwrap();
             dispatch(clearUser());
             navigate("/");
         } catch (error) {

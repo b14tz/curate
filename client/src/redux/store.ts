@@ -10,6 +10,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const persistConfig = {
     key: "root",
     storage,
+    blacklist: [apiSlice.reducerPath],
 };
 
 const combinedReducer = combineReducers({
@@ -27,15 +28,17 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
-                // Ignore these action types
                 ignoredActions: [
                     "persist/PERSIST",
                     "persist/REHYDRATE",
                     "persist/PURGE",
                 ],
-                // Optionally ignore these field paths in all actions
-                ignoredActionPaths: ["meta.arg", "payload.timestamp"],
-                // Optionally ignore these paths in the state
+                ignoredActionPaths: [
+                    "meta.arg",
+                    "payload.timestamp",
+                    "meta.baseQueryMeta.request",
+                    "meta.baseQueryMeta.response",
+                ],
                 ignoredPaths: ["items.dates"],
             },
         }).concat(apiSlice.middleware),

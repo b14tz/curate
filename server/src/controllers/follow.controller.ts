@@ -11,7 +11,7 @@ export const createFollow = async (req: Request, res: Response) => {
                 followingId: data.followingId,
             },
         });
-        return res.status(200).send("Successfully followed user");
+        res.status(200).json({ message: "Successfully followed user" });
     } catch (error) {
         console.error(error);
     }
@@ -28,7 +28,7 @@ export const deleteFollow = async (req: Request, res: Response) => {
                 },
             },
         });
-        return res.status(200).send("Successfully unfollowed user");
+        res.status(200).json({ message: "Successfully unfollowed user" });
     } catch (error) {
         console.error(error);
     }

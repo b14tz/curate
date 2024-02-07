@@ -1,12 +1,15 @@
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { createFollow, deleteFollow } from "@/api/routes/follow";
 import { RootState } from "@/redux/store";
 import SettingsModal from "../SettingsModal";
 import { Button } from "../ui/button";
 import modpfp from "@/assets/pfp-marsh.png";
 import pfp from "@/assets/pfp.png";
+import {
+    useCreateFollowMutation,
+    useDeleteFollowMutation,
+} from "@/redux/api/routes/follow";
 
 export default function Header({
     user,
@@ -15,13 +18,13 @@ export default function Header({
     user: User;
     isCurrentUser: boolean;
 }) {
+    const { enqueueSnackbar } = useSnackbar();
+    const [isFollowing, setIsFollowing] = useState(true);
+    const [createFollow] = useCreateFollowMutation();
+    const [deleteFollow] = useDeleteFollowMutation();
     const currentUser = useSelector(
         (state: RootState) => state.userReducer.user
     );
-
-    const { enqueueSnackbar } = useSnackbar();
-
-    const [isFollowing, setIsFollowing] = useState(true);
 
     useEffect(() => {
         setIsFollowing(
@@ -39,14 +42,7 @@ export default function Header({
             await createFollow({
                 followerId: user.id,
                 followingId: currentUser.id,
-            });
-
-            // const newFollowers = [
-            //     ...(user.followers || []),
-            //     { followerId: user.id, followingId: currentUser.id },
-            // ];
-
-            // setUser({ ...user, followers: newFollowers });
+            }).unwrap();
             setIsFollowing(true);
         } else {
             enqueueSnackbar("You must be logged in to follow users.", {
@@ -60,14 +56,8 @@ export default function Header({
             await deleteFollow({
                 followerId: user.id,
                 followingId: currentUser.id,
-            });
-
-            // const newFollowers = user.followers?.filter((follower) => {
-            //     return currentUser && follower.followingId !== currentUser.id;
-            // });
-
-            //setUser({ ...user, followers: newFollowers });
-            setIsFollowing(false); // Set follow status to false
+            }).unwrap();
+            setIsFollowing(false);
         }
     };
 
