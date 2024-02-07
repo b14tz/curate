@@ -16,6 +16,7 @@ import { useGetPostQuery } from "@/redux/api/routes/post";
 import ViewSkeleton from "@/components/skeletons/ViewSkeleton";
 import { Button } from "@/components/ui/button";
 import SavePostModal from "@/components/SavePostModal";
+import DeletePostModal from "@/components/DeletePostModal";
 
 export default function PostPage({ showComments = false }) {
     const { id } = useParams();
@@ -33,6 +34,8 @@ export default function PostPage({ showComments = false }) {
 
     if (isLoading) return <ViewSkeleton />;
     if (isError || !post) return <div>Error fetching playlist</div>;
+
+    const isCurrentUser = currentUser?.id === post.author.id;
 
     const handleLike = async () => {
         if (currentUser) {
@@ -176,6 +179,7 @@ export default function PostPage({ showComments = false }) {
                             <MessageCircle size={18} />
                             <p>{post.comments.length}</p>
                         </Button>
+
                         <SavePostModal post={post}>
                             <Button
                                 variant="outline"
@@ -189,14 +193,21 @@ export default function PostPage({ showComments = false }) {
                         </SavePostModal>
                     </div>
 
-                    <Button
-                        variant="outline"
-                        className="w-fit flex items-center space-x-1"
-                        onClick={() => navigate(`/user/${post?.author.id}`)}
-                    >
-                        <CircleUserRound size={18} />
-                        <p>{post.author.displayName}</p>
-                    </Button>
+                    <div className="flex space-x-1">
+                        {isCurrentUser ? (
+                            <DeletePostModal id={id}>
+                                <Button variant="outline">Delete</Button>
+                            </DeletePostModal>
+                        ) : null}
+                        <Button
+                            variant="outline"
+                            className="w-fit flex items-center space-x-1"
+                            onClick={() => navigate(`/user/${post?.author.id}`)}
+                        >
+                            <CircleUserRound size={18} />
+                            <p>{post.author.displayName}</p>
+                        </Button>
+                    </div>
                 </div>
                 <hr />
 

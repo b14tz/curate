@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { createPost } from "@/api/routes/post";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import {
@@ -35,6 +34,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "./ui/select";
+import { useCreatePostMutation } from "@/redux/api/routes/post";
 
 export default function PostModal({ children }: { children: JSX.Element }) {
     const [playlistOptions, setPlaylistOptions] = useState<
@@ -47,6 +47,8 @@ export default function PostModal({ children }: { children: JSX.Element }) {
     const [selectedRadio, setSelectedRadio] = useState("");
 
     const dispatch = useDispatch();
+
+    const [createPost] = useCreatePostMutation();
 
     const user = useSelector((state: RootState) => state.userReducer.user);
     const appleToken = useSelector((state: RootState) => state.appleReducer);
@@ -65,6 +67,7 @@ export default function PostModal({ children }: { children: JSX.Element }) {
         setValue("title", "");
         setValue("description", "");
         setSelectedOption("");
+        location.reload();
     };
 
     const handleSelectOption = (val: string) => {
@@ -146,18 +149,21 @@ export default function PostModal({ children }: { children: JSX.Element }) {
     };
 
     const handlePost = async (data: PostForm) => {
-        console.log("hi");
         if (user && selectedOption) {
-            await createPost({
-                title: data.title,
-                description: data.description,
-                origin: selectedRadio,
-                originId: playlistOptions[+selectedOption].value.id,
-                authorId: user.id,
-            });
+            try {
+                await createPost({
+                    title: data.title,
+                    description: data.description,
+                    origin: selectedRadio,
+                    originId: playlistOptions[+selectedOption].value.id,
+                    authorId: user.id,
+                }).unwrap();
+                handleClose();
+            } catch (error) {
+                console.error("Failed to create post", error);
+                return;
+            }
         }
-        handleClose();
-        location.reload();
     };
 
     useEffect(() => {
