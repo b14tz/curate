@@ -8,7 +8,6 @@ import {
     isSpotifyTokenExpired,
     updateAccessToken,
 } from "@/redux/features/spotify/spotifySlice";
-import { getExpirationTime } from "@/utils/time";
 import { refreshAccessToken } from "@/api/routes/spotify";
 import { useGetUserPostsQuery } from "@/redux/api/routes/post";
 import { skipToken } from "@reduxjs/toolkit/query";
@@ -44,11 +43,11 @@ export default function UserPage() {
     const ensureValidSpotifyToken = async () => {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
-            const expirationTime = getExpirationTime(data.expires_in);
             await dispatch(
                 updateAccessToken({
                     accessToken: data.access_token,
-                    expirationTime: expirationTime,
+                    expirationTime: data.expirationTime,
+                    refreshToken: data.refreshToken,
                 })
             );
         }

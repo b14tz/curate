@@ -116,7 +116,7 @@ export default function SettingsModal({
                     </div>
 
                     <Dialog>
-                        <DialogTrigger>
+                        <DialogTrigger asChild>
                             <Button variant="destructive" className="w-full">
                                 Delete Account
                             </Button>

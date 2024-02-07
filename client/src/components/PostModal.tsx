@@ -13,7 +13,6 @@ import {
 import { isAppleTokenExpired } from "@/redux/features/apple/appleSlice";
 import AppleAuthButton from "./apple/AppleAuthButton";
 import { fetchAllPlaylistsByMusicUserToken } from "@/api/routes/apple";
-import { getExpirationTime } from "@/utils/time";
 import {
     Dialog,
     DialogContent,
@@ -138,11 +137,12 @@ export default function PostModal({ children }: { children: JSX.Element }) {
     const ensureValidSpotifyToken = async () => {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
-            const expirationTime = getExpirationTime(data.expires_in);
+            console.log("Refreshed Spotify Token: ", data);
             await dispatch(
                 updateAccessToken({
                     accessToken: data.access_token,
-                    expirationTime: expirationTime,
+                    expirationTime: data.expirationTime,
+                    refreshToken: data.refreshToken,
                 })
             );
         }
@@ -225,7 +225,7 @@ export default function PostModal({ children }: { children: JSX.Element }) {
                                         <input
                                             type="radio"
                                             name="radio-post-origin"
-                                            className="accent-primarynpx shrink-0 ms-auto mt-0.5 border-silver rounded-full text-primary disabled:opacity-50 disabled:pointer-events-none"
+                                            className="accent-primary shrink-0 ms-auto mt-0.5 border-silver rounded-full text-primary disabled:opacity-50 disabled:pointer-events-none"
                                             checked={selectedRadio === "apple"}
                                             readOnly
                                             disabled={isAppleTokenExpired(

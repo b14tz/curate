@@ -18,6 +18,7 @@ export default function AppleAuthButton() {
     useEffect(() => {
         const loadMusicKit = async () => {
             const developerToken = await getAppleDeveloperToken();
+            console.log("Developer Token: ", developerToken);
             window.MusicKit.configure({
                 developerToken,
                 app: {
@@ -36,19 +37,19 @@ export default function AppleAuthButton() {
         try {
             const music = window.MusicKit.getInstance();
             const musicUserToken = await music.authorize();
-            const expirationSeconds = 100 * 24 * 60 * 60;
+            const expirationSeconds = 90 * 24 * 60 * 60; // Example: 90 days for illustration
             const expirationTime = await getExpirationTime(expirationSeconds);
-            await dispatch(
+
+            dispatch(
                 setApple({
-                    musicUserToken: musicUserToken,
-                    expirationTime: expirationTime,
+                    musicUserToken,
+                    expirationTime,
                 })
             );
         } catch (error) {
             console.error("Authorization error:", error);
         }
     };
-
     return (
         <div>
             {appleToken.musicUserToken &&

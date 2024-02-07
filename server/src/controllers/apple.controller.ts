@@ -39,7 +39,6 @@ const generateAppleDeveloperToken = async () => {
 
     try {
         const privateKey = APPLE_MUSIC_AUTH_SECRET.replace(/\\n/g, "\n");
-
         const token = jwt.sign({}, privateKey, {
             algorithm: "ES256",
             expiresIn: "180d",
