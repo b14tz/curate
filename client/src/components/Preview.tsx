@@ -17,9 +17,7 @@ export default function Preview({
 
     useEffect(() => {
         const calculateAndSetImageStyles = () => {
-            console.log("hit");
             if (buttonRef.current) {
-                console.log("Width: ", buttonRef.current.offsetWidth);
                 const buttonWidth = buttonRef.current.offsetWidth;
                 const overlapMargin =
                     imageSideLength -
@@ -79,7 +77,7 @@ export default function Preview({
                                 height: `${imageSideLength}px`,
                                 width: `${imageSideLength}px`,
                             }}
-                            className="drop-shadow flex items-center justify-center bg-gradient-to-r from-slate-900 to-slate-800"
+                            className="drop-shadow flex items-center justify-center bg-gradient-to-r from-background to-slate-900"
                         >
                             {/* Optional: Content or icons inside the div */}
                         </div>
