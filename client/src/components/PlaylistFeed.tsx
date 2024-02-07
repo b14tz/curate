@@ -9,7 +9,6 @@ export default function PlaylistFeed({
     emptyMessage: string;
 }) {
     const navigate = useNavigate();
-    console.log(playlists);
     const renderFeed = () => {
         if (Object.keys(playlists).length === 0) {
             return (

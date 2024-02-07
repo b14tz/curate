@@ -97,7 +97,6 @@ const savePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         else if (origin === "apple" && destination === "spotify") {
             // Apple to Spotify
             const isrcs = yield (0, apple_controller_1.getIsrcsByApplePlaylistId)(originId);
-            console.log("isrcs: ", isrcs);
             const trackUris = yield (0, spotify_controller_1.getTrackUrisByIsrcs)(isrcs);
             dataForDestination = {
                 title,
@@ -105,7 +104,6 @@ const savePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 ids: trackUris,
                 accessToken: destinationUserToken,
             };
-            console.log("track uris: ", trackUris);
         }
         if (destinationUserToken) {
             if (destination === "spotify") {

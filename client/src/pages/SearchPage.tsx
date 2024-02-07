@@ -22,7 +22,6 @@ export default function SearchPage({ postsSearch = false }) {
             data = await searchUsers(searchTerm);
             setUsers(data);
         }
-        console.log(searchTerm);
     };
 
     const renderSearchResults = () => {

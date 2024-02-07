@@ -18,7 +18,6 @@ export default function AppleAuthButton() {
     useEffect(() => {
         const loadMusicKit = async () => {
             const developerToken = await getAppleDeveloperToken();
-            console.log("Developer Token: ", developerToken);
             window.MusicKit.configure({
                 developerToken,
                 app: {

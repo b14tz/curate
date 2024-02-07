@@ -55,7 +55,6 @@ export const savePlaylist = async (req: Request, res: Response) => {
         } else if (origin === "apple" && destination === "spotify") {
             // Apple to Spotify
             const isrcs = await getIsrcsByApplePlaylistId(originId);
-            console.log("isrcs: ", isrcs);
             const trackUris = await getTrackUrisByIsrcs(isrcs);
             dataForDestination = {
                 title,
@@ -63,7 +62,6 @@ export const savePlaylist = async (req: Request, res: Response) => {
                 ids: trackUris,
                 accessToken: destinationUserToken,
             };
-            console.log("track uris: ", trackUris);
         }
 
         if (destinationUserToken) {
