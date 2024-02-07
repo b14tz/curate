@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import Preview from "./Preview";
 
 export default function PlaylistFeed({
     playlists,
@@ -22,53 +23,19 @@ export default function PlaylistFeed({
                     {playlists.map((playlist) => (
                         <div
                             key={playlist.id}
-                            className="flex flex-row space-x-4 items-center"
+                            className="flex flex-row items-center w-full space-x-4"
                         >
-                            <button
-                                className="flex flex-row drop-shadow-xl"
-                                onClick={() =>
-                                    navigate(
-                                        `/top/${playlist.origin}/${playlist.id}`
-                                    )
-                                }
+                            <div className="w-[55%]">
+                                <Preview
+                                    source={playlist}
+                                    path={`/top/${playlist.origin}/${playlist.id}`}
+                                />
+                            </div>
+
+                            <div
+                                id="keep-380"
+                                className="flex flex-col w-[380px] flex-shrink-0 self-start mt-2 space-y-1"
                             >
-                                {Array.from({ length: 7 }).map((_, index) => {
-                                    const song = playlist.songs[index];
-                                    const zIndex = 1000 - index;
-                                    const isOverlappingImage = index > 0;
-
-                                    if (song) {
-                                        // Render song image
-                                        return (
-                                            <img
-                                                key={index}
-                                                src={song.imageUrl}
-                                                className={`w-28 h-28 drop-shadow ${
-                                                    isOverlappingImage
-                                                        ? "ml-[-50px]"
-                                                        : ""
-                                                }`}
-                                                style={{ zIndex }}
-                                            />
-                                        );
-                                    } else {
-                                        // Render placeholder if song is not available
-                                        return (
-                                            <div
-                                                key={index}
-                                                className={`w-28 h-28 border border-snow bg-white shadow-inner drop-shadow ${
-                                                    isOverlappingImage
-                                                        ? "ml-[-50px]"
-                                                        : ""
-                                                }`}
-                                                style={{ zIndex }}
-                                            ></div>
-                                        );
-                                    }
-                                })}
-                            </button>
-
-                            <div className="flex flex-col max-w-[380px] self-start mt-2 space-y-1">
                                 <button
                                     className="w-fit"
                                     onClick={() =>
@@ -77,7 +44,7 @@ export default function PlaylistFeed({
                                         )
                                     }
                                 >
-                                    <p className="text-xl font-bold">
+                                    <p className="text-ellipsis	whitespace-nowrap overflow-hidden text-xl font-bold">
                                         {playlist.title}
                                     </p>
                                 </button>

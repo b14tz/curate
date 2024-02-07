@@ -35,7 +35,7 @@ export default function CommentBox({
     };
 
     return (
-        <div className="mt-2 space-y-4 flex flex-col">
+        <div className="mt-2 space-y-2 flex flex-col">
             <Textarea
                 rows={5}
                 placeholder="Add a comment..."

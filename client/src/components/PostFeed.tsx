@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useSnackbar } from "notistack";
 import { CircleUserRound, Heart, MessageCircle } from "lucide-react";
+import Preview from "./Preview";
 
 export default function PostFeed({
     posts,
@@ -79,49 +80,16 @@ export default function PostFeed({
                     {posts.map((post) => (
                         <div
                             key={post.id}
-                            className="flex flex-row space-x-4 items-center"
+                            className="flex flex-row space-x-4 w-full items-center"
                         >
-                            <button
-                                className="flex flex-row drop-shadow-xl"
-                                onClick={() => navigate(`/post/${post.id}`)}
-                            >
-                                {Array.from({ length: 7 }).map((_, index) => {
-                                    const song = post.songs[index];
-                                    const zIndex = 1000 - index;
-                                    const isOverlappingImage = index > 0;
+                            <div className="w-[55%]">
+                                <Preview
+                                    source={post}
+                                    path={`/post/${post.id}`}
+                                />
+                            </div>
 
-                                    if (song) {
-                                        // Render song image
-                                        return (
-                                            <img
-                                                key={index}
-                                                src={song.imageUrl}
-                                                className={`w-28 h-28 drop-shadow ${
-                                                    isOverlappingImage
-                                                        ? "ml-[-50px]"
-                                                        : ""
-                                                }`}
-                                                style={{ zIndex }}
-                                            />
-                                        );
-                                    } else {
-                                        // Render placeholder if song is not available
-                                        return (
-                                            <div
-                                                key={index}
-                                                className={`w-28 h-28 border border-snow bg-white shadow-inner drop-shadow ${
-                                                    isOverlappingImage
-                                                        ? "ml-[-50px]"
-                                                        : ""
-                                                }`}
-                                                style={{ zIndex }}
-                                            ></div>
-                                        );
-                                    }
-                                })}
-                            </button>
-
-                            <div className="flex flex-col max-w-[380px] self-start mt-2 space-y-1">
+                            <div className="flex flex-col w-[380px] flex-shrink-0 self-start mt-2 space-y-1">
                                 <button
                                     className="w-fit"
                                     onClick={() => navigate(`/post/${post.id}`)}
@@ -185,4 +153,46 @@ export default function PostFeed({
         }
     };
     return <>{renderFeed()}</>;
+}
+
+{
+    /* <button
+        className="flex flex-row drop-shadow-xl"
+        onClick={() => navigate(`/post/${post.id}`)}
+    >
+        {Array.from({ length: 7 }).map((_, index) => {
+            const song = post.songs[index];
+            const zIndex = 1000 - index;
+            const isOverlappingImage = index > 0;
+
+            if (song) {
+                // Render song image
+                return (
+                    <img
+                        key={index}
+                        src={song.imageUrl}
+                        className={`w-28 h-28 drop-shadow ${
+                            isOverlappingImage
+                                ? "ml-[-50px]"
+                                : ""
+                        }`}
+                        style={{ zIndex }}
+                    />
+                );
+            } else {
+                // Render placeholder if song is not available
+                return (
+                    <div
+                        key={index}
+                        className={`w-28 h-28 border border-snow bg-white shadow-inner drop-shadow ${
+                            isOverlappingImage
+                                ? "ml-[-50px]"
+                                : ""
+                        }`}
+                        style={{ zIndex }}
+                    ></div>
+                );
+            }
+        })}
+    </button> */
 }
