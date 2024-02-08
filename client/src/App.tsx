@@ -16,6 +16,8 @@ import SpotifyCallback from "./components/callbacks/SpotifyCallback";
 import AuthCallback from "./components/callbacks/AuthCallback";
 import DiscoverPage from "./pages/DiscoverPage";
 import PlaylistPage from "./pages/PlaylistPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 export default function App() {
     return (
@@ -74,6 +76,10 @@ function AllRoutes() {
                 {/* Callbacks */}
                 <Route path="/callback/auth" element={<AuthCallback />} />
                 <Route path="/callback/spotify" element={<SpotifyCallback />} />
+
+                {/*Privacy Policy */}
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-of-service" element={<TermsOfService />} />
             </Routes>
         </>
     );
