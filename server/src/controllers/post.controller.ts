@@ -118,6 +118,18 @@ export const savePost = async (req: Request, res: Response) => {
             }
         }
 
+        await db.post.update({
+            where: { id },
+            data: { saves: { increment: 1 } },
+        });
+
+        if (post.authorId) {
+            await db.user.update({
+                where: { id: post.authorId },
+                data: { saves: { increment: 1 } },
+            });
+        }
+
         return res.status(200).json({ message: "Successfully saved post" });
     } catch (error) {
         console.error("Error in saving playlist:", error);

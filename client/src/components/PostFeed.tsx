@@ -40,7 +40,6 @@ export default function PostFeed({
                 userId: currentUser.id,
                 postId: postId,
             }).unwrap();
-            updatePostLikes(postId, true);
         } else {
             enqueueSnackbar("You must be logged in to like a post.", {
                 autoHideDuration: 2000,
@@ -55,27 +54,7 @@ export default function PostFeed({
                 userId: currentUser.id,
                 postId: postId,
             }).unwrap();
-            updatePostLikes(postId, false);
         }
-    };
-
-    // Update the likes in the posts state
-    const updatePostLikes = (postId: string, isLiked: boolean) => {
-        const updatedPosts = posts.map((post) => {
-            if (currentUser && post.id === postId) {
-                return {
-                    ...post,
-                    likes: isLiked
-                        ? [...post.likes, { userId: currentUser.id, postId }]
-                        : post.likes.filter(
-                              (like) => like.userId !== currentUser.id
-                          ),
-                };
-            }
-            return post;
-        });
-        console.log("Handle updated posts here: ", updatedPosts);
-        // setPosts(updatedPosts);
     };
 
     const renderFeed = () => {
@@ -119,7 +98,10 @@ export default function PostFeed({
                                         <CircleUserRound size={18} />
                                         <p>{post.author.displayName}</p>
                                     </button>
-                                    <p>{post.total} songs</p>
+                                    <div className="flex flex-row space-x-2 justify-center">
+                                        <p>{post.total}</p>
+                                        <p>songs</p>
+                                    </div>
 
                                     {isPostLikedByUser(post) ? (
                                         <button

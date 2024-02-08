@@ -16,6 +16,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (_result, _error, args) => [
                 { type: "User", id: args.followerId },
                 { type: "User", id: args.followingId },
+                { type: "Post", id: "LIST" },
             ],
         }),
         deleteFollow: builder.mutation<{ message: string }, FollowForm>({
@@ -27,6 +28,7 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: (_result, _error, args) => [
                 { type: "User", id: args.followerId },
                 { type: "User", id: args.followingId },
+                { type: "Post", id: "LIST" },
             ],
         }),
     }),

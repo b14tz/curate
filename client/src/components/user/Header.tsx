@@ -27,12 +27,13 @@ export default function Header({
     );
 
     useEffect(() => {
+        console.log(user.following);
         setIsFollowing(
-            user.followers?.some(
+            user.following?.some(
                 (follower) =>
                     currentUser &&
-                    follower.followerId === user.id &&
-                    follower.followingId === currentUser.id
+                    follower.followerId === currentUser.id &&
+                    follower.followingId === user.id
             ) || false
         );
     }, [user, currentUser]);
@@ -40,8 +41,8 @@ export default function Header({
     const handleFollow = async () => {
         if (currentUser) {
             await createFollow({
-                followerId: user.id,
-                followingId: currentUser.id,
+                followerId: currentUser.id,
+                followingId: user.id,
             }).unwrap();
             setIsFollowing(true);
         } else {
@@ -54,8 +55,8 @@ export default function Header({
     const handleUnfollow = async () => {
         if (currentUser) {
             await deleteFollow({
-                followerId: user.id,
-                followingId: currentUser.id,
+                followerId: currentUser.id,
+                followingId: user.id,
             }).unwrap();
             setIsFollowing(false);
         }
@@ -100,7 +101,7 @@ export default function Header({
                     </div>
                     <div className="border-l" />
                     <div className="flex flex-col items-center">
-                        <h3>{user.saves?.length || 0}</h3>
+                        <h3>{user.saves}</h3>
                         <p>Saves</p>
                     </div>
                     <div className="border-l" />

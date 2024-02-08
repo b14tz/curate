@@ -36,6 +36,7 @@ model User {
   posts              Post[]
   comments           PostComment[]
   likes              PostLike[]
+  saves              Int
   followers          Follow[]      @relation("follower")
   following          Follow[]      @relation("following")
 }

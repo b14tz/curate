@@ -14,7 +14,7 @@ interface User {
     followers?: Follow[];
     following?: Follow[];
     posts?: [];
-    saves?: [];
+    saves: number;
     token: string;
 }
 

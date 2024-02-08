@@ -116,6 +116,16 @@ const savePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 yield (0, apple_controller_1.createApplePlaylist)(dataForDestination);
             }
         }
+        yield db_server_1.db.post.update({
+            where: { id },
+            data: { saves: { increment: 1 } },
+        });
+        if (post.authorId) {
+            yield db_server_1.db.user.update({
+                where: { id: post.authorId },
+                data: { saves: { increment: 1 } },
+            });
+        }
         return res.status(200).json({ message: "Successfully saved post" });
     }
     catch (error) {

@@ -23,6 +23,7 @@ export const createUser = async ({
                 bio: "",
                 connectedToSpotify: false,
                 connectedToApple: false,
+                saves: 0,
             },
         });
         return result;

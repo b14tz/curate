@@ -22,6 +22,7 @@ const createUser = ({ firstName, lastName, username, email, }) => __awaiter(void
                 bio: "",
                 connectedToSpotify: false,
                 connectedToApple: false,
+                saves: 0,
             },
         });
         return result;

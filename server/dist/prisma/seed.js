@@ -22,6 +22,7 @@ function seed() {
                     bio: user.bio,
                     connectedToSpotify: user.connectedToSpotify,
                     connectedToApple: user.connectedToApple,
+                    saves: 0,
                 },
             });
         }));
