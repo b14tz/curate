@@ -8,7 +8,7 @@ import {
 const commentRoutes = Router();
 
 commentRoutes.get("/all/:id", getAllPostComments);
-commentRoutes.post("/:id", createComment);
+commentRoutes.post("/", createComment);
 commentRoutes.delete("/:id", deleteComment);
 
 export default commentRoutes;

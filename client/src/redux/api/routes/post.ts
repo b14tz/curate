@@ -65,10 +65,10 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
             query: (id) => ({ url: `/post/${id}`, method: "DELETE" }),
             invalidatesTags: [{ type: "Post", id: "LIST" }],
         }),
-        // savePost: builder.query<, string>({
-        //     query: (id) => `/post/${id}/save`,
-        //     providesTags: [{ type: "Post", id: "save" }],
-        // }),
+        savePost: builder.mutation<QueryResponse, string>({
+            query: (id) => `/post/${id}/save`,
+            invalidatesTags: (_result, _error, id) => [{ type: "Post", id }],
+        }),
     }),
 });
 

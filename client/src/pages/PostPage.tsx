@@ -3,12 +3,12 @@ import {
     Heart,
     MessageCircle,
     RefreshCcwDot,
+    XIcon,
 } from "lucide-react";
 import { IconCornerDownRight } from "@tabler/icons-react";
 import { useSnackbar } from "notistack";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { createLike, deleteLike } from "@/api/routes/like";
 import CommentBox from "@/components/CommentBox";
 import { RootState } from "@/redux/store";
 import { formatPostTime } from "@/utils/time";
@@ -17,10 +17,14 @@ import ViewSkeleton from "@/components/skeletons/ViewSkeleton";
 import { Button } from "@/components/ui/button";
 import SavePostModal from "@/components/SavePostModal";
 import DeletePostModal from "@/components/DeletePostModal";
+import {
+    useCreateLikeMutation,
+    useDeleteLikeMutation,
+} from "@/redux/api/routes/like";
+import { useDeleteCommentMutation } from "@/redux/api/routes/comment";
 
 export default function PostPage({ showComments = false }) {
     const { id } = useParams();
-
     if (!id) return <p>Error identifying post</p>;
 
     const navigate = useNavigate();
@@ -30,6 +34,9 @@ export default function PostPage({ showComments = false }) {
         (state: RootState) => state.userReducer.user
     );
 
+    const [deleteComment] = useDeleteCommentMutation();
+    const [createLike] = useCreateLikeMutation();
+    const [deleteLike] = useDeleteLikeMutation();
     const { data: post, isLoading, isError } = useGetPostQuery(id);
 
     if (isLoading) return <ViewSkeleton />;
@@ -39,14 +46,10 @@ export default function PostPage({ showComments = false }) {
 
     const handleLike = async () => {
         if (currentUser) {
-            await createLike(post.id, { userId: currentUser.id });
-            // setPost({
-            //     ...post,
-            //     likes: [
-            //         ...post.likes,
-            //         { userId: currentUser.id, postId: post.id },
-            //     ],
-            // });
+            await createLike({
+                userId: currentUser.id,
+                postId: post.id,
+            }).unwrap();
         } else {
             enqueueSnackbar("You must be logged in to like a post.", {
                 autoHideDuration: 2000,
@@ -56,14 +59,15 @@ export default function PostPage({ showComments = false }) {
 
     const handleUnlike = async () => {
         if (currentUser) {
-            await deleteLike(post.id, { userId: currentUser.id });
-            // setPost({
-            //     ...post,
-            //     likes: post.likes.filter(
-            //         (like) => like.userId !== currentUser.id
-            //     ),
-            // });
+            await deleteLike({
+                userId: currentUser.id,
+                postId: post.id,
+            }).unwrap();
         }
+    };
+
+    const handleDeleteComment = async (id: string) => {
+        await deleteComment(id).unwrap();
     };
 
     const renderSongs = () => {
@@ -111,17 +115,33 @@ export default function PostPage({ showComments = false }) {
             return (
                 <div className="flex flex-col space-y-4">
                     {post?.comments.map((comment) => (
-                        <div
-                            key={comment.author + comment.content}
-                            className="flex flex-col"
-                        >
-                            <div className="flex flex-row w-full justify-between">
-                                <p>{comment.author.displayName}</p>
-                                <p>{formatPostTime(comment.createdAt)}</p>
-                            </div>
-                            <div className="flex items-center">
-                                <IconCornerDownRight />
-                                <p>{comment.content}</p>
+                        <div key={comment.id}>
+                            <hr />
+                            <div className="flex flex-row justify-between w-full items-center p-2">
+                                <div>
+                                    <div className="flex flex-row space-x-2">
+                                        <p>{comment.author.displayName}</p>
+                                        <p>●</p>
+                                        <p>
+                                            {formatPostTime(comment.createdAt)}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <IconCornerDownRight />
+                                        <p>{comment.content}</p>
+                                    </div>
+                                </div>
+                                {comment.author.id === currentUser?.id ? (
+                                    <Button
+                                        variant="ghost"
+                                        className="w-fit"
+                                        onClick={() =>
+                                            handleDeleteComment(comment.id)
+                                        }
+                                    >
+                                        <XIcon />
+                                    </Button>
+                                ) : null}
                             </div>
                         </div>
                     ))}
@@ -216,10 +236,7 @@ export default function PostPage({ showComments = false }) {
                         <>{renderSongs()}</>
                     ) : (
                         <div className="flex flex-col space-y-2">
-                            <CommentBox
-                                post={post}
-                                setPost={() => console.log("fix this later")}
-                            />
+                            <CommentBox post={post} />
                             <div>{renderComments()}</div>
                         </div>
                     )}

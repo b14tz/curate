@@ -14,8 +14,7 @@ export const getAllPostLikes = async (req: Request, res: Response) => {
 
 export const createLike = async (req: Request, res: Response) => {
     try {
-        const postId = req.params.id;
-        const { userId } = req.body;
+        const { userId, postId } = req.body;
         const like = await db.postLike.create({
             data: {
                 postId,
@@ -30,8 +29,7 @@ export const createLike = async (req: Request, res: Response) => {
 
 export const deleteLike = async (req: Request, res: Response) => {
     try {
-        const postId = req.params.id;
-        const { userId } = req.body;
+        const { userId, postId } = req.body;
         await db.postLike.delete({
             where: {
                 userId_postId: {

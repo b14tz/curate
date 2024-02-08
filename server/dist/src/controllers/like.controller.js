@@ -24,8 +24,7 @@ const getAllPostLikes = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.getAllPostLikes = getAllPostLikes;
 const createLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postId = req.params.id;
-        const { userId } = req.body;
+        const { userId, postId } = req.body;
         const like = yield db_server_1.db.postLike.create({
             data: {
                 postId,
@@ -41,8 +40,7 @@ const createLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.createLike = createLike;
 const deleteLike = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postId = req.params.id;
-        const { userId } = req.body;
+        const { userId, postId } = req.body;
         yield db_server_1.db.postLike.delete({
             where: {
                 userId_postId: {

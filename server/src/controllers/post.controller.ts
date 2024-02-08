@@ -33,8 +33,11 @@ export const updatePost = async (req: Request, res: Response) => {
     const id = req.params.id;
     const data = req.body;
     try {
-        await db.post.update({ where: { id }, data: { ...data } });
-        return res.status(200).send("Successfully updated post");
+        const updatedPost = await db.post.update({
+            where: { id },
+            data: { ...data },
+        });
+        return res.status(200).json(updatedPost);
     } catch (error) {
         return res.status(500).send("Error updating user");
     }
@@ -43,8 +46,8 @@ export const updatePost = async (req: Request, res: Response) => {
 export const deletePost = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
-        await db.post.delete({ where: { id } });
-        return res.status(204).send();
+        const deletedPost = await db.post.delete({ where: { id } });
+        return res.status(204).json(deletedPost);
     } catch (error) {
         console.error(error);
         return res.status(500).send(`Error deleting user`);
@@ -115,7 +118,7 @@ export const savePost = async (req: Request, res: Response) => {
             }
         }
 
-        return res.status(200).send("Successfully saved playlist");
+        return res.status(200).json({ message: "Successfully saved post" });
     } catch (error) {
         console.error("Error in saving playlist:", error);
         return res.status(500).send("Error in saving playlist");

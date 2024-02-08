@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { formatPostTime } from "../utils/time";
-import { createLike, deleteLike } from "@/api/routes/like";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { useSnackbar } from "notistack";
 import { CircleUserRound, Heart, MessageCircle } from "lucide-react";
 import Preview from "./Preview";
+import {
+    useCreateLikeMutation,
+    useDeleteLikeMutation,
+} from "@/redux/api/routes/like";
 
 export default function PostFeed({
     posts,
@@ -14,6 +17,8 @@ export default function PostFeed({
     posts: Post[];
     emptyMessage: string;
 }) {
+    const [createLike] = useCreateLikeMutation();
+    const [deleteLike] = useDeleteLikeMutation();
     const currentUser = useSelector(
         (state: RootState) => state.userReducer.user
     );
@@ -31,7 +36,10 @@ export default function PostFeed({
     // Handle like
     const handleLike = async (postId: string) => {
         if (currentUser) {
-            await createLike(postId, { userId: currentUser.id });
+            await createLike({
+                userId: currentUser.id,
+                postId: postId,
+            }).unwrap();
             updatePostLikes(postId, true);
         } else {
             enqueueSnackbar("You must be logged in to like a post.", {
@@ -43,7 +51,10 @@ export default function PostFeed({
     // Handle unlike
     const handleUnlike = async (postId: string) => {
         if (currentUser) {
-            await deleteLike(postId, { userId: currentUser.id });
+            await deleteLike({
+                userId: currentUser.id,
+                postId: postId,
+            }).unwrap();
             updatePostLikes(postId, false);
         }
     };
@@ -132,10 +143,17 @@ export default function PostFeed({
                                             <p>{post.likes.length}</p>
                                         </button>
                                     )}
-                                    <div className="flex space-x-1 items-center">
+                                    <button
+                                        className="w-fit flex space-x-1 items-center"
+                                        onClick={() =>
+                                            navigate(
+                                                `/post/${post.id}/comments`
+                                            )
+                                        }
+                                    >
                                         <MessageCircle size={18} />
                                         <p>{post.comments.length}</p>
-                                    </div>
+                                    </button>
                                     <p>
                                         {post.createdAt
                                             ? formatPostTime(post.createdAt)

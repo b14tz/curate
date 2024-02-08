@@ -7,13 +7,13 @@ export const getAllPostLikes = async (id: string) => {
 };
 
 // POST /like/:id
-export const createLike = async (postId: string, data: { userId: string }) => {
-    const res = await axiosInstance.post(`/like/${postId}`, data);
+export const createLike = async (data: { userId: string; postId: string }) => {
+    const res = await axiosInstance.post(`/like`, data);
     return res.data;
 };
 
 // POST /like/remove/:id
-export const deleteLike = async (postId: string, data: { userId: string }) => {
-    const res = await axiosInstance.post(`/like/remove/${postId}`, data);
+export const deleteLike = async (data: { userId: string; postId: string }) => {
+    const res = await axiosInstance.post(`/like/remove`, data);
     return res.data;
 };

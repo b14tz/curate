@@ -64,7 +64,7 @@ interface Playlist {
 interface Post extends Playlist {
     saves: number;
     createdAt: string;
-    comments: Comment[];
+    comments: PostComment[];
     likes: Like[];
 }
 
@@ -73,7 +73,8 @@ interface Like {
     postId: string;
 }
 
-interface Comment {
+interface PostComment {
+    id: string;
     content: string;
     post: Post;
     author: User;
@@ -103,4 +104,8 @@ interface ResponseError extends Error {
 interface SelectOption {
     label: string;
     value: any;
+}
+
+interface QueryResponse {
+    message: string;
 }

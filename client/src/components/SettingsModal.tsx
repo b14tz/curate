@@ -19,6 +19,7 @@ import {
     useDeleteUserMutation,
     useUpdateUserMutation,
 } from "@/redux/api/routes/user";
+import { enqueueSnackbar } from "notistack";
 
 export default function SettingsModal({
     user,
@@ -44,8 +45,14 @@ export default function SettingsModal({
 
     const handleChangeUsername = async () => {
         try {
-            await updateUser({ id: user.id, displayName: displayName });
+            await updateUser({
+                id: user.id,
+                displayName: displayName,
+            }).unwrap();
             dispatch(setUser({ ...currentUser, displayName: displayName }));
+            enqueueSnackbar({
+                message: `Successfully changed username to "${displayName}"`,
+            });
         } catch (error) {
             console.error(error);
         }
@@ -82,7 +89,7 @@ export default function SettingsModal({
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                         <Label htmlFor="username">Username</Label>
-                        <form
+                        <div
                             onSubmit={handleChangeUsername}
                             className="flex flex-row space-x-2"
                         >
@@ -90,8 +97,13 @@ export default function SettingsModal({
                                 value={displayName}
                                 onChange={(e) => setDisplayName(e.target.value)}
                             />
-                            <Button variant="outline">Change</Button>
-                        </form>
+                            <Button
+                                variant="outline"
+                                onClick={() => handleChangeUsername()}
+                            >
+                                Change
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="flex flex-col space-y-2">

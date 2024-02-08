@@ -31,8 +31,11 @@ const updatePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const id = req.params.id;
     const data = req.body;
     try {
-        yield db_server_1.db.post.update({ where: { id }, data: Object.assign({}, data) });
-        return res.status(200).send("Successfully updated post");
+        const updatedPost = yield db_server_1.db.post.update({
+            where: { id },
+            data: Object.assign({}, data),
+        });
+        return res.status(200).json(updatedPost);
     }
     catch (error) {
         return res.status(500).send("Error updating user");
@@ -42,8 +45,8 @@ exports.updatePost = updatePost;
 const deletePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        yield db_server_1.db.post.delete({ where: { id } });
-        return res.status(204).send();
+        const deletedPost = yield db_server_1.db.post.delete({ where: { id } });
+        return res.status(204).json(deletedPost);
     }
     catch (error) {
         console.error(error);
@@ -113,7 +116,7 @@ const savePost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 yield (0, apple_controller_1.createApplePlaylist)(dataForDestination);
             }
         }
-        return res.status(200).send("Successfully saved playlist");
+        return res.status(200).json({ message: "Successfully saved post" });
     }
     catch (error) {
         console.error("Error in saving playlist:", error);

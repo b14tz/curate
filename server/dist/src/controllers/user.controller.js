@@ -45,7 +45,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 posts: true,
             },
         });
-        return res.status(200).send(result);
+        return res.status(200).json(result);
     }
     catch (error) {
         console.error(error);
@@ -82,8 +82,11 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const id = req.params.id;
     const data = req.body;
     try {
-        yield db_server_1.db.user.update({ where: { id }, data: Object.assign({}, data) });
-        return res.status(200).send("Successfully updated user");
+        const updatedUser = yield db_server_1.db.user.update({
+            where: { id },
+            data: Object.assign({}, data),
+        });
+        res.status(200).json(updatedUser);
     }
     catch (error) {
         return res.status(500).send("Error updating user");
@@ -93,8 +96,8 @@ exports.updateUser = updateUser;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
-        yield db_server_1.db.user.delete({ where: { id } });
-        return res.status(200).send("Successfully deleted user");
+        const deletedUser = yield db_server_1.db.user.delete({ where: { id } });
+        return res.status(200).json(deletedUser);
     }
     catch (error) {
         return res.status(500).send(`Error deleting user: ${error}`);

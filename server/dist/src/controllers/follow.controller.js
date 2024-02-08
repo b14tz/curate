@@ -20,7 +20,7 @@ const createFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 followingId: data.followingId,
             },
         });
-        return res.status(200).send("Successfully followed user");
+        res.status(200).json({ message: "Successfully followed user" });
     }
     catch (error) {
         console.error(error);
@@ -38,7 +38,7 @@ const deleteFollow = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 },
             },
         });
-        return res.status(200).send("Successfully unfollowed user");
+        res.status(200).json({ message: "Successfully unfollowed user" });
     }
     catch (error) {
         console.error(error);

@@ -20,11 +20,13 @@ export const getAllPostComments = async (req: Request, res: Response) => {
 
 export const createComment = async (req: Request, res: Response) => {
     try {
-        const postId = req.params.id;
-        const { content, authorId }: { content: string; authorId: string } =
-            req.body;
+        const {
+            content,
+            userId,
+            postId,
+        }: { content: string; userId: string; postId: string } = req.body;
         const comment = await db.postComment.create({
-            data: { authorId, postId, content },
+            data: { authorId: userId, postId, content },
             include: { author: true },
         });
         return res.status(200).send(comment);
@@ -36,8 +38,11 @@ export const createComment = async (req: Request, res: Response) => {
 export const deleteComment = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        await db.postComment.delete({ where: { id } });
-        return res.status(200).send("Successfully deleted comment");
+        const deletedComment = await db.postComment.delete({
+            where: { id },
+            include: { post: true },
+        });
+        return res.status(200).json(deletedComment);
     } catch (error) {
         console.error(error);
     }

@@ -30,10 +30,9 @@ const getAllPostComments = (req, res) => __awaiter(void 0, void 0, void 0, funct
 exports.getAllPostComments = getAllPostComments;
 const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const postId = req.params.id;
-        const { content, authorId } = req.body;
+        const { content, userId, postId, } = req.body;
         const comment = yield db_server_1.db.postComment.create({
-            data: { authorId, postId, content },
+            data: { authorId: userId, postId, content },
             include: { author: true },
         });
         return res.status(200).send(comment);
@@ -46,8 +45,11 @@ exports.createComment = createComment;
 const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
-        yield db_server_1.db.postComment.delete({ where: { id } });
-        return res.status(200).send("Successfully deleted comment");
+        const deletedComment = yield db_server_1.db.postComment.delete({
+            where: { id },
+            include: { post: true },
+        });
+        return res.status(200).json(deletedComment);
     }
     catch (error) {
         console.error(error);

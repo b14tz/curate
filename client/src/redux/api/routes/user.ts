@@ -20,8 +20,8 @@ export const extendedApiSlice = apiSlice.injectEndpoints({
                 method: "PUT",
                 body: patch,
             }),
-            invalidatesTags: (_result, _error, arg) => [
-                { type: "User", id: arg.id },
+            invalidatesTags: (_result, _error, args) => [
+                { type: "User", id: args.id },
             ],
         }),
         deleteUser: builder.mutation<User, string>({

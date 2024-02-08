@@ -8,7 +8,7 @@ import {
 const likeRoutes = Router();
 
 likeRoutes.get("/all/:id", getAllPostLikes);
-likeRoutes.post("/:id", createLike);
-likeRoutes.post("/remove/:id", deleteLike);
+likeRoutes.post("/", createLike);
+likeRoutes.post("/remove", deleteLike);
 
 export default likeRoutes;
