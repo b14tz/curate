@@ -2,6 +2,7 @@ export default function TermsOfService() {
     return (
         <div className="flex flex-col space-y-2">
             <h3> Terms of Service</h3>
+            <br />
             <p>1. Introduction </p>
             <p>
                 Welcome to Jookbox ("we", "us", "our"). By accessing our website
@@ -12,6 +13,7 @@ export default function TermsOfService() {
                 these terms, you are prohibited from using or accessing this
                 site.
             </p>
+            <br />
             <p>2. Use License</p>
             <p>
                 Permission is granted to temporarily download one copy of the
@@ -31,6 +33,7 @@ export default function TermsOfService() {
                 must destroy any downloaded materials in your possession whether
                 in electronic or printed format.
             </p>
+            <br />
             <p>3. Disclaimer</p>
             <p>
                 The materials on Jookbox's website are provided on an 'as is'
@@ -41,6 +44,7 @@ export default function TermsOfService() {
                 non-infringement of intellectual property or other violation of
                 rights.
             </p>
+            <br />
             <p>4. Limitations</p>
             <p>
                 In no event shall Jookbox or its suppliers be liable for any
@@ -50,6 +54,7 @@ export default function TermsOfService() {
                 if Jookbox or a Jookbox authorized representative has been
                 notified orally or in writing of the possibility of such damage.{" "}
             </p>
+            <br />
             <p>5. Accuracy of Materials </p>
             <p>
                 The materials appearing on Jookbox's website could include
@@ -58,8 +63,10 @@ export default function TermsOfService() {
                 accurate, complete, or current. Jookbox may make changes to the
                 materials contained on its website at any time without notice.
                 However, Jookbox does not make any commitment to update the
+                materials.
             </p>
-            materials.
+            <br />
+
             <p>6. Links</p>
             <p>
                 Jookbox has not reviewed all of the sites linked to its website
@@ -68,13 +75,17 @@ export default function TermsOfService() {
                 of the site. Use of any such linked website is at the user's own
                 risk.
             </p>
+            <br />
+
             <p>7. Modifications</p>
             <p>
                 Jookbox may revise these Terms of Service for its website at any
                 time without notice. By using this website you are agreeing to
                 be bound by the then current version of these Terms of Service.
             </p>
-            <p>8. Governing Law</p>{" "}
+            <br />
+
+            <p>8. Governing Law</p>
             <p>
                 These terms and conditions are governed by and construed in
                 accordance with the laws of the United States and you
