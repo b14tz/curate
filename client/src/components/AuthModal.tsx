@@ -18,7 +18,7 @@ export default function AuthModal({ children }: { children: JSX.Element }) {
                 </DialogHeader>
                 <Button
                     variant={"secondary"}
-                    className="flex space-x-4 w-fi"
+                    className="flex space-x-4"
                     onClick={() => {
                         window.location.href = `${
                             import.meta.env.VITE_SERVER_URL
@@ -26,7 +26,7 @@ export default function AuthModal({ children }: { children: JSX.Element }) {
                     }}
                 >
                     <IconBrandGoogleFilled />
-                    <p>Authorize with Google</p>
+                    <p>Login with Google</p>
                 </Button>
             </DialogContent>
         </Dialog>
