@@ -45,7 +45,7 @@ export default function UserPage() {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
             await dispatch(
                 updateAccessToken({
-                    accessToken: data.access_token,
+                    accessToken: data.accessToken,
                     expirationTime: data.expirationTime,
                     refreshToken: data.refreshToken,
                 })
@@ -55,7 +55,7 @@ export default function UserPage() {
 
     useEffect(() => {
         ensureValidSpotifyToken();
-    }, [id]);
+    }, [id, spotifyToken]);
 
     if (isLoadingPosts || isLoadingUser) return <UserPageSkeleton />;
     if (postsError) return <div>Error fetching posts</div>;

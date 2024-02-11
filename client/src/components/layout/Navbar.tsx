@@ -13,6 +13,7 @@ import {
 } from "../ui/navigation-menu";
 import { Button } from "../ui/button";
 import AuthModal from "../AuthModal";
+import AboutModal from "../AboutModal";
 
 export default function Navbar() {
     const user = useSelector((state: RootState) => state.userReducer.user);
@@ -48,6 +49,9 @@ export default function Navbar() {
                     <Button onClick={() => navigate("/search")} variant="ghost">
                         Search
                     </Button>
+                    <AboutModal>
+                        <Button variant="ghost">About</Button>
+                    </AboutModal>
                     {user ? (
                         <>
                             <NavigationMenu>
@@ -90,7 +94,7 @@ export default function Navbar() {
                         </>
                     ) : (
                         <AuthModal>
-                            <Button variant={"ghost"}>Login</Button>
+                            <Button variant="ghost">Login</Button>
                         </AuthModal>
                     )}
                 </div>

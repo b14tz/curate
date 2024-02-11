@@ -32,6 +32,7 @@ export const spotifySlice = createSlice({
         },
         updateAccessToken: (state, action) => {
             state.accessToken = action.payload.accessToken;
+            state.refreshToken = action.payload.refreshToken;
             state.expirationTime = action.payload.expirationTime;
         },
     },

@@ -89,6 +89,7 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
                 },
             }
         );
+        console.log("Refresh Response: ", response.data);
         const {
             access_token,
             expires_in,

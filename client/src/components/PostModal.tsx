@@ -138,9 +138,9 @@ export default function PostModal({ children }: { children: JSX.Element }) {
         if (isSpotifyTokenExpired(spotifyToken) && spotifyToken.refreshToken) {
             const data = await refreshAccessToken(spotifyToken.refreshToken);
             console.log("Refreshed Spotify Token: ", data);
-            await dispatch(
+            dispatch(
                 updateAccessToken({
-                    accessToken: data.access_token,
+                    accessToken: data.accessToken,
                     expirationTime: data.expirationTime,
                     refreshToken: data.refreshToken,
                 })
