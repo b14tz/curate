@@ -2,7 +2,7 @@ export default function PrivacyPolicy() {
     return (
         <div className="flex flex-col space-y-2">
             <h3>Privacy Policy</h3>
-            <p>Last Updated: 07/01/2022</p>
+            <p>Last Updated: 02/07/2024</p>
             <br />
 
             <p>

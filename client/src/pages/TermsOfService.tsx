@@ -2,6 +2,7 @@ export default function TermsOfService() {
     return (
         <div className="flex flex-col space-y-2">
             <h3> Terms of Service</h3>
+            <p>Last Updated: 02/07/2024</p>
             <br />
             <p>1. Introduction </p>
             <p>
