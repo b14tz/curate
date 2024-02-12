@@ -1,6 +1,5 @@
 import "remixicon/fonts/remixicon.css";
 import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
 
 export default function Footer() {
@@ -17,20 +16,18 @@ export default function Footer() {
                     </a>
                 </p>
                 <p>●</p>
-                <Button
-                    variant="link"
-                    className="w-fit p-0 text-white font-normal"
+                <button
+                    className="w-fit p-0 text-sm text-white font-normal hover:underline"
                     onClick={() => navigate("/privacy-policy")}
                 >
                     Privacy
-                </Button>
-                <Button
-                    variant="link"
-                    className="w-fit p-0 text-white font-normal"
+                </button>
+                <button
+                    className="w-fit p-0 text-sm text-white font-normal hover:underline"
                     onClick={() => navigate("/terms-of-service")}
                 >
                     Terms
-                </Button>
+                </button>
             </div>
         </div>
     );
