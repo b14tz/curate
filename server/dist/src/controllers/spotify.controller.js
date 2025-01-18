@@ -156,6 +156,7 @@ const getTopSpotifyPlaylists = (req, res) => __awaiter(void 0, void 0, void 0, f
             headers: { Authorization: `Bearer ${token}` },
         });
         const playlists = topPlaylistsData.data.playlists.items;
+        console.log("Playlist Details: ", playlists);
         const result = yield Promise.all(playlists.map((playlist) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 // Use the utility function to fetch playlist details
