@@ -27,7 +27,6 @@ export default function Header({
     );
 
     useEffect(() => {
-        console.log(user.following);
         setIsFollowing(
             user.following?.some(
                 (follower) =>

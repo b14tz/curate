@@ -14,7 +14,6 @@ import SearchPage from "./pages/SearchPage";
 import PostPage from "./pages/PostPage";
 import SpotifyCallback from "./components/callbacks/SpotifyCallback";
 import AuthCallback from "./components/callbacks/AuthCallback";
-import DiscoverPage from "./pages/DiscoverPage";
 import PlaylistPage from "./pages/PlaylistPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -44,13 +43,6 @@ function AllRoutes() {
                 <Route path="/" element={<Navigate to="/feed" replace />} />
                 <Route path="/feed" element={<HomePage />} />
                 <Route path="/feed/following" element={<HomePage />} />
-
-                <Route
-                    path="/discover"
-                    element={<Navigate to="/discover/spotify" replace />}
-                />
-                <Route path="/discover/spotify" element={<DiscoverPage />} />
-                <Route path="/discover/apple" element={<DiscoverPage />} />
 
                 <Route
                     path="/search"

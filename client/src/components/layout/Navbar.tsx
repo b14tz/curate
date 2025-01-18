@@ -40,12 +40,6 @@ export default function Navbar() {
                     <Button onClick={() => navigate("/")} variant="ghost">
                         Home
                     </Button>
-                    <Button
-                        onClick={() => navigate("/discover")}
-                        variant="ghost"
-                    >
-                        Discover
-                    </Button>
                     <Button onClick={() => navigate("/search")} variant="ghost">
                         Search
                     </Button>

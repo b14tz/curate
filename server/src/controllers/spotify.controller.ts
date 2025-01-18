@@ -187,7 +187,7 @@ export const getTopSpotifyPlaylists = async (req: Request, res: Response) => {
             headers: { Authorization: `Bearer ${token}` },
         });
         const playlists = topPlaylistsData.data.playlists.items;
-
+        console.log("Playlist Details: ", playlists);
         const result = await Promise.all(
             playlists.map(async (playlist: any) => {
                 try {
